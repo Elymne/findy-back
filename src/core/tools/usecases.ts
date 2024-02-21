@@ -17,3 +17,10 @@ export class Failure<T> extends Result<T> {
     this.error = error;
   }
 }
+
+// export class FailureError {
+//   timestamp: string;
+//   status: number;
+//   error: string;
+//   message: string;
+// }
