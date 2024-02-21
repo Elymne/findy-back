@@ -1,0 +1,19 @@
+import express, { Application } from "express"
+import helmet from "helmet"
+import dotenv from "dotenv"
+import apiRoute from "./routes"
+
+dotenv.config()
+
+const app: Application = express()
+
+app.use(helmet())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+app.use(apiRoute)
+app.get("/", (req: express.Request, res: express.Response) => {
+    res.json({ status: "API is running on /api" })
+})
+
+export default app

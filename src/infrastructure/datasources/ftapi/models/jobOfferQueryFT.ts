@@ -1,0 +1,31 @@
+export interface JobOfferFTQuery {
+    accesTravailleurHandicape?: boolean
+    appellation?: string
+    codeROME?: string
+    commune?: string
+    departement?: string
+    distance?: number
+    domaine?: string
+    dureeHebdoMax?: string
+    dureeHebdoMin?: string
+    experience?: string
+    experienceExigence?: string
+    inclureLimitrophes?: boolean
+    maxCreationDate?: string
+    minCreationDate?: string
+    modeSelectionPartenaires?: string
+    motsCles?: string
+    natureContrat?: string
+    niveauFormation?: string
+    offresMRS?: boolean
+    partenaires?: string
+    paysContinent?: string
+    periodeSalaire?: string
+    permis?: string
+    publieeDepuis?: number
+    qualification?: string
+    range?: string
+    typeContrat?: string
+    region?: string
+    secteurActivite?: string
+}
