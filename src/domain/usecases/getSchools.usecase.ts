@@ -1,7 +1,7 @@
 import { Result, Usecase } from "~/core/usecase"
-import { School } from "../entities/School.entity"
 import { UUID } from "crypto"
 import { SchoolDatasource, SchoolDatasourceImpl } from "~/infrastructure/datasources/local/school.datasource"
+import { School } from "../entities/school.entity"
 
 export interface GetSchoolsUsecase extends Usecase<School[], GetSchoolsUsecaseParams> {
     schoolDatasource: SchoolDatasource

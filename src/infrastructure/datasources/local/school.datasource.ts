@@ -1,7 +1,7 @@
 import { UUID } from "crypto"
 import { PgClient } from "~/core/databases/pgClient"
 import { createSchoolTableQuery } from "./queries/school.queries"
-import { School } from "~/domain/entities/School.entity"
+import { School } from "~/domain/entities/school.entity"
 
 export interface SchoolDatasource {
     createTable: () => Promise<void>
