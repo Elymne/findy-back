@@ -1,19 +1,15 @@
 import express, { Request, Response } from "express"
-import { Failure, Success } from "~/core/usecase"
-import { Municipality } from "~/domain/entities/municipality.entity"
-import { GetMunicipalities, GetMunicipalitiesImpl } from "~/domain/usecases/getMunicipalities.usecase"
+import { GetMunicipalitiesUsecase, GetMunicipalitiesUsecaseImpl } from "~/domain/usecases/getMunicipalities.usecase"
 
 const router = express.Router()
-const getAllMunicipalities: GetMunicipalities = GetMunicipalitiesImpl
+const getAllMunicipalities: GetMunicipalitiesUsecase = GetMunicipalitiesUsecaseImpl
 
 router.get("/", async (req: Request, res: Response) => {
     const result = await getAllMunicipalities.perform()
-
-    if ("errorCode" in result) {
-        return res.status(500).send(result as Failure<Municipality[]>)
+    if ("errorCode" in result && typeof result.errorCode === "number") {
+        return res.status(result.errorCode).send(result)
     }
-
-    res.status(200).send(result as Success<Municipality[]>)
+    res.status(200).send(result)
 })
 
 export default router

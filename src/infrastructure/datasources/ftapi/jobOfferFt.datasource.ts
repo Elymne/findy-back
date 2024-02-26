@@ -18,6 +18,9 @@ export const JobOfferFTDatasourceImpl: JobOfferFtDatasource = {
             },
         })
 
+        // ? france.travail send a 204 response when no data are found instead of an empty array.
+        if (!response.data) return []
+
         return response.data.resultats
     },
 }

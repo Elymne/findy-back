@@ -5,13 +5,13 @@ import { MunicipalityParser, MunicipalityParserImpl } from "~/infrastructure/par
 import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokken.datasource"
 import { logger } from "~/core/tools/logger"
 
-export interface GetMunicipalities extends UsecaseNoParams<Municipality[]> {
+export interface GetMunicipalitiesUsecase extends UsecaseNoParams<Municipality[]> {
     tokenFTDatasource: TokenFTDatasource
     municipalityFTDatasource: MunicipalityFTDatasource
     municipalityParser: MunicipalityParser
 }
 
-export const GetMunicipalitiesImpl: GetMunicipalities = {
+export const GetMunicipalitiesUsecaseImpl: GetMunicipalitiesUsecase = {
     tokenFTDatasource: TokenFTDatasourceImpl,
     municipalityFTDatasource: MunicipalityFTDatasourceImpl,
     municipalityParser: MunicipalityParserImpl,
@@ -31,7 +31,7 @@ export const GetMunicipalitiesImpl: GetMunicipalities = {
             return {
                 message: "An internal error occur",
                 data: [],
-                errorCode: 1,
+                errorCode: 500,
             } as Failure<Municipality[]>
         }
     },

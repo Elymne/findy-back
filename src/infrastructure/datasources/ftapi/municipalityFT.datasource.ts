@@ -5,6 +5,7 @@ import { ftpeApiUrl, ftpeApiVersion } from "./configs/ftapi.const"
 
 export interface MunicipalityFTDatasource {
     findAll: (tokken: TokenFT) => Promise<MunicipalityFT[]>
+    findOne: (code: string, tokken: TokenFT) => Promise<MunicipalityFT | undefined>
 }
 
 export const MunicipalityFTDatasourceImpl: MunicipalityFTDatasource = {
@@ -17,5 +18,17 @@ export const MunicipalityFTDatasourceImpl: MunicipalityFTDatasource = {
         })
 
         return response.data
+    },
+    findOne: async function (code: string, tokken: TokenFT): Promise<MunicipalityFT | undefined> {
+        const response = await axios.get<MunicipalityFT[]>(`${ftpeApiUrl}/${ftpeApiVersion}/referentiel/communes`, {
+            headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${tokken.access_token}`,
+            },
+        })
+
+        return response.data.find((elem) => {
+            return elem.code == code
+        })
     },
 }
