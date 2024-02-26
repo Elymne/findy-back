@@ -4,11 +4,11 @@ import { TokenFT } from "./models/tokenFT"
 import { ftpeApiUrl, ftpeApiVersion } from "./configs/ftapi.const"
 import { JobOfferFT, JobOfferFTResponseBody } from "./models/jobOfferFT"
 
-export interface JobOfferFtDatasource {
+export interface JobOfferFTDatasource {
     findAll: (params: JobOfferFTQuery, token: TokenFT) => Promise<JobOfferFT[]>
 }
 
-export const JobOfferFTDatasourceImpl: JobOfferFtDatasource = {
+export const JobOfferFTDatasourceImpl: JobOfferFTDatasource = {
     findAll: async function (query: JobOfferFTQuery, token: TokenFT): Promise<JobOfferFT[]> {
         const response = await axios.get<JobOfferFTResponseBody>(`${ftpeApiUrl}/${ftpeApiVersion}/offres/search`, {
             params: query,

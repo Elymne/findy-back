@@ -1,0 +1,6 @@
+const first = "https://www.welcometothejungle.com/fr"
+const second = "/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR"
+const words = "&query=marketing"
+const page = "&page=1"
+const latLng = "&aroundLatLng=47.21811%2C-1.55302&aroundRadius=20"
+const commune = "&aroundQuery=Nantes%2C%20France"

@@ -2,7 +2,7 @@ import { Failure, Result, Success, UsecaseNoParams } from "~/core/usecase"
 import { Municipality } from "../entities/municipality.entity"
 import { MunicipalityFTDatasource, MunicipalityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
 import { MunicipalityParser, MunicipalityParserImpl } from "~/infrastructure/parser/municipality.parser"
-import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokken.datasource"
+import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
 import { logger } from "~/core/tools/logger"
 
 export interface GetMunicipalitiesUsecase extends UsecaseNoParams<Municipality[]> {

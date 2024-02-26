@@ -1,15 +1,15 @@
 import { logger } from "~/core/tools/logger"
 import { Failure, Result, Success, Usecase } from "~/core/usecase"
 import { JobOffer } from "../entities/jobOffer.entity"
-import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokken.datasource"
-import { JobOfferFTDatasourceImpl, JobOfferFtDatasource } from "~/infrastructure/datasources/ftapi/jobOfferFt.datasource"
+import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
 import { JobOfferParser, JobOfferParserImpl } from "~/infrastructure/parser/jobOffer.parser"
 import { JobOfferService, JobOfferServiceImpl } from "~/infrastructure/services/jobOffer.service"
 import { MunicipalityFTDatasource, MunicipalityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
+import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/jobOfferFt.datasource"
 
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource
-    jobOfferFtDatasource: JobOfferFtDatasource
+    jobOfferFtDatasource: JobOfferFTDatasource
     municipalityFtDatasource: MunicipalityFTDatasource
     jobOfferService: JobOfferService
     jobOfferParser: JobOfferParser
