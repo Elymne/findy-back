@@ -5,8 +5,10 @@ import { MunicipalityFTDatasource, MunicipalityFTDatasourceImpl } from "~/infras
 import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
 import { JobOfferParser, JobOfferParserImpl } from "~/infrastructure/parser/jobOffer.parser"
 import { JobOfferService, JobOfferServiceImpl } from "~/infrastructure/services/jobOffer.service"
-import { DetailedJobOffer } from "../../entities/detailedJobOffer.entity"
 import { JobOffer } from "../../entities/jobOffer.entity"
+import { JobOfferFTQuery } from "~/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
+import { JobOfferHistory } from "~/domain/entities/databases/jobOfferHistory"
+import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
 
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource
@@ -25,8 +27,10 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
 
     perform: async function (params: GetJobOfferFTUsecaseParams): Promise<Result<JobOffer[]>> {
         try {
+            // Generate a token needed to fetch data from france.travail API.
             const token = await this.tokenFTDatasource.generate()
 
+            // Check query data send by users. (City/municipality code).
             const municipality = await this.municipalityFtDatasource.findOne(params.municipalityCode, token)
             if (!municipality) {
                 return {
@@ -36,15 +40,27 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
                 } as Failure<JobOffer[]>
             }
 
+            // Get job offers from france.travail API.
             const jobOffersFT = await this.jobOfferFtDatasource.findAll(
                 {
                     commune: params.municipalityCode,
                     motsCles: params.keywords,
-                },
+                } as JobOfferFTQuery,
                 token
             )
 
-            const jobOffersFTFiltered = await this.jobOfferService.filterJobOfferFT(jobOffersFT)
+            // TODO : Un data source qui store les mots clés à banir pour notre recherche d'alternance.
+            const textFilters: TextFilter[] = []
+
+            // TODO : Un data source qui store les offres déjà analysé pour rendre le filtrage beaucoup plus rapide.
+            const jobOfferHistories: JobOfferHistory[] = []
+
+            // Filtrage des offres d'emploi récupérées.
+            const { jobOffersFTFiltered, newHistories } = await this.jobOfferService.filterJobOfferFT(jobOffersFT, textFilters, jobOfferHistories)
+
+            // TODO : Un data souce pour sauvegarder les données historisé pour optimiser notre filtrage la prochaine fois.
+            console.clear()
+            console.log(newHistories)
 
             const jobOffers = await this.jobOfferParser.parseFT(jobOffersFTFiltered)
 

@@ -9,7 +9,7 @@ const getJobOfferFTUsecase: GetJobOfferFTUsecase = GetJobOfferFTUsecaseImpl
 // municode : 21704
 // keyword : cuisine
 
-router.get("/", query("keywords").notEmpty().isString().escape(), query("municipalityCode").notEmpty().isString().escape(), async (req: Request, res: Response) => {
+router.get("/ft", query("keywords").notEmpty().isString().escape(), query("municipalityCode").notEmpty().isString().escape(), async (req: Request, res: Response) => {
     const validator = validationResult(req)
     if (!validator.isEmpty()) {
         return res.status(404).send("Inputs are missing.")
