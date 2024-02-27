@@ -5,7 +5,8 @@ import { MunicipalityFTDatasource, MunicipalityFTDatasourceImpl } from "~/infras
 import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
 import { JobOfferParser, JobOfferParserImpl } from "~/infrastructure/parser/jobOffer.parser"
 import { JobOfferService, JobOfferServiceImpl } from "~/infrastructure/services/jobOffer.service"
-import { JobOffer } from "../entities/jobOffer.entity"
+import { DetailedJobOffer } from "../../entities/detailedJobOffer.entity"
+import { JobOffer } from "../../entities/jobOffer.entity"
 
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource

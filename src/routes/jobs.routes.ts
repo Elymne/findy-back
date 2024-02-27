@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "~/domain/usecases/getJobOffersFT.usecase"
+import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "~/domain/usecases/jobOffer/getJobOffersFT.usecase"
 import { JobOfferWTTJDatasourceImpl } from "~/infrastructure/datasources/wttj/jobOfferWTTJ.datasource"
 
 const router = express.Router()
