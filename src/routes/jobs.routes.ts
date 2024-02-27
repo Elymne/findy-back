@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "~/domain/usecases/getJobOffersFT.usecase"
-import { JobOfferFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/jobOfferFt.datasource"
 import { JobOfferWTTJDatasourceImpl } from "~/infrastructure/datasources/wttj/jobOfferWTTJ.datasource"
 
 const router = express.Router()
@@ -29,8 +28,8 @@ router.get("/", query("keywords").notEmpty().isString().escape(), query("municip
 })
 
 router.get("/testing", async (req: Request, res: Response) => {
-    await JobOfferWTTJDatasourceImpl.testScrap()
-    res.status(200).send("")
+    const jobOffers = await JobOfferWTTJDatasourceImpl.findAllShort()
+    res.status(200).send(jobOffers)
 })
 
 export default router

@@ -1,10 +1,13 @@
 import { UUID } from "crypto"
 
 export interface ShortJobOfferWTTJ {
-    id?: UUID
     title: string
+    image: string
+
+    company: string
+    companyLogo: string
+    city: string
+
+    created: string
     accessUrl: string
-    imagUrl: string
-    logoUrl: string
-    companyName: string
 }

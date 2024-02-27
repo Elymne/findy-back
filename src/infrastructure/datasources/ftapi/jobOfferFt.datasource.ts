@@ -1,8 +1,8 @@
 import axios from "axios"
-import { JobOfferFTQuery } from "./models/jobOfferQueryFT"
-import { TokenFT } from "./models/tokenFT"
 import { ftpeApiUrl, ftpeApiVersion } from "./configs/ftapi.const"
 import { JobOfferFT, JobOfferFTResponseBody } from "./models/jobOfferFT"
+import { JobOfferFTQuery } from "./models/jobOfferQueryFT"
+import { TokenFT } from "./models/tokenFT"
 
 export interface JobOfferFTDatasource {
     findAll: (params: JobOfferFTQuery, token: TokenFT) => Promise<JobOfferFT[]>

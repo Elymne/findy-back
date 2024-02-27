@@ -1,6 +1,19 @@
-const first = "https://www.welcometothejungle.com/fr"
-const second = "/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR"
-const words = "&query=marketing"
-const page = "&page=1"
-const latLng = "&aroundLatLng=47.21811%2C-1.55302&aroundRadius=20"
-const commune = "&aroundQuery=Nantes%2C%20France"
+export const baseUrl = "https://www.welcometothejungle.com/fr/jobs"
+
+/**
+ * Simply the city.
+ * Example : FR
+ */
+export const countryQuery = "refinementList[offices.country_code][]="
+
+/**
+ * Simply the words that you can set to searchbar.
+ * Example : Communication, Marketing, Enorme enculé.
+ */
+export const paramsQuery = "query="
+
+/**
+ * Simply the page.
+ * Example : 1, 2, 3..
+ */
+export const page = "page="

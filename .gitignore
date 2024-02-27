@@ -12,6 +12,7 @@ pids
 logs
 results
 tmp
+docs
 
 # Build
 public/css/main.css

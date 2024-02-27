@@ -1,38 +1,51 @@
+import { baseUrl, countryQuery, paramsQuery } from "./configs/wttj.const"
 import { ShortJobOfferWTTJ } from "./models/shortJobOfferWTTJ"
 import puppeteer from "puppeteer"
 
 export interface JobOfferWTTJDatasource {
-    findReduced: () => Promise<ShortJobOfferWTTJ[]>
-    testScrap: () => Promise<void>
+    findAllShort: () => Promise<ShortJobOfferWTTJ[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
-    findReduced: async function (): Promise<ShortJobOfferWTTJ[]> {
-        return []
-    },
-    testScrap: async function (): Promise<void> {
-        console.clear()
-
+    /**
+     * TODO Gestion de la pagination.
+     * TODO Gestion des mots clés.
+     * TODO Gestion du lieu
+     * TODO Gestion des params optionnels
+     * @returns
+     */
+    findAllShort: async function (): Promise<ShortJobOfferWTTJ[]> {
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
-        console.log("Browser init")
-
         const page = await browser.newPage()
-        console.log("New page")
 
-        await page.goto("https://www.welcometothejungle.com/fr/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR&query=communication&page=1")
-        console.log("Access to the new page")
-
-        await page.waitForSelector(`[data-testid="jobs-search-results-count"]`, { timeout: 3000 })
+        await page.goto(`${baseUrl}?${countryQuery}FR&${paramsQuery}communication&${page}1`, { timeout: 3000 })
         await new Promise((f) => setTimeout(f, 1000))
-        console.log("Page loaded, loot everything !")
+
+        const result: ShortJobOfferWTTJ[] = []
 
         const rows = await page.$$("li.ais-Hits-list-item")
+        for (const row of rows) {
+            const imageSelectors = await row.$$("img")
+            const imageUrl = (await imageSelectors[0].evaluate((img) => img.getAttribute("src"))) as string
+            const companyLogoUrl = (await imageSelectors[1].evaluate((img) => img.getAttribute("src"))) as string
+            const h4selectors = await row.$$("h4")
+            const title = (await h4selectors[0].evaluate((h4) => h4.textContent)) as string
+            const spanSelectors = await row.$$("span")
+            const companyName = (await spanSelectors[0].evaluate((span) => span.textContent)) as string
+            const cityName = (await spanSelectors[2].evaluate((span) => span.textContent)) as string
+            const dateCreation = (await spanSelectors[spanSelectors.length - 1].evaluate((span) => span.textContent)) as string
 
-        // TODO Tout récupérer et voilà.
-        for (let row of rows) {
-            const img = await row.$("div > a > img")
-            const url = await img?.evaluate((x) => x.getAttribute("src"))
-            console.log(url)
+            result.push({
+                title: title,
+                image: imageUrl,
+                companyLogo: companyLogoUrl,
+                company: companyName,
+                city: cityName,
+                created: dateCreation,
+                accessUrl: "",
+            })
         }
+
+        return result
     },
 }
