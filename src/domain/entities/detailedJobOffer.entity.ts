@@ -1,6 +1,3 @@
-/**
- *
- */
 export interface DetailedJobOffer {
     id?: string
     title: string
@@ -20,6 +17,21 @@ export interface DetailedJobOffer {
     updatedAt: number
 }
 
+export interface Company {
+    name?: string
+    description?: string
+    logoUrl?: string
+    websiteUrl?: string
+}
+
+export interface WorkOffice {
+    name: string
+    lat: number
+    long: number
+    postalcode: string
+    zone: string
+}
+
 export interface ExpRequirement {
     code: string
     description: string
@@ -28,13 +40,6 @@ export interface ExpRequirement {
 export interface Contact {
     name: string
     access: string
-}
-
-export interface Company {
-    name?: string
-    description?: string
-    logoUrl?: string
-    websiteUrl?: string
 }
 
 export interface Skill {
@@ -46,12 +51,4 @@ export interface Skill {
 export interface SoftSkill {
     title: string
     description: string
-}
-
-export interface WorkOffice {
-    name: string
-    lat: number
-    long: number
-    postalcode: string
-    zone: string
 }

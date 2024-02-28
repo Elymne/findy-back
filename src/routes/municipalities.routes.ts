@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express"
-import { GetMunicipalitiesUsecase, GetMunicipalitiesUsecaseImpl } from "~/domain/usecases/getMunicipalities.usecase"
+import { GetCitiesUsecase, GetCitiesUsecaseImpl } from "~/domain/usecases/getCities.usecase"
 
 const router = express.Router()
-const getAllMunicipalities: GetMunicipalitiesUsecase = GetMunicipalitiesUsecaseImpl
+const getAllMunicipalities: GetCitiesUsecase = GetCitiesUsecaseImpl
 
 router.get("/", async (req: Request, res: Response) => {
     const result = await getAllMunicipalities.perform()

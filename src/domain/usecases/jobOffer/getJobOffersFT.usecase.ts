@@ -1,7 +1,7 @@
 import { logger } from "~/core/tools/logger"
 import { Usecase, Failure, Success, Result } from "~/core/usecase"
 import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/jobOfferFT.datasource"
-import { MunicipalityFTDatasource, MunicipalityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
+import { CityFTDatasource, CityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
 import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
 import { JobOfferParser, JobOfferParserImpl } from "~/infrastructure/parser/jobOffer.parser"
 import { JobOfferService, JobOfferServiceImpl } from "~/infrastructure/services/jobOffer.service"
@@ -14,7 +14,7 @@ import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "~/infr
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource
     jobOfferFtDatasource: JobOfferFTDatasource
-    municipalityFtDatasource: MunicipalityFTDatasource
+    municipalityFtDatasource: CityFTDatasource
     textFilterDatasource: TextFilterDatasource
     jobOfferHistoryDatasource: JobOfferHistoryDatasource
     jobOfferService: JobOfferService
@@ -24,7 +24,7 @@ export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTU
 export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
     tokenFTDatasource: TokenFTDatasourceImpl,
     jobOfferFtDatasource: JobOfferFTDatasourceImpl,
-    municipalityFtDatasource: MunicipalityFTDatasourceImpl,
+    municipalityFtDatasource: CityFTDatasourceImpl,
     textFilterDatasource: TextFilterDatasourceImpl,
     jobOfferHistoryDatasource: JobOfferHistoryDatasourceImpl,
     jobOfferParser: JobOfferParserImpl,

@@ -1,17 +1,17 @@
-import { Municipality } from "~/domain/entities/municipality.entity"
-import { MunicipalityFT } from "../datasources/ftapi/models/municipalityFT"
+import { City } from "~/domain/entities/city.entity"
+import { CityFT } from "../datasources/ftapi/models/municipalityFT"
 
 export interface MunicipalityParser {
-    parseFT: (source: MunicipalityFT[]) => Promise<Municipality[]>
+    parseFT: (source: CityFT[]) => Promise<City[]>
 }
 
 export const MunicipalityParserImpl: MunicipalityParser = {
-    parseFT: async function (source: MunicipalityFT[]): Promise<Municipality[]> {
+    parseFT: async function (source: CityFT[]): Promise<City[]> {
         return source.map((elem) => {
             return {
-                title: elem.libelle,
+                name: elem.libelle,
                 code: elem.code,
-            } as Municipality
+            } as City
         })
     },
 }

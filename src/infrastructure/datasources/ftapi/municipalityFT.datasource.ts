@@ -1,16 +1,16 @@
 import axios from "axios"
-import { MunicipalityFT } from "./models/municipalityFT"
+import { CityFT } from "./models/municipalityFT"
 import { TokenFT } from "./models/tokenFT"
 import { ftpeApiUrl, ftpeApiVersion } from "./configs/ftapi.const"
 
-export interface MunicipalityFTDatasource {
-    findAll: (tokken: TokenFT) => Promise<MunicipalityFT[]>
-    findOne: (code: string, tokken: TokenFT) => Promise<MunicipalityFT | undefined>
+export interface CityFTDatasource {
+    findAll: (tokken: TokenFT) => Promise<CityFT[]>
+    findOne: (code: string, tokken: TokenFT) => Promise<CityFT | undefined>
 }
 
-export const MunicipalityFTDatasourceImpl: MunicipalityFTDatasource = {
-    findAll: async function (tokken: TokenFT): Promise<MunicipalityFT[]> {
-        const response = await axios.get<MunicipalityFT[]>(`${ftpeApiUrl}/${ftpeApiVersion}/referentiel/communes`, {
+export const CityFTDatasourceImpl: CityFTDatasource = {
+    findAll: async function (tokken: TokenFT): Promise<CityFT[]> {
+        const response = await axios.get<CityFT[]>(`${ftpeApiUrl}/${ftpeApiVersion}/referentiel/communes`, {
             headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${tokken.access_token}`,
@@ -19,8 +19,8 @@ export const MunicipalityFTDatasourceImpl: MunicipalityFTDatasource = {
 
         return response.data
     },
-    findOne: async function (code: string, tokken: TokenFT): Promise<MunicipalityFT | undefined> {
-        const response = await axios.get<MunicipalityFT[]>(`${ftpeApiUrl}/${ftpeApiVersion}/referentiel/communes`, {
+    findOne: async function (code: string, tokken: TokenFT): Promise<CityFT | undefined> {
+        const response = await axios.get<CityFT[]>(`${ftpeApiUrl}/${ftpeApiVersion}/referentiel/communes`, {
             headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${tokken.access_token}`,
