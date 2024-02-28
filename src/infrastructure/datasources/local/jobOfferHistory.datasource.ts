@@ -61,8 +61,6 @@ export const JobOfferHistoryDatasourceImpl: JobOfferHistoryDatasource = {
         query = query.substring(0, query.length - 1)
         query += ";"
 
-        console.log(query)
-
         await PgClient.getInstance().getClient().query<JobOfferHistory>(query, values)
         return schools.length
     },

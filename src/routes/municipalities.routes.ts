@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express"
-import { GetCitiesUsecase, GetCitiesUsecaseImpl } from "~/domain/usecases/getCities.usecase"
+import { GetCitiesUsecase, GetCitiesUsecaseImpl } from "~/domain/usecases/citiy/getCities.usecase"
 
 const router = express.Router()
 const getAllMunicipalities: GetCitiesUsecase = GetCitiesUsecaseImpl

@@ -3,8 +3,8 @@ import { Usecase, Failure, Success, Result } from "~/core/usecase"
 import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/jobOfferFT.datasource"
 import { CityFTDatasource, CityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
 import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
-import { JobOfferParser, JobOfferParserImpl } from "~/infrastructure/parser/jobOffer.parser"
-import { JobOfferService, JobOfferServiceImpl } from "~/infrastructure/services/jobOffer.service"
+import { JobOfferParserFT, JobOfferParserFTImpl } from "~/infrastructure/parser/jobOfferFT.parser"
+import { JobOfferFTService, JobOfferFTServiceImpl } from "~/infrastructure/services/jobOfferFT.service"
 import { JobOffer } from "../../entities/jobOffer.entity"
 import { JobOfferFTQuery } from "~/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
 import { JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
@@ -17,8 +17,8 @@ export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTU
     municipalityFtDatasource: CityFTDatasource
     textFilterDatasource: TextFilterDatasource
     jobOfferHistoryDatasource: JobOfferHistoryDatasource
-    jobOfferService: JobOfferService
-    jobOfferParser: JobOfferParser
+    jobOfferFTService: JobOfferFTService
+    jobOfferParserFT: JobOfferParserFT
 }
 
 export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
@@ -27,15 +27,13 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
     municipalityFtDatasource: CityFTDatasourceImpl,
     textFilterDatasource: TextFilterDatasourceImpl,
     jobOfferHistoryDatasource: JobOfferHistoryDatasourceImpl,
-    jobOfferParser: JobOfferParserImpl,
-    jobOfferService: JobOfferServiceImpl,
+    jobOfferFTService: JobOfferFTServiceImpl,
+    jobOfferParserFT: JobOfferParserFTImpl,
 
     perform: async function (params: GetJobOfferFTUsecaseParams): Promise<Result<JobOffer[]>> {
         try {
-            // Generate a token needed to fetch data from france.travail API.
             const token = await this.tokenFTDatasource.generate()
 
-            // Check query data send by users. (City/municipality code).
             const municipality = await this.municipalityFtDatasource.findOne(params.municipalityCode, token)
             if (!municipality) {
                 return {
@@ -45,7 +43,6 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
                 } as Failure<JobOffer[]>
             }
 
-            // Fetching : Job offer, filter text and historic value.
             const [jobOffersFT, textFilters, jobOfferHistories] = await Promise.all([
                 this.jobOfferFtDatasource.findAll(
                     {
@@ -58,14 +55,12 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
                 this.jobOfferHistoryDatasource.findAllBySource(JobOfferSource.ftapi),
             ])
 
-            // Filtrage des offres d'emploi récupérées.
-            const { jobOffersFTFiltered, newHistories } = await this.jobOfferService.filterJobOfferFT(jobOffersFT, textFilters, jobOfferHistories)
+            const { jobOfferFTFiltered, newHistories } = await this.jobOfferFTService.filter(jobOffersFT, textFilters, jobOfferHistories)
 
-            // Mise à jour de l'historique des offres trouvés pour faciliter le prochain filtrage.
-            await this.jobOfferHistoryDatasource.addMany(newHistories)
-
-            // Parsing/normalisation des données pour notre API.
-            const jobOffers = await this.jobOfferParser.parseFT(jobOffersFTFiltered)
+            const [jobOffers, _] = await Promise.all([
+                this.jobOfferParserFT.parse(jobOfferFTFiltered),
+                this.jobOfferHistoryDatasource.addMany(newHistories),
+            ])
 
             return {
                 message: "Job offers from france.travail API fetched successfully",

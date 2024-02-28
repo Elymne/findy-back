@@ -3,13 +3,13 @@ import { DetailedJobOfferFT } from "../datasources/ftapi/models/detailedJobOffer
 import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
 import { JobOffer } from "~/domain/entities/jobOffer.entity"
 
-export interface JobOfferParser {
-    parseDetailedFT: (source: DetailedJobOfferFT[]) => Promise<DetailedJobOffer[]>
-    parseFT: (source: JobOfferFT[]) => Promise<JobOffer[]>
+export interface JobOfferParserFT {
+    parseDetailed: (source: DetailedJobOfferFT[]) => Promise<DetailedJobOffer[]>
+    parse: (source: JobOfferFT[]) => Promise<JobOffer[]>
 }
 
-export const JobOfferParserImpl: JobOfferParser = {
-    parseFT: async function (source: JobOfferFT[]): Promise<JobOffer[]> {
+export const JobOfferParserFTImpl: JobOfferParserFT = {
+    parse: async function (source: JobOfferFT[]): Promise<JobOffer[]> {
         return source.map((elem) => {
             return {
                 id: elem.id,
@@ -21,12 +21,11 @@ export const JobOfferParserImpl: JobOfferParser = {
                 createdAt: Date.parse(elem.dateCreation),
                 updatedAt: Date.parse(elem.dateActualisation),
                 sourceUrl: elem.origineOffre.urlOrigine,
-                createdWhile: undefined,
             } as JobOffer
         })
     },
 
-    parseDetailedFT: async function (source: DetailedJobOfferFT[]): Promise<DetailedJobOffer[]> {
+    parseDetailed: async function (source: DetailedJobOfferFT[]): Promise<DetailedJobOffer[]> {
         return source.map((elem) => {
             return {
                 id: elem.id,

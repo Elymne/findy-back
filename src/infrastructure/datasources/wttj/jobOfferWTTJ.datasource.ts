@@ -1,9 +1,9 @@
 import { aroundQuery, baseUrl, countryQuery, pageQuery, paramsQuery } from "./configs/wttj.const"
-import { ShortJobOfferWTTJ } from "./models/shortJobOfferWTTJ"
+import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
 import puppeteer from "puppeteer"
 
 export interface JobOfferWTTJDatasource {
-    findAllShort: (keyWords: string, city: string) => Promise<ShortJobOfferWTTJ[]>
+    findAll: (keyWords: string, city: string) => Promise<JobOfferWTTJ[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
@@ -14,7 +14,7 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
      * TODO Gestion des params optionnels
      * @returns
      */
-    findAllShort: async function (keyWords: string, city: string): Promise<ShortJobOfferWTTJ[]> {
+    findAll: async function (keyWords: string, city: string): Promise<JobOfferWTTJ[]> {
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
         const page = await browser.newPage()
 
@@ -23,7 +23,7 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
         await page.goto(url, { timeout: 3000 })
         await new Promise((f) => setTimeout(f, 1000))
 
-        const result: ShortJobOfferWTTJ[] = []
+        const result: JobOfferWTTJ[] = []
 
         const rows = await page.$$("li.ais-Hits-list-item")
         for (const row of rows) {
@@ -35,6 +35,12 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
             const spanSelectors = await row.$$("span")
             const companyName = (await spanSelectors[0].evaluate((span) => span.textContent)) as string
             const cityName = (await spanSelectors[2].evaluate((span) => span.textContent)) as string
+
+            const tags: string[] = []
+            for (let i = 3; i < spanSelectors.length - 1; i++) {
+                tags.push((await spanSelectors[i].evaluate((span) => span.textContent)) as string)
+            }
+
             const dateCreation = (await spanSelectors[spanSelectors.length - 1].evaluate((span) => span.textContent)) as string
 
             result.push({
@@ -45,6 +51,7 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
                 city: cityName,
                 created: dateCreation,
                 accessUrl: "",
+                tags: tags,
             })
         }
 

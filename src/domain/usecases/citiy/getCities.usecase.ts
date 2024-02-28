@@ -1,5 +1,5 @@
 import { Failure, Result, Success, UsecaseNoParams } from "~/core/usecase"
-import { City } from "../entities/city.entity"
+import { City } from "../../entities/city.entity"
 import { CityFTDatasource, CityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
 import { MunicipalityParser, MunicipalityParserImpl } from "~/infrastructure/parser/municipality.parser"
 import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
