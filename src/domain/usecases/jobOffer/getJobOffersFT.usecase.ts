@@ -7,11 +7,9 @@ import { JobOfferParser, JobOfferParserImpl } from "~/infrastructure/parser/jobO
 import { JobOfferService, JobOfferServiceImpl } from "~/infrastructure/services/jobOffer.service"
 import { JobOffer } from "../../entities/jobOffer.entity"
 import { JobOfferFTQuery } from "~/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
-import { JobOfferHistory, JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
-import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
+import { JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "~/infrastructure/datasources/local/textFilter.datasource"
 import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "~/infrastructure/datasources/local/jobOfferHistory.datasource"
-import { uuid } from "~/core/tools/uuid"
 
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource

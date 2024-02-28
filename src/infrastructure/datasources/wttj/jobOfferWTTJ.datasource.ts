@@ -1,9 +1,9 @@
-import { baseUrl, countryQuery, paramsQuery } from "./configs/wttj.const"
+import { aroundQuery, baseUrl, countryQuery, pageQuery, paramsQuery } from "./configs/wttj.const"
 import { ShortJobOfferWTTJ } from "./models/shortJobOfferWTTJ"
 import puppeteer from "puppeteer"
 
 export interface JobOfferWTTJDatasource {
-    findAllShort: () => Promise<ShortJobOfferWTTJ[]>
+    findAllShort: (keyWords: string, city: string) => Promise<ShortJobOfferWTTJ[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
@@ -14,11 +14,13 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
      * TODO Gestion des params optionnels
      * @returns
      */
-    findAllShort: async function (): Promise<ShortJobOfferWTTJ[]> {
+    findAllShort: async function (keyWords: string, city: string): Promise<ShortJobOfferWTTJ[]> {
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
         const page = await browser.newPage()
 
-        await page.goto(`${baseUrl}?${countryQuery}FR&${paramsQuery}communication&${page}1`, { timeout: 3000 })
+        const url = `${baseUrl}?${countryQuery}=FR&${paramsQuery}=${keyWords}&${pageQuery}=1&${aroundQuery}=${city}`
+
+        await page.goto(url, { timeout: 3000 })
         await new Promise((f) => setTimeout(f, 1000))
 
         const result: ShortJobOfferWTTJ[] = []

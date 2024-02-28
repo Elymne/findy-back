@@ -28,7 +28,7 @@ router.get("/ft", query("keywords").notEmpty().isString().escape(), query("munic
 })
 
 router.get("/testing", async (req: Request, res: Response) => {
-    const jobOffers = await JobOfferWTTJDatasourceImpl.findAllShort()
+    const jobOffers = await JobOfferWTTJDatasourceImpl.findAllShort("marketing", "Nantes+France")
     res.status(200).send(jobOffers)
 })
 
