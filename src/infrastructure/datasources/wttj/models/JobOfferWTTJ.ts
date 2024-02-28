@@ -6,8 +6,6 @@ export interface JobOfferWTTJ {
     companyLogo: string
     city: string
 
-    tags: string[]
-
     created: string
     accessUrl: string
 }

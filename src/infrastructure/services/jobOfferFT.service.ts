@@ -4,11 +4,19 @@ import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
 import { uuid } from "~/core/tools/uuid"
 
 export interface JobOfferFTService {
-    filter: (source: JobOfferFT[], filters: TextFilter[], histories: JobOfferHistory[]) => Promise<{ jobOfferFTFiltered: JobOfferFT[]; newHistories: JobOfferHistory[] }>
+    filter: (
+        source: JobOfferFT[],
+        filters: TextFilter[],
+        histories: JobOfferHistory[]
+    ) => Promise<{ jobOfferFTFiltered: JobOfferFT[]; newHistories: JobOfferHistory[] }>
 }
 
 export const JobOfferFTServiceImpl: JobOfferFTService = {
-    filter: async function (source: JobOfferFT[], filters: TextFilter[], histories: JobOfferHistory[]): Promise<{ jobOfferFTFiltered: JobOfferFT[]; newHistories: JobOfferHistory[] }> {
+    filter: async function (
+        source: JobOfferFT[],
+        filters: TextFilter[],
+        histories: JobOfferHistory[]
+    ): Promise<{ jobOfferFTFiltered: JobOfferFT[]; newHistories: JobOfferHistory[] }> {
         const newHistories: JobOfferHistory[] = []
         const result = source.filter((elem) => {
             const f = histories.filter((history) => history.source_id == elem.id)

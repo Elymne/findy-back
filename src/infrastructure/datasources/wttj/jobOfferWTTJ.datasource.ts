@@ -1,4 +1,4 @@
-import { aroundQuery, baseUrl, countryQuery, pageQuery, paramsQuery } from "./configs/wttj.const"
+import { aroundQuery, baseUrl, contractTypeQuery, countryQuery, pageQuery, paramsQuery } from "./configs/wttj.const"
 import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
 import puppeteer from "puppeteer"
 
@@ -18,7 +18,7 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
         const page = await browser.newPage()
 
-        const url = `${baseUrl}?${countryQuery}=FR&${paramsQuery}=${keyWords}&${pageQuery}=1&${aroundQuery}=${city}`
+        const url = `${baseUrl}?${countryQuery}=FR&${contractTypeQuery}=apprenticeship&${paramsQuery}=${keyWords}&${pageQuery}=1&${aroundQuery}=${city}`
 
         await page.goto(url, { timeout: 3000 })
         await new Promise((f) => setTimeout(f, 1000))
@@ -30,16 +30,17 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
             const imageSelectors = await row.$$("img")
             const imageUrl = (await imageSelectors[0].evaluate((img) => img.getAttribute("src"))) as string
             const companyLogoUrl = (await imageSelectors[1].evaluate((img) => img.getAttribute("src"))) as string
+
             const h4selectors = await row.$$("h4")
             const title = (await h4selectors[0].evaluate((h4) => h4.textContent)) as string
+
             const spanSelectors = await row.$$("span")
             const companyName = (await spanSelectors[0].evaluate((span) => span.textContent)) as string
             const cityName = (await spanSelectors[2].evaluate((span) => span.textContent)) as string
 
-            const tags: string[] = []
-            for (let i = 3; i < spanSelectors.length - 1; i++) {
-                tags.push((await spanSelectors[i].evaluate((span) => span.textContent)) as string)
-            }
+            const aSelector = await row.$$("a")
+            const sourceUrl = ("https://www.welcometothejungle.com" +
+                (await aSelector[0].evaluate((span) => span.getAttribute("href")))) as string
 
             const dateCreation = (await spanSelectors[spanSelectors.length - 1].evaluate((span) => span.textContent)) as string
 
@@ -50,8 +51,7 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
                 company: companyName,
                 city: cityName,
                 created: dateCreation,
-                accessUrl: "",
-                tags: tags,
+                accessUrl: sourceUrl,
             })
         }
 
