@@ -1,10 +1,10 @@
-import { DatabaseDatasource } from "~/core/databases/database.datasource"
+import { DBDataSource } from "~/core/databases/database.datasource"
 import { PgClient } from "~/core/databases/pgClient"
 import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
 
-export interface SchoolDatasource extends DatabaseDatasource<TextFilter> {}
+export interface TextFilterDatasource extends DBDataSource<TextFilter> {}
 
-export const SchoolDatasourceImpl: SchoolDatasource = {
+export const TextFilterDatasourceImpl: TextFilterDatasource = {
     tableName: "text_filter",
 
     findOne: async function (id: string): Promise<TextFilter[]> {

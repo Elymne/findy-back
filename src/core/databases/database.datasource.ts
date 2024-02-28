@@ -1,4 +1,4 @@
-export interface DatabaseDatasource<T> {
+export interface DBDataSource<T> {
     tableName: string
 
     findOne: (id: string) => Promise<T[]>

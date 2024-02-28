@@ -1,14 +1,14 @@
 import { Result, Usecase } from "~/core/usecase"
 import { UUID } from "crypto"
-import { SchoolDatasource, SchoolDatasourceImpl } from "~/infrastructure/datasources/local/textFilter.datasource"
+import { TextFilterDatasource, TextFilterDatasourceImpl } from "~/infrastructure/datasources/local/textFilter.datasource"
 import { TextFilter } from "../entities/databases/textFilter.entity"
 
 export interface GetSchoolsUsecase extends Usecase<TextFilter[], GetSchoolsUsecaseParams> {
-    schoolDatasource: SchoolDatasource
+    schoolDatasource: TextFilterDatasource
 }
 
 export const getSchoolsUsecaseImpl: GetSchoolsUsecase = {
-    schoolDatasource: SchoolDatasourceImpl,
+    schoolDatasource: TextFilterDatasourceImpl,
     perform: function (params: GetSchoolsUsecaseParams): Promise<Result<TextFilter[]>> {
         throw new Error("Function not implemented.")
     },

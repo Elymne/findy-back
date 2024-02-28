@@ -1,4 +1,4 @@
-import { JobOfferHistory } from "~/domain/entities/databases/jobOfferHistory"
+import { JobOfferHistory, JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
 import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
 import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
 import { v4 as uuidv4 } from "uuid"
@@ -22,7 +22,7 @@ export const JobOfferServiceImpl: JobOfferService = {
                     id: uuidv4(),
                     source_id: elem.id,
                     is_banned: true,
-                    source: "ftapi",
+                    source: JobOfferSource.ftapi,
                 })
                 return false
             }
@@ -34,7 +34,7 @@ export const JobOfferServiceImpl: JobOfferService = {
                         id: uuidv4(),
                         source_id: elem.id,
                         is_banned: true,
-                        source: "ftapi",
+                        source: JobOfferSource.ftapi,
                     })
                     return false
                 }
@@ -44,7 +44,7 @@ export const JobOfferServiceImpl: JobOfferService = {
                 id: uuidv4(),
                 source_id: elem.id,
                 is_banned: false,
-                source: "ftapi",
+                source: JobOfferSource.ftapi,
             })
             return true
         })
