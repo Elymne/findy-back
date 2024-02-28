@@ -1,36 +1,15 @@
-import { UUID } from "crypto"
+import { DatabaseDatasource } from "~/core/databases/database.datasource"
 import { PgClient } from "~/core/databases/pgClient"
-import { createTextFilterTableQuery } from "./queries/school.queries"
 import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
 
-export interface SchoolDatasource {
-    tableName: string
-    createTable: () => Promise<void>
-    findOne: (id: UUID) => Promise<TextFilter[]>
-    findByName: (name: string) => Promise<TextFilter[]>
-    findAll: () => Promise<TextFilter[]>
-    deleteOne: (id: UUID) => Promise<number>
-    deleteMany: (ids: UUID[]) => Promise<number>
-    addOne: (school: TextFilter) => Promise<TextFilter[]>
-    addMany: (schools: TextFilter[]) => Promise<TextFilter[]>
-}
+export interface SchoolDatasource extends DatabaseDatasource<TextFilter> {}
 
 export const SchoolDatasourceImpl: SchoolDatasource = {
     tableName: "text_filter",
 
-    createTable: async function (): Promise<void> {
-        await PgClient.getInstance().getClient().query(createTextFilterTableQuery, [])
-    },
-
-    findOne: async function (id: UUID): Promise<TextFilter[]> {
+    findOne: async function (id: string): Promise<TextFilter[]> {
         const query = `SELECT * FROM ${this.tableName} WHERE id = $1`
         const res = await PgClient.getInstance().getClient().query<TextFilter>(query, [id])
-        return [...res]
-    },
-
-    findByName: async function (name: string): Promise<TextFilter[]> {
-        const query = `SELECT * FROM ${this.tableName} WHERE value = $1`
-        const res = await PgClient.getInstance().getClient().query<TextFilter>(query, [name])
         return [...res]
     },
 
@@ -40,21 +19,21 @@ export const SchoolDatasourceImpl: SchoolDatasource = {
         return [...res]
     },
 
-    deleteOne: async function (id: UUID): Promise<number> {
+    deleteOne: async function (id: string): Promise<number> {
         const query = `DELETE FROM ${this.tableName} WHERE id = $1`
         const res = await await PgClient.getInstance().getClient().query(query, [id])
         return 0
     },
 
-    deleteMany: function (ids: UUID[]): Promise<number> {
+    deleteMany: function (ids: string[]): Promise<number> {
         throw new Error("Function not implemented.")
     },
 
-    addOne: function (school: TextFilter): Promise<TextFilter[]> {
+    addOne: function (school: TextFilter): Promise<number> {
         throw new Error("Function not implemented.")
     },
 
-    addMany: function (schools: TextFilter[]): Promise<TextFilter[]> {
+    addMany: function (schools: TextFilter[]): Promise<number> {
         throw new Error("Function not implemented.")
     },
 }

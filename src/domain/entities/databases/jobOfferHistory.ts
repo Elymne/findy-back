@@ -1,7 +1,7 @@
 export interface JobOfferHistory {
     id: string
-    sourceId?: string
-    sourceUrl?: string
+    source_id?: string
+    source_url?: string
     source: string
-    banned: boolean
+    is_banned: boolean
 }

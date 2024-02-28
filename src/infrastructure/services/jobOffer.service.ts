@@ -13,15 +13,15 @@ export const JobOfferServiceImpl: JobOfferService = {
 
         const result = source.filter((elem) => {
             // Checking if this job has already been fetched by our API. (Quick solution)
-            const f = histories.filter((history) => history.sourceId == elem.id)
-            if (f.length != 0) return !f[0].banned
+            const f = histories.filter((history) => history.source_id == elem.id)
+            if (f.length != 0) return !f[0].is_banned
 
             // Check by attribute from france.travail API.
             if (elem.alternance == false) {
                 newHistories.push({
                     id: uuidv4(),
-                    sourceId: elem.id,
-                    banned: true,
+                    source_id: elem.id,
+                    is_banned: true,
                     source: "ftapi",
                 })
                 return false
@@ -32,8 +32,8 @@ export const JobOfferServiceImpl: JobOfferService = {
                 if (elem.intitule.includes(filter.value)) {
                     newHistories.push({
                         id: uuidv4(),
-                        sourceId: elem.id,
-                        banned: true,
+                        source_id: elem.id,
+                        is_banned: true,
                         source: "ftapi",
                     })
                     return false
@@ -42,8 +42,8 @@ export const JobOfferServiceImpl: JobOfferService = {
 
             newHistories.push({
                 id: uuidv4(),
-                sourceId: elem.id,
-                banned: false,
+                source_id: elem.id,
+                is_banned: false,
                 source: "ftapi",
             })
             return true

@@ -9,11 +9,13 @@ import { JobOffer } from "../../entities/jobOffer.entity"
 import { JobOfferFTQuery } from "~/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
 import { JobOfferHistory } from "~/domain/entities/databases/jobOfferHistory"
 import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
+import { SchoolDatasource, SchoolDatasourceImpl } from "~/infrastructure/datasources/local/textFilter.datasource"
 
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource
     jobOfferFtDatasource: JobOfferFTDatasource
     municipalityFtDatasource: MunicipalityFTDatasource
+    schoolDatasource: SchoolDatasource
     jobOfferService: JobOfferService
     jobOfferParser: JobOfferParser
 }
@@ -22,6 +24,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
     tokenFTDatasource: TokenFTDatasourceImpl,
     jobOfferFtDatasource: JobOfferFTDatasourceImpl,
     municipalityFtDatasource: MunicipalityFTDatasourceImpl,
+    schoolDatasource: SchoolDatasourceImpl,
     jobOfferParser: JobOfferParserImpl,
     jobOfferService: JobOfferServiceImpl,
 
@@ -50,7 +53,10 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
             )
 
             // TODO : Un data source qui store les mots clés à banir pour notre recherche d'alternance.
-            const textFilters: TextFilter[] = []
+            const textFilters = await this.schoolDatasource.findAll()
+
+            console.clear()
+            console.log(textFilters)
 
             // TODO : Un data source qui store les offres déjà analysé pour rendre le filtrage beaucoup plus rapide.
             const jobOfferHistories: JobOfferHistory[] = []
@@ -59,8 +65,8 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
             const { jobOffersFTFiltered, newHistories } = await this.jobOfferService.filterJobOfferFT(jobOffersFT, textFilters, jobOfferHistories)
 
             // TODO : Un data souce pour sauvegarder les données historisé pour optimiser notre filtrage la prochaine fois.
-            console.clear()
-            console.log(newHistories)
+
+            //console.log(newHistories)
 
             const jobOffers = await this.jobOfferParser.parseFT(jobOffersFTFiltered)
 
