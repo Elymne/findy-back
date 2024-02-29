@@ -14,28 +14,32 @@ import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "~/infr
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource
     jobOfferFtDatasource: JobOfferFTDatasource
-    municipalityFtDatasource: CityFTDatasource
+    cityFTDatasource: CityFTDatasource
     textFilterDatasource: TextFilterDatasource
     jobOfferHistoryDatasource: JobOfferHistoryDatasource
+
     jobOfferFTService: JobOfferFTService
+
     jobOfferParserFT: JobOfferParserFT
 }
 
 export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
     tokenFTDatasource: TokenFTDatasourceImpl,
     jobOfferFtDatasource: JobOfferFTDatasourceImpl,
-    municipalityFtDatasource: CityFTDatasourceImpl,
+    cityFTDatasource: CityFTDatasourceImpl,
     textFilterDatasource: TextFilterDatasourceImpl,
     jobOfferHistoryDatasource: JobOfferHistoryDatasourceImpl,
+
     jobOfferFTService: JobOfferFTServiceImpl,
+
     jobOfferParserFT: JobOfferParserFTImpl,
 
     perform: async function (params: GetJobOfferFTUsecaseParams): Promise<Result<JobOffer[]>> {
         try {
             const token = await this.tokenFTDatasource.generate()
 
-            const municipality = await this.municipalityFtDatasource.findOne(params.municipalityCode, token)
-            if (!municipality) {
+            const city = await this.cityFTDatasource.findOne(params.cityCode, token)
+            if (!city) {
                 return {
                     message: "The municipality code given does not exists in france.travail API references data.",
                     data: [],
@@ -46,7 +50,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
             const [jobOffersFT, textFilters, jobOfferHistories] = await Promise.all([
                 this.jobOfferFtDatasource.findAll(
                     {
-                        commune: params.municipalityCode,
+                        commune: params.cityCode,
                         motsCles: params.keywords,
                     } as JobOfferFTQuery,
                     token
@@ -79,5 +83,5 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
 
 export interface GetJobOfferFTUsecaseParams {
     keywords: string
-    municipalityCode: string
+    cityCode: string
 }

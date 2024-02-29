@@ -14,7 +14,7 @@ const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecase
 router.get(
     "/ft",
     query("keywords").notEmpty().isString().escape(),
-    query("municipalityCode").notEmpty().isString().escape(),
+    query("cityCode").notEmpty().isString().escape(),
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
         if (!validator.isEmpty()) {
@@ -22,8 +22,8 @@ router.get(
         }
 
         const result = await getJobOfferFTUsecase.perform({
-            municipalityCode: req.query.municipalityCode as string,
             keywords: req.query.keywords as string,
+            cityCode: req.query.municipalityCode as string,
         })
 
         if ("errorCode" in result && typeof result.errorCode === "number") {
@@ -37,7 +37,7 @@ router.get(
 router.get(
     "/wttj",
     query("keywords").notEmpty().isString().escape(),
-    query("city").notEmpty().isString().escape(),
+    query("cityCode").notEmpty().isString().escape(),
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
         if (!validator.isEmpty()) {
@@ -46,7 +46,7 @@ router.get(
 
         const result = await getJobOffersWTTJUsecase.perform({
             keyWords: req.query.keywords as string,
-            city: req.query.city as string,
+            cityCode: req.query.cityCode as string,
         })
 
         if ("errorCode" in result && typeof result.errorCode === "number") {

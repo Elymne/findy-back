@@ -1,9 +1,17 @@
-import { aroundQuery, wttjUrl, wttjContractTypeQuery, wttjCountryQuery, wttjPageQuery, wttjParamsQuery } from "./configs/wttj.const"
+import {
+    wttjUrl,
+    wttjContractTypeQuery,
+    wttjCountryQuery,
+    wttjPageQuery,
+    wttjParamsQuery,
+    wttjAroundLatLng,
+    wttjAroundRadius,
+} from "./configs/wttj.const"
 import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
 import puppeteer from "puppeteer"
 
 export interface JobOfferWTTJDatasource {
-    findAll: (keyWords: string, city: string) => Promise<JobOfferWTTJ[]>
+    findAll: (keyWords: string, lat: number, lng: number) => Promise<JobOfferWTTJ[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
@@ -14,12 +22,13 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
      * TODO Gestion des params optionnels
      * @returns
      */
-    findAll: async function (keyWords: string, city: string): Promise<JobOfferWTTJ[]> {
+    findAll: async function (keyWords: string, lat: number, lng: number): Promise<JobOfferWTTJ[]> {
         console.clear()
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
         const page = await browser.newPage()
 
-        const url = `${wttjUrl}?${wttjCountryQuery}=FR&${wttjContractTypeQuery}=apprenticeship&${wttjParamsQuery}=${keyWords}&${wttjPageQuery}=1`
+        const url = `
+        ${wttjUrl}?${wttjCountryQuery}=FR&${wttjContractTypeQuery}=apprenticeship&${wttjParamsQuery}=${keyWords}&${wttjPageQuery}=1&${wttjAroundLatLng}=${lat},${lng}&${wttjAroundRadius}=20`
 
         await page.goto(url, { timeout: 3000 })
         await new Promise((f) => setTimeout(f, 3000))

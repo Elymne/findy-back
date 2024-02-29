@@ -8,7 +8,7 @@ export interface GeoapiDatasource {
 
 export const GeoapiDatasourceImpl: GeoapiDatasource = {
     findOne: async function (code: string): Promise<GeoCity> {
-        const response = await axios.get<GeoCity>(`${geoapiUrl}/${geoapiCity}?${geoapiDefinedQuery}`, {
+        const response = await axios.get<GeoCity>(`${geoapiUrl}/${geoapiCity}/${code}?${geoapiDefinedQuery}`, {
             headers: {
                 Accept: "application/json",
             },
