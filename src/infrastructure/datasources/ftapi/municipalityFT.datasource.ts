@@ -1,7 +1,7 @@
 import axios from "axios"
 import { CityFT } from "./models/municipalityFT"
 import { TokenFT } from "./models/tokenFT"
-import { ftpeApiUrl, ftpeApiVersion } from "./configs/ftapi.const"
+import { ftapiUrl, ftapiVersion } from "./configs/ftapi.const"
 
 export interface CityFTDatasource {
     findAll: (tokken: TokenFT) => Promise<CityFT[]>
@@ -10,7 +10,7 @@ export interface CityFTDatasource {
 
 export const CityFTDatasourceImpl: CityFTDatasource = {
     findAll: async function (tokken: TokenFT): Promise<CityFT[]> {
-        const response = await axios.get<CityFT[]>(`${ftpeApiUrl}/${ftpeApiVersion}/referentiel/communes`, {
+        const response = await axios.get<CityFT[]>(`${ftapiUrl}/${ftapiVersion}/referentiel/communes`, {
             headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${tokken.access_token}`,
@@ -20,7 +20,7 @@ export const CityFTDatasourceImpl: CityFTDatasource = {
         return response.data
     },
     findOne: async function (code: string, tokken: TokenFT): Promise<CityFT | undefined> {
-        const response = await axios.get<CityFT[]>(`${ftpeApiUrl}/${ftpeApiVersion}/referentiel/communes`, {
+        const response = await axios.get<CityFT[]>(`${ftapiUrl}/${ftapiVersion}/referentiel/communes`, {
             headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${tokken.access_token}`,

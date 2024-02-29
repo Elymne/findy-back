@@ -1,4 +1,4 @@
-import { aroundQuery, baseUrl, contractTypeQuery, countryQuery, pageQuery, paramsQuery } from "./configs/wttj.const"
+import { aroundQuery, wttjUrl, wttjContractTypeQuery, wttjCountryQuery, wttjPageQuery, wttjParamsQuery } from "./configs/wttj.const"
 import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
 import puppeteer from "puppeteer"
 
@@ -15,17 +15,28 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
      * @returns
      */
     findAll: async function (keyWords: string, city: string): Promise<JobOfferWTTJ[]> {
+        console.clear()
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
         const page = await browser.newPage()
 
-        const url = `${baseUrl}?${countryQuery}=FR&${contractTypeQuery}=apprenticeship&${paramsQuery}=${keyWords}&${pageQuery}=1&${aroundQuery}=${city}`
+        const url = `${wttjUrl}?${wttjCountryQuery}=FR&${wttjContractTypeQuery}=apprenticeship&${wttjParamsQuery}=${keyWords}&${wttjPageQuery}=1`
 
         await page.goto(url, { timeout: 3000 })
-        await new Promise((f) => setTimeout(f, 1000))
+        await new Promise((f) => setTimeout(f, 3000))
 
         const result: JobOfferWTTJ[] = []
 
+        const pagerDiv = await page.$(`[aria-label="Pagination"]`)
+        const pagerRows = await pagerDiv?.$$("li")
+
+        if (pagerRows) {
+            const liv = await pagerRows[pagerRows.length - 2].$("a")
+            const textCont = await liv?.evaluate((x) => x.textContent)
+            console.log(`Valeur text div a : ${textCont}`)
+        }
+
         const rows = await page.$$("li.ais-Hits-list-item")
+
         for (const row of rows) {
             const imageSelectors = await row.$$("img")
             const imageUrl = (await imageSelectors[0].evaluate((img) => img.getAttribute("src"))) as string
