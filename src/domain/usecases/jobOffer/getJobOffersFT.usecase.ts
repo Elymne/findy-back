@@ -35,6 +35,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
     jobOfferParserFT: JobOfferParserFTImpl,
 
     perform: async function (params: GetJobOfferFTUsecaseParams): Promise<Result<JobOffer[]>> {
+        console.log("Je pense que ça marche pas...")
         try {
             const token = await this.tokenFTDatasource.generate()
 
