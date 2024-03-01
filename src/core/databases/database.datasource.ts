@@ -10,3 +10,5 @@ export interface DBDataSource<T> {
     deleteOne: (id: string) => Promise<number>
     deleteMany: (ids: string[]) => Promise<number>
 }
+
+// https://www.welcometothejungle.com/fr/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR&refinementList%5Bcontract_type%5D%5B%5D=apprenticeship&query=&page=1
