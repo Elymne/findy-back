@@ -1,7 +1,5 @@
-import test, { describe } from "node:test"
 import supertest from "supertest"
-import app from "./../src/server"
-//import { GetCitiesUsecase, GetCitiesUsecaseImpl } from "@App/domain/usecases/city/getCities.usecase"
+import app from "../src/server"
 
 describe("Entry test.", () => {
     test("Working test launch.", async () => {
@@ -15,7 +13,3 @@ describe("Entry route", () => {
         expect(res.body).toEqual({ status: "API is running on /api" })
     })
 })
-
-// describe("Testing a usecase", async () => {
-//     const getCitiesUsecase : GetCitiesUsecase = GetCitiesUsecaseImpl
-// })
