@@ -1,7 +1,7 @@
-import { JobOfferHistory, JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
+import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
 import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
-import { TextFilter } from "~/domain/entities/databases/textFilter.entity"
-import { uuid } from "~/core/tools/uuid"
+import { TextFilter } from "@App/domain/entities/databases/textFilter.entity"
+import { uuid } from "@App/core/tools/uuid"
 
 export interface JobOfferFTService {
     filter: (

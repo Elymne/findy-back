@@ -1,4 +1,4 @@
-import { City } from "~/domain/entities/city.entity"
+import { City } from "@App/domain/entities/city.entity"
 import { CityFT } from "../datasources/ftapi/models/municipalityFT"
 
 export interface MunicipalityParser {

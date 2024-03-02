@@ -1,15 +1,15 @@
-import { logger } from "~/core/tools/logger"
-import { Usecase, Failure, Success, Result } from "~/core/usecase"
-import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/jobOfferFT.datasource"
-import { CityFTDatasource, CityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
-import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
-import { JobOfferParserFT, JobOfferParserFTImpl } from "~/infrastructure/parser/jobOfferFT.parser"
-import { JobOfferFTService, JobOfferFTServiceImpl } from "~/infrastructure/services/jobOfferFT.service"
-import { JobOffer } from "../../entities/jobOffer.entity"
-import { JobOfferFTQuery } from "~/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
-import { JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
-import { TextFilterDatasource, TextFilterDatasourceImpl } from "~/infrastructure/datasources/local/textFilter.datasource"
-import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "~/infrastructure/datasources/local/jobOfferHistory.datasource"
+import { logger } from "@App/core/tools/logger"
+import { Usecase, Failure, Success, Result } from "@App/core/usecase"
+import { CityFTDatasource, CityFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/municipalityFT.datasource"
+import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/tokkenFT.datasource"
+import { JobOfferParserFT, JobOfferParserFTImpl } from "@App/infrastructure/parser/jobOfferFT.parser"
+import { JobOfferFTService, JobOfferFTServiceImpl } from "@App/infrastructure/services/jobOfferFT.service"
+import { JobOfferFTQuery } from "@App/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
+import { JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
+import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
+import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "@App/infrastructure/datasources/local/jobOfferHistory.datasource"
+import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/jobOfferFt.datasource"
+import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource
@@ -61,7 +61,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
 
             const { jobOfferFTFiltered, newHistories } = await this.jobOfferFTService.filter(jobOffersFT, textFilters, jobOfferHistories)
 
-            const [jobOffers, _] = await Promise.all([
+            const [jobOffers] = await Promise.all([
                 this.jobOfferParserFT.parse(jobOfferFTFiltered),
                 this.jobOfferHistoryDatasource.addMany(newHistories),
             ])

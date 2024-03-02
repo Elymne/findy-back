@@ -58,7 +58,7 @@ const firstCall = async (browser: Browser, url: string): Promise<{ nbPages?: num
 
     if (pagerRows) {
         const liv = await pagerRows[pagerRows.length - 2].$("a")
-        nbPages = await liv?.evaluate((x) => x.textContent)
+        nbPages = parseInt((await liv?.evaluate((x) => x.textContent)) ?? "0")
     }
 
     const result = await scrapJobOffers(page)

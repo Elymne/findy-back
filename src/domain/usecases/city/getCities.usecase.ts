@@ -1,9 +1,9 @@
-import { Failure, Result, Success, UsecaseNoParams } from "~/core/usecase"
-import { City } from "../../entities/city.entity"
-import { CityFTDatasource, CityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
-import { MunicipalityParser, MunicipalityParserImpl } from "~/infrastructure/parser/municipality.parser"
-import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
-import { logger } from "~/core/tools/logger"
+import { Failure, Result, Success, UsecaseNoParams } from "@App/core/usecase"
+import { CityFTDatasource, CityFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/municipalityFT.datasource"
+import { MunicipalityParser, MunicipalityParserImpl } from "@App/infrastructure/parser/municipality.parser"
+import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/tokkenFT.datasource"
+import { logger } from "@App/core/tools/logger"
+import { City } from "@App/domain/entities/city.entity"
 
 export interface GetCitiesUsecase extends UsecaseNoParams<City[]> {
     tokenFTDatasource: TokenFTDatasource

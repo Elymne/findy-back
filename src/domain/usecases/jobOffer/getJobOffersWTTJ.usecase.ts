@@ -1,15 +1,15 @@
-import { logger } from "~/core/tools/logger"
-import { Failure, Result, Success, Usecase } from "~/core/usecase"
-import { JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
-import { JobOffer } from "~/domain/entities/jobOffer.entity"
-import { CityFTDatasource, CityFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/municipalityFT.datasource"
-import { TokenFTDatasource, TokenFTDatasourceImpl } from "~/infrastructure/datasources/ftapi/tokkenFT.datasource"
-import { GeoapiDatasource, GeoapiDatasourceImpl } from "~/infrastructure/datasources/geoapi/geoapiDatasource"
-import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "~/infrastructure/datasources/local/jobOfferHistory.datasource"
-import { TextFilterDatasource, TextFilterDatasourceImpl } from "~/infrastructure/datasources/local/textFilter.datasource"
-import { JobOfferWTTJDatasource, JobOfferWTTJDatasourceImpl } from "~/infrastructure/datasources/wttj/jobOfferWTTJ.datasource"
-import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "~/infrastructure/parser/jobOfferWTTJ.parser"
-import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "~/infrastructure/services/jobOfferWTTJ.service"
+import { logger } from "@App/core/tools/logger"
+import { Failure, Result, Success, Usecase } from "@App/core/usecase"
+import { JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
+import { JobOffer } from "@App/domain/entities/jobOffer.entity"
+import { CityFTDatasource, CityFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/municipalityFT.datasource"
+import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/tokkenFT.datasource"
+import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/datasources/geoapi/geoapiDatasource"
+import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "@App/infrastructure/datasources/local/jobOfferHistory.datasource"
+import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
+import { JobOfferWTTJDatasource, JobOfferWTTJDatasourceImpl } from "@App/infrastructure/datasources/wttj/jobOfferWTTJ.datasource"
+import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/parser/jobOfferWTTJ.parser"
+import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/services/jobOfferWTTJ.service"
 
 export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], GetJobOffersWTTJUsecaseParams> {
     jobOfferWTTJDatasource: JobOfferWTTJDatasource
@@ -68,7 +68,7 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
                 jobOfferHistories
             )
 
-            const [jobOffers, _] = await Promise.all([
+            const [jobOffers] = await Promise.all([
                 this.jobOfferWTTJParser.parse(jobOffersWTTJFiltered),
                 this.jobOfferHistoryDatasource.addMany(newHistories),
             ])

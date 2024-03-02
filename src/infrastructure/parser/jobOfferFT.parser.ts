@@ -1,7 +1,7 @@
-import { DetailedJobOffer } from "~/domain/entities/detailedJobOffer.entity"
+import { DetailedJobOffer } from "@App/domain/entities/detailedJobOffer.entity"
 import { DetailedJobOfferFT } from "../datasources/ftapi/models/detailedJobOfferFT"
 import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
-import { JobOffer } from "~/domain/entities/jobOffer.entity"
+import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 
 export interface JobOfferParserFT {
     parseDetailed: (source: DetailedJobOfferFT[]) => Promise<DetailedJobOffer[]>

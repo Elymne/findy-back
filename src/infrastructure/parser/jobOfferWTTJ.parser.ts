@@ -1,4 +1,4 @@
-import { JobOffer } from "~/domain/entities/jobOffer.entity"
+import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 import { JobOfferWTTJ } from "../datasources/wttj/models/JobOfferWTTJ"
 
 export interface JobOfferWTTJParser {

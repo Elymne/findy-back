@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { cacheSuccesses } from "~/core/tools/cache"
-import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "~/domain/usecases/jobOffer/getJobOffersFT.usecase"
-import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseimpl } from "~/domain/usecases/jobOffer/getJobOffersWTTJ.usecase"
+import { cacheSuccesses } from "@App/core/tools/cache"
+import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "@App/domain/usecases/jobOffer/getJobOffersFT.usecase"
+import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseimpl } from "@App/domain/usecases/jobOffer/getJobOffersWTTJ.usecase"
 
 const router = express.Router()
 const getJobOfferFTUsecase: GetJobOfferFTUsecase = GetJobOfferFTUsecaseImpl

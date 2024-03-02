@@ -1,7 +1,6 @@
-import { DBDataSource } from "~/core/databases/database.datasource"
-import { PgClient } from "~/core/databases/pgClient"
-import { uuid } from "~/core/tools/uuid"
-import { JobOfferHistory, JobOfferSource } from "~/domain/entities/databases/jobOfferHistory"
+import { DBDataSource } from "@App/core/databases/database.datasource"
+import { PgClient } from "@App/core/databases/pgClient"
+import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
 
 export interface JobOfferHistoryDatasource extends DBDataSource<JobOfferHistory> {
     findAllBySource: (source: JobOfferSource) => Promise<JobOfferHistory[]>
@@ -22,24 +21,24 @@ export const JobOfferHistoryDatasourceImpl: JobOfferHistoryDatasource = {
         return [...res]
     },
 
-    addOne: async function (school: JobOfferHistory): Promise<number> {
-        const query = `INSERT INTO ${this.tableName} (id,source,is_banned,source_id,source_url) VALUES (default,$1,$2,$3,$4);`
+    addOne: async function (school: JobOfferHistory): Promise<JobOfferHistory> {
+        const query = `INSERT INTO ${this.tableName} (id,source,is_banned,source_id,source_url) VALUES ($1,$2,$3,$4,$5);`
         await PgClient.getInstance()
             .getClient()
-            .query<JobOfferHistory>(query, [school.source, school.is_banned, school.source_id ?? "default", school.source_url ?? "default"])
-        return 1
+            .query<JobOfferHistory>(query, [school.id, school.source, school.is_banned, school.source_id, school.source_url])
+        return school
     },
 
-    addMany: async function (schools: JobOfferHistory[]): Promise<number> {
-        if (schools.length == 0) return 0
+    addMany: async function (schools: JobOfferHistory[]): Promise<JobOfferHistory[]> {
+        if (schools.length == 0) return []
 
         let query = `INSERT INTO ${this.tableName} (id,source,is_banned,source_id,source_url) VALUES `
         const values = []
         let index = 1
         for (const school of schools) {
-            query += `($${index}`
+            query += `($${school.id}`
             index++
-            values.push(uuid)
+            values.push(school.id)
 
             query += `,$${index}`
             index++
@@ -62,15 +61,28 @@ export const JobOfferHistoryDatasourceImpl: JobOfferHistoryDatasource = {
         query += ";"
 
         await PgClient.getInstance().getClient().query<JobOfferHistory>(query, values)
-        return schools.length
+        return schools
     },
 
-    deleteOne: function (id: string): Promise<number> {
-        throw new Error("Function not implemented.")
+    deleteOne: async function (id: string): Promise<number> {
+        const query = `DELETE FROM ${this.tableName} WHERE id = $1 RETURNING *;`
+        const res = await PgClient.getInstance().getClient().query<number>(query, [id])
+        return [...res][0]
     },
 
-    deleteMany: function (ids: string[]): Promise<number> {
-        throw new Error("Function not implemented.")
+    deleteMany: async function (ids: string[]): Promise<number> {
+        if (ids.length == 0) return 0
+
+        let query = `DELETE FROM ${this.tableName} WHERE `
+        for (let index = 1; index < ids.length + 1; index++) {
+            query += `id = $${index} AND`
+        }
+
+        query = query.substring(0, query.length - 3)
+        query += " RETURNING *;"
+
+        const result = await PgClient.getInstance().getClient().query<number>(query, ids)
+        return [...result][0]
     },
 
     findAllBySource: async function (source: JobOfferSource): Promise<JobOfferHistory[]> {
