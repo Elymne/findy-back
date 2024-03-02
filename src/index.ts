@@ -1,0 +1,17 @@
+import { PgClient } from "./core/databases/pgClient"
+import app from "./server"
+
+const port = process.env.PORT ?? "3000"
+app.listen(port, async () => {
+    // Database client connection.
+    const pgClient = PgClient.getInstance()
+    await pgClient.initClient({
+        host: process.env.PG_HOST,
+        port: Number.parseInt(process.env.PG_PORT ?? ""),
+        user: process.env.PG_USER,
+        password: process.env.PG_PASSWORD,
+        database: process.env.PG_DATABASE,
+    })
+
+    console.log(`Server is running at http://localhost:${port}`)
+})

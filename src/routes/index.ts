@@ -1,11 +1,10 @@
-import express, { Request, Response } from "express";
-import jobsRoutes from "./jobs";
+import { Router } from "express"
+import jobsRoutes from "./jobs.routes"
+import municipalitiesRoutes from "./municipalities.routes"
 
-const router = express.Router();
+const router = Router()
 
-router.use("/jobs", jobsRoutes);
-router.use("/", (req: Request, res: Response) => {
-  res.send("API in progress.");
-});
+router.use("/jobs", jobsRoutes)
+router.use("/municipalities", municipalitiesRoutes)
 
-export default router;
+export default router
