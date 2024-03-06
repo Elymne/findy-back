@@ -1,6 +1,6 @@
-import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
+import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/jobOfferHistory.entity"
 import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
-import { TextFilter } from "@App/domain/entities/databases/textFilter.entity"
+import { TextFilter } from "@App/domain/entities/textFilter.entity"
 import { uuid } from "@App/core/tools/uuid"
 
 export interface JobOfferFTService {
@@ -24,7 +24,7 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
 
             if (elem.alternance == false) {
                 newHistories.push({
-                    id: uuid,
+                    id: uuid(),
                     source_id: elem.id,
                     is_banned: true,
                     source: JobOfferSource.ftapi,
@@ -35,7 +35,7 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
             filters.forEach((filter) => {
                 if (elem.intitule.includes(filter.value)) {
                     newHistories.push({
-                        id: uuid,
+                        id: uuid(),
                         source_id: elem.id,
                         is_banned: true,
                         source: JobOfferSource.ftapi,
@@ -45,7 +45,7 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
             })
 
             newHistories.push({
-                id: uuid,
+                id: uuid(),
                 source_id: elem.id,
                 is_banned: false,
                 source: JobOfferSource.ftapi,

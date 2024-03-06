@@ -1,6 +1,6 @@
 import { DBDataSource } from "@App/core/databases/database.datasource"
 import { PgClient } from "@App/core/databases/pgClient"
-import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
+import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/jobOfferHistory.entity"
 
 export interface JobOfferHistoryDatasource extends DBDataSource<JobOfferHistory> {
     findAllBySource: (source: JobOfferSource) => Promise<JobOfferHistory[]>
@@ -36,7 +36,7 @@ export const JobOfferHistoryDatasourceImpl: JobOfferHistoryDatasource = {
         const values = []
         let index = 1
         for (const school of schools) {
-            query += `($${school.id}`
+            query += `($${index}`
             index++
             values.push(school.id)
 

@@ -1,6 +1,6 @@
 import { DBDataSource } from "@App/core/databases/database.datasource"
 import { PgClient } from "@App/core/databases/pgClient"
-import { TextFilter } from "@App/domain/entities/databases/textFilter.entity"
+import { TextFilter } from "@App/domain/entities/textFilter.entity"
 
 export interface TextFilterDatasource extends DBDataSource<TextFilter> {}
 
@@ -32,7 +32,7 @@ export const TextFilterDatasourceImpl: TextFilterDatasource = {
         const values = []
         let index = 1
         for (const textFilter of textFilters) {
-            query += `($${textFilter.id}`
+            query += `($${index}`
             index++
             values.push(textFilter.id)
 

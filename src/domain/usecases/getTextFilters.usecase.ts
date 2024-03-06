@@ -1,7 +1,7 @@
 import { Result, Usecase } from "@App/core/usecase"
 import { UUID } from "crypto"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
-import { TextFilter } from "../entities/databases/textFilter.entity"
+import { TextFilter } from "../entities/textFilter.entity"
 
 export interface GetSchoolsUsecase extends Usecase<TextFilter[], GetSchoolsUsecaseParams> {
     schoolDatasource: TextFilterDatasource
@@ -16,6 +16,6 @@ export const getSchoolsUsecaseImpl: GetSchoolsUsecase = {
 }
 
 export interface GetSchoolsUsecaseParams {
-    ids?: UUID[]
+    ids?: string[]
     names?: string[]
 }

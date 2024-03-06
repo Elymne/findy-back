@@ -1,6 +1,6 @@
 import { logger } from "@App/core/tools/logger"
 import { Failure, Result, Success, Usecase } from "@App/core/usecase"
-import { JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
+import { JobOfferSource } from "@App/domain/entities/jobOfferHistory.entity"
 import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 import { CityFTDatasource, CityFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/municipalityFT.datasource"
 import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/tokkenFT.datasource"
@@ -56,7 +56,7 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
                 this.jobOfferHistoryDatasource.findAllBySource(JobOfferSource.wttj),
             ])
 
-            const jobOffersWTTJ = await this.jobOfferWTTJDatasource.findAll(
+            const jobOffersWTTJ = await this.jobOfferWTTJDatasource.findAllByQuery(
                 params.keyWords,
                 geoCity.centre.coordinates[1],
                 geoCity.centre.coordinates[0]

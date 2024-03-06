@@ -5,7 +5,7 @@ import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/da
 import { JobOfferParserFT, JobOfferParserFTImpl } from "@App/infrastructure/parser/jobOfferFT.parser"
 import { JobOfferFTService, JobOfferFTServiceImpl } from "@App/infrastructure/services/jobOfferFT.service"
 import { JobOfferFTQuery } from "@App/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
-import { JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
+import { JobOfferSource } from "@App/domain/entities/jobOfferHistory.entity"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
 import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "@App/infrastructure/datasources/local/jobOfferHistory.datasource"
 import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/jobOfferFt.datasource"

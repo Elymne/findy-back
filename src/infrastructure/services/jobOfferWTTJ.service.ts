@@ -1,6 +1,6 @@
-import { TextFilter } from "@App/domain/entities/databases/textFilter.entity"
+import { TextFilter } from "@App/domain/entities/textFilter.entity"
 import { JobOfferWTTJ } from "../datasources/wttj/models/JobOfferWTTJ"
-import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
+import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/jobOfferHistory.entity"
 import { uuid } from "@App/core/tools/uuid"
 
 export interface JobOfferWTTJService {
@@ -26,7 +26,7 @@ export const JobOfferWTTJServiceImpl: JobOfferWTTJService = {
             filters.forEach((filter) => {
                 if (elem.title.includes(filter.value)) {
                     newHistories.push({
-                        id: uuid,
+                        id: uuid(),
                         source_url: elem.accessUrl,
                         is_banned: true,
                         source: JobOfferSource.wttj,
@@ -36,7 +36,7 @@ export const JobOfferWTTJServiceImpl: JobOfferWTTJService = {
             })
 
             newHistories.push({
-                id: uuid,
+                id: uuid(),
                 source_url: elem.accessUrl,
                 is_banned: false,
                 source: JobOfferSource.wttj,
