@@ -6,48 +6,24 @@ import {
     wttjParamsQuery,
     wttjAroundLatLng,
     wttjAroundRadius,
-    fetchAllUrl,
 } from "./configs/wttj.const"
 import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
 import puppeteer, { Browser, Page } from "puppeteer"
 
 export interface JobOfferWTTJDatasource {
-    findAll: () => Promise<JobOfferWTTJ[]>
     findAllByQuery: (keyWords: string, lat: number, lng: number) => Promise<JobOfferWTTJ[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
-    findAll: async function (): Promise<JobOfferWTTJ[]> {
-        const url = `${fetchAllUrl}=1`
-
-        const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
-        const { nbPages, firstResult } = await firstCall(browser, url)
-
-        if (nbPages && nbPages == 0) {
-            return firstResult
-        }
-
-        const result: JobOfferWTTJ[] = [...firstResult]
-        const callSequenses: Promise<JobOfferWTTJ[]>[] = []
-
-        for (let i = 2; i < nbPages!; i++) {
-            const nextUrl = `${fetchAllUrl}=${i}`
-            callSequenses.push(nextCall(browser, nextUrl))
-        }
-
-        const sequenseResults = await Promise.all(callSequenses)
-
-        sequenseResults.forEach((elem) => {
-            result.push(...elem)
-        })
-
-        browser.close()
-        return result
-    },
-
     findAllByQuery: async function (keyWords: string, lat: number, lng: number): Promise<JobOfferWTTJ[]> {
         const url = `
-        ${wttjUrl}?${wttjCountryQuery}=FR&${wttjContractTypeQuery}=apprenticeship&${wttjParamsQuery}=${keyWords}&${wttjPageQuery}=1&${wttjAroundLatLng}=${lat},${lng}&${wttjAroundRadius}=20`
+        ${wttjUrl}
+        ?${wttjCountryQuery}=FR
+        &${wttjContractTypeQuery}=apprenticeship
+        &${wttjParamsQuery}=${keyWords}
+        &${wttjAroundLatLng}=${lat},${lng}
+        &${wttjAroundRadius}=20
+        &${wttjPageQuery}=1`
 
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
         const { nbPages, firstResult } = await firstCall(browser, url)
@@ -60,15 +36,20 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
         const callSequenses: Promise<JobOfferWTTJ[]>[] = []
 
         for (let i = 2; i < nbPages!; i++) {
-            const nextUrl = `${wttjUrl}?${wttjCountryQuery}=FR&${wttjContractTypeQuery}=apprenticeship&${wttjParamsQuery}=${keyWords}&${wttjPageQuery}=${i}&${wttjAroundLatLng}=${lat},${lng}&${wttjAroundRadius}=20`
+            const nextUrl = `
+            ${wttjUrl}
+            ?${wttjCountryQuery}=FR
+            &${wttjContractTypeQuery}=apprenticeship
+            &${wttjParamsQuery}=${keyWords}
+            &${wttjAroundLatLng}=${lat},${lng}
+            &${wttjAroundRadius}=20
+            &${wttjPageQuery}=${i}`
+
             callSequenses.push(nextCall(browser, nextUrl))
         }
 
         const sequenseResults = await Promise.all(callSequenses)
-
-        sequenseResults.forEach((elem) => {
-            result.push(...elem)
-        })
+        sequenseResults.forEach((elem) => result.push(...elem))
 
         browser.close()
         return result

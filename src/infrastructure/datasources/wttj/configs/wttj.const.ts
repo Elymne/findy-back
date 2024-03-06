@@ -7,6 +7,3 @@ export const wttjPageQuery = "page"
 
 export const wttjAroundLatLng = "aroundLatLng"
 export const wttjAroundRadius = "aroundRadius"
-
-export const fetchAllUrl =
-    "https://www.welcometothejungle.com/fr/jobs?refinementList[offices.country_code][]=FR&refinementList[contract_type][]=apprenticeship&page"

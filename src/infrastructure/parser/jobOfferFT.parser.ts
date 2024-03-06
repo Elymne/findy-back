@@ -1,12 +1,12 @@
 import { DetailedJobOffer } from "@App/domain/entities/detailedJobOffer.entity"
 import { DetailedJobOfferFT } from "../datasources/ftapi/models/detailedJobOfferFT"
 import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
-import { SourceData } from "@App/domain/entities/enums/sourceData.enum"
+import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
 import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 
 export interface JobOfferParserFT {
-    parseDetailed: (source: DetailedJobOfferFT[]) => Promise<DetailedJobOffer[]>
     parse: (source: JobOfferFT[]) => Promise<JobOffer[]>
+    parseDetailed: (source: DetailedJobOfferFT[]) => Promise<DetailedJobOffer[]>
 }
 
 export const JobOfferParserFTImpl: JobOfferParserFT = {
@@ -22,7 +22,7 @@ export const JobOfferParserFTImpl: JobOfferParserFT = {
                 created_at: Date.parse(elem.dateCreation),
                 updated_at: Date.parse(elem.dateActualisation),
                 source_url: elem.origineOffre.urlOrigine,
-                source_data: SourceData.FTAPI,
+                source_data: SourceSite.FTAPI,
             } as JobOffer
         })
     },
@@ -72,7 +72,7 @@ export const JobOfferParserFTImpl: JobOfferParserFT = {
                     }
                 }),
                 sourceUrl: elem.origineOffre.urlOrigine,
-                sourceData: SourceData.FTAPI,
+                sourceData: SourceSite.FTAPI,
                 createdAt: Date.parse(elem.dateCreation),
                 updatedAt: Date.parse(elem.dateActualisation),
             } as DetailedJobOffer

@@ -7,6 +7,7 @@ const getAllMunicipalities: GetCitiesUsecase = GetCitiesUsecaseImpl
 
 router.get("/", cacheSuccesses, async (req: Request, res: Response) => {
     const result = await getAllMunicipalities.perform()
+
     if ("errorCode" in result && typeof result.errorCode === "number") {
         return res.status(result.errorCode).send(result)
     }

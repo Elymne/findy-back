@@ -5,21 +5,19 @@ import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/da
 import { JobOfferParserFT, JobOfferParserFTImpl } from "@App/infrastructure/parser/jobOfferFT.parser"
 import { JobOfferFTService, JobOfferFTServiceImpl } from "@App/infrastructure/services/jobOfferFT.service"
 import { JobOfferFTQuery } from "@App/infrastructure/datasources/ftapi/models/jobOfferQueryFT"
-import { JobOfferSource } from "@App/domain/entities/jobOfferHistory.entity"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
-import { JobOfferHistoryDatasource, JobOfferHistoryDatasourceImpl } from "@App/infrastructure/datasources/local/jobOfferHistory.datasource"
+import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/datasources/local/knownJobOffer.datasource"
 import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/jobOfferFt.datasource"
 import { JobOffer } from "@App/domain/entities/jobOffer.entity"
+import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
 
 export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], GetJobOfferFTUsecaseParams> {
     tokenFTDatasource: TokenFTDatasource
     jobOfferFtDatasource: JobOfferFTDatasource
     cityFTDatasource: CityFTDatasource
     textFilterDatasource: TextFilterDatasource
-    jobOfferHistoryDatasource: JobOfferHistoryDatasource
-
+    knownJobOfferDatasource: KnownJobOfferDatasource
     jobOfferFTService: JobOfferFTService
-
     jobOfferParserFT: JobOfferParserFT
 }
 
@@ -28,7 +26,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
     jobOfferFtDatasource: JobOfferFTDatasourceImpl,
     cityFTDatasource: CityFTDatasourceImpl,
     textFilterDatasource: TextFilterDatasourceImpl,
-    jobOfferHistoryDatasource: JobOfferHistoryDatasourceImpl,
+    knownJobOfferDatasource: KnownJobOfferDatasourceImpl,
 
     jobOfferFTService: JobOfferFTServiceImpl,
 
@@ -56,14 +54,14 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
                     token
                 ),
                 this.textFilterDatasource.findAll(),
-                this.jobOfferHistoryDatasource.findAllBySource(JobOfferSource.ftapi),
+                this.knownJobOfferDatasource.findAllBySource(SourceSite.FTAPI),
             ])
 
             const { jobOfferFTFiltered, newHistories } = await this.jobOfferFTService.filter(jobOffersFT, textFilters, jobOfferHistories)
 
             const [jobOffers] = await Promise.all([
                 this.jobOfferParserFT.parse(jobOfferFTFiltered),
-                this.jobOfferHistoryDatasource.addMany(newHistories),
+                this.knownJobOfferDatasource.addMany(newHistories),
             ])
 
             return {

@@ -1,10 +1,10 @@
 import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 import { JobOfferWTTJ } from "../datasources/wttj/models/JobOfferWTTJ"
-import { SourceData } from "@App/domain/entities/enums/sourceData.enum"
+import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
 
 export interface JobOfferWTTJParser {
-    //parseDetailed: (source: DetailedJobOfferWTTJ[]) => Promise<DetailedJobOffer[]>
     parse: (source: JobOfferWTTJ[]) => Promise<JobOffer[]>
+    //parseDetailed: (source: DetailedJobOfferWTTJ[]) => Promise<DetailedJobOffer[]>
 }
 
 export const JobOfferWTTJParserImpl: JobOfferWTTJParser = {
@@ -17,7 +17,7 @@ export const JobOfferWTTJParserImpl: JobOfferWTTJParser = {
                 city_name: elem.city,
                 image_url: elem.image,
                 source_url: elem.accessUrl,
-                source_data: SourceData.WTTJ,
+                source_data: SourceSite.WTTJ,
                 created_while: elem.created,
             } as JobOffer
         })

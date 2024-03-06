@@ -1,35 +1,36 @@
 import { DBDataSource } from "@App/core/databases/database.datasource"
 import { PgClient } from "@App/core/databases/pgClient"
-import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/jobOfferHistory.entity"
+import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
+import { KnownJobOffer } from "@App/domain/entities/knownJobOffer.entity"
 
-export interface JobOfferHistoryDatasource extends DBDataSource<JobOfferHistory> {
-    findAllBySource: (source: JobOfferSource) => Promise<JobOfferHistory[]>
+export interface KnownJobOfferDatasource extends DBDataSource<KnownJobOffer> {
+    findAllBySource: (source: SourceSite) => Promise<KnownJobOffer[]>
 }
 
-export const JobOfferHistoryDatasourceImpl: JobOfferHistoryDatasource = {
+export const KnownJobOfferDatasourceImpl: KnownJobOfferDatasource = {
     tableName: "job_offer_history",
 
-    findOne: async function (id: string): Promise<JobOfferHistory[]> {
+    findOne: async function (id: string): Promise<KnownJobOffer[]> {
         const query = `SELECT * FROM ${this.tableName} WHERE id = $1`
-        const res = await PgClient.getInstance().getClient().query<JobOfferHistory>(query, [id])
+        const res = await PgClient.getInstance().getClient().query<KnownJobOffer>(query, [id])
         return [...res]
     },
 
-    findAll: async function (): Promise<JobOfferHistory[]> {
+    findAll: async function (): Promise<KnownJobOffer[]> {
         const query = `SELECT * FROM ${this.tableName}`
-        const res = await PgClient.getInstance().getClient().query<JobOfferHistory>(query, [])
+        const res = await PgClient.getInstance().getClient().query<KnownJobOffer>(query, [])
         return [...res]
     },
 
-    addOne: async function (school: JobOfferHistory): Promise<JobOfferHistory> {
+    addOne: async function (school: KnownJobOffer): Promise<KnownJobOffer> {
         const query = `INSERT INTO ${this.tableName} (id,source,is_banned,source_id,source_url) VALUES ($1,$2,$3,$4,$5);`
         await PgClient.getInstance()
             .getClient()
-            .query<JobOfferHistory>(query, [school.id, school.source, school.is_banned, school.source_id, school.source_url])
+            .query<KnownJobOffer>(query, [school.id, school.source, school.is_banned, school.source_id, school.source_url])
         return school
     },
 
-    addMany: async function (schools: JobOfferHistory[]): Promise<JobOfferHistory[]> {
+    addMany: async function (schools: KnownJobOffer[]): Promise<KnownJobOffer[]> {
         if (schools.length == 0) return []
 
         let query = `INSERT INTO ${this.tableName} (id,source,is_banned,source_id,source_url) VALUES `
@@ -60,7 +61,7 @@ export const JobOfferHistoryDatasourceImpl: JobOfferHistoryDatasource = {
         query = query.substring(0, query.length - 1)
         query += ";"
 
-        await PgClient.getInstance().getClient().query<JobOfferHistory>(query, values)
+        await PgClient.getInstance().getClient().query<KnownJobOffer>(query, values)
         return schools
     },
 
@@ -85,9 +86,9 @@ export const JobOfferHistoryDatasourceImpl: JobOfferHistoryDatasource = {
         return [...result][0]
     },
 
-    findAllBySource: async function (source: JobOfferSource): Promise<JobOfferHistory[]> {
+    findAllBySource: async function (source: SourceSite): Promise<KnownJobOffer[]> {
         const query = `SELECT * FROM ${this.tableName} WHERE source = $1`
-        const res = await PgClient.getInstance().getClient().query<JobOfferHistory>(query, [source])
+        const res = await PgClient.getInstance().getClient().query<KnownJobOffer>(query, [source])
         return [...res]
     },
 }

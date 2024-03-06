@@ -1,4 +1,4 @@
-import { SourceData } from "./enums/sourceData.enum"
+import { SourceSite } from "./enums/sourceData.enum"
 
 export interface JobOffer {
     id?: string
@@ -8,7 +8,7 @@ export interface JobOffer {
     company_logo_url: string
     city_name: string
     source_url: string
-    source_data: SourceData
+    source_data: SourceSite
 
     created_at?: number
     updated_at?: number

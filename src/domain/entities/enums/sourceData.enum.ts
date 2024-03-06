@@ -1,4 +1,4 @@
-export enum SourceData {
+export enum SourceSite {
     FTAPI = "FTAPI",
     WTTJ = "WTTJ",
 }
