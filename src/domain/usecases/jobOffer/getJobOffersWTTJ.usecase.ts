@@ -10,8 +10,9 @@ import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastruct
 import { JobOfferWTTJDatasource, JobOfferWTTJDatasourceImpl } from "@App/infrastructure/datasources/wttj/jobOfferWTTJ.datasource"
 import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/parser/jobOfferWTTJ.parser"
 import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/services/jobOfferWTTJ.service"
+import { JobOffersUsecaseParams } from "./jobOfferUsecaseParams"
 
-export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], GetJobOffersWTTJUsecaseParams> {
+export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], JobOffersUsecaseParams> {
     jobOfferWTTJDatasource: JobOfferWTTJDatasource
     knownJobOfferDatasource: KnownJobOfferDatasource
     textFilterDatasource: TextFilterDatasource
@@ -32,12 +33,11 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
     jobOfferWTTJService: JobOfferWTTJServiceImpl,
     jobOfferWTTJParser: JobOfferWTTJParserImpl,
 
-    perform: async function (params: GetJobOffersWTTJUsecaseParams): Promise<Result<JobOffer[]>> {
+    perform: async function (params: JobOffersUsecaseParams): Promise<Result<JobOffer[]>> {
         try {
             const token = await this.tokenFTDatasource.generate()
 
             const city = await this.cityFTDatasource.findOne(params.cityCode, token)
-
             if (!city) {
                 return {
                     message: "The municipality code given does not exists in france.travail API references data.",
@@ -58,7 +58,7 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
                 geoCity.centre.coordinates[0]
             )
 
-            const { jobOffersWTTJFiltered, newKnownJobOffers: newHistories } = await this.jobOfferWTTJService.filter(
+            const { jobOffersWTTJFiltered, newKnownJobOffers } = await this.jobOfferWTTJService.filter(
                 jobOffersWTTJ,
                 textFilters,
                 jobOfferHistories
@@ -66,7 +66,7 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
 
             const [jobOffers] = await Promise.all([
                 this.jobOfferWTTJParser.parse(jobOffersWTTJFiltered),
-                this.knownJobOfferDatasource.addMany(newHistories),
+                this.knownJobOfferDatasource.addMany(newKnownJobOffers),
             ])
 
             return {
@@ -82,9 +82,4 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
             } as Failure<JobOffer[]>
         }
     },
-}
-
-export interface GetJobOffersWTTJUsecaseParams {
-    keyWords: string
-    cityCode: string
 }

@@ -8,6 +8,7 @@ export interface JobOfferFT {
     dateCreation: string
     dateActualisation: string
     lieuTravail: {
+        libelle: string
         commune: string
     }
     entreprise: {

@@ -8,20 +8,30 @@ const router = express.Router()
 const getJobOfferFTUsecase: GetJobOfferFTUsecase = GetJobOfferFTUsecaseImpl
 const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecaseimpl
 
+// TODO Faire un usecase qui fetch tout ce que l'on a pour l'instant.
 router.get(
     "/",
     query("keywords").notEmpty().isString().escape(),
     query("cityCode").notEmpty().isString().escape(),
+    query("page")
+        .isNumeric()
+        .custom((value: number) => {
+            if (value < 1) {
+                throw new Error("Page value range should be between 1 and infinity")
+            }
+        })
+        .default(1),
     cacheSuccesses,
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
         if (!validator.isEmpty()) {
-            return res.status(404).send("Inputs are missing.")
+            return res.status(404).send({ error: validator })
         }
 
         const result = await getJobOfferFTUsecase.perform({
-            keywords: req.query.keywords as string,
+            keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,
+            page: parseInt(req.query.page as string),
         })
 
         if ("errorCode" in result && typeof result.errorCode === "number") {
@@ -44,8 +54,9 @@ router.get(
         }
 
         const result = await getJobOfferFTUsecase.perform({
-            keywords: req.query.keywords as string,
+            keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,
+            page: 4,
         })
 
         if ("errorCode" in result && typeof result.errorCode === "number") {
@@ -70,6 +81,7 @@ router.get(
         const result = await getJobOffersWTTJUsecase.perform({
             keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,
+            page: 1,
         })
 
         if ("errorCode" in result && typeof result.errorCode === "number") {

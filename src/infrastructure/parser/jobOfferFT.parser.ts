@@ -17,7 +17,7 @@ export const JobOfferParserFTImpl: JobOfferParserFT = {
                 title: elem.intitule,
                 company_name: elem.entreprise.nom,
                 company_logo_url: elem.entreprise.logo,
-                city_name: elem.lieuTravail.commune,
+                city_name: elem.lieuTravail.libelle,
                 image_url: "FranceTravailPlaceholder",
                 created_at: Date.parse(elem.dateCreation),
                 updated_at: Date.parse(elem.dateActualisation),

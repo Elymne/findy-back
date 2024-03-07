@@ -21,7 +21,7 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
         const newKnownJobOffers: KnownJobOffer[] = []
 
         const result = source.filter((elem) => {
-            const f = knownJobOffers.filter((history) => history.source_id == elem.id)
+            const f = knownJobOffers.filter((knownJobOffer) => knownJobOffer.source_id === elem.id)
             if (f.length != 0) {
                 return !f[0].is_banned
             }
@@ -36,17 +36,19 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
                 return false
             }
 
-            filters.forEach((filter) => {
-                if (elem.intitule.includes(filter.value)) {
-                    newKnownJobOffers.push({
-                        id: uuid(),
-                        source_id: elem.id,
-                        is_banned: true,
-                        source: SourceSite.FTAPI,
-                    })
-                    return false
-                }
+            const foundFilters = filters.filter((filter) => {
+                return elem.intitule.includes(filter.value) || elem.entreprise?.nom?.includes(filter.value)
             })
+
+            if (foundFilters.length != 0) {
+                newKnownJobOffers.push({
+                    id: uuid(),
+                    source_id: elem.id,
+                    source: SourceSite.FTAPI,
+                    is_banned: true,
+                })
+                return false
+            }
 
             newKnownJobOffers.push({
                 id: uuid(),
@@ -56,6 +58,7 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
             })
             return true
         })
+
         return { jobOfferFTFiltered: result, newKnownJobOffers: newKnownJobOffers }
     },
 }

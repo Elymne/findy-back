@@ -8,7 +8,7 @@ export interface KnownJobOfferDatasource extends DBDataSource<KnownJobOffer> {
 }
 
 export const KnownJobOfferDatasourceImpl: KnownJobOfferDatasource = {
-    tableName: "job_offer_history",
+    tableName: "known_job_offer",
 
     findOne: async function (id: string): Promise<KnownJobOffer[]> {
         const query = `SELECT * FROM ${this.tableName} WHERE id = $1`
@@ -26,7 +26,7 @@ export const KnownJobOfferDatasourceImpl: KnownJobOfferDatasource = {
         const query = `INSERT INTO ${this.tableName} (id,source,is_banned,source_id,source_url) VALUES ($1,$2,$3,$4,$5);`
         await PgClient.getInstance()
             .getClient()
-            .query<KnownJobOffer>(query, [school.id, school.source, school.is_banned, school.source_id, school.source_url])
+            .query<KnownJobOffer>(query, [school.id, school.source, school.is_banned, school.source_id ?? null, school.source_url ?? null])
         return school
     },
 
@@ -51,11 +51,11 @@ export const KnownJobOfferDatasourceImpl: KnownJobOfferDatasource = {
 
             query += `,$${index}`
             index++
-            values.push(school.source_id)
+            values.push(school.source_id ?? null)
 
             query += `,$${index}),`
             index++
-            values.push(school.source_url)
+            values.push(school.source_url ?? null)
         }
 
         query = query.substring(0, query.length - 1)
