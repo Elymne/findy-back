@@ -46,7 +46,7 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
                 } as Failure<JobOffer[]>
             }
 
-            const [geoCity, textFilters, jobOfferHistories] = await Promise.all([
+            const [geoCity, textFilters, knownJobOffers] = await Promise.all([
                 this.geoapiDatasource.findOne(params.cityCode),
                 this.textFilterDatasource.findAll(),
                 this.knownJobOfferDatasource.findAllBySource(SourceSite.WTTJ),
@@ -62,7 +62,7 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
             const { jobOffersWTTJFiltered, newKnownJobOffers } = await this.jobOfferWTTJService.filter(
                 jobOffersWTTJ,
                 textFilters,
-                jobOfferHistories
+                knownJobOffers
             )
 
             const [jobOffers] = await Promise.all([

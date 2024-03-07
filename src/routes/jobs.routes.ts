@@ -3,32 +3,27 @@ import { query, validationResult } from "express-validator"
 import { cacheSuccesses } from "@App/core/tools/cache"
 import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "@App/domain/usecases/jobOffer/getJobOffersFT.usecase"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseimpl } from "@App/domain/usecases/jobOffer/getJobOffersWTTJ.usecase"
+import { GetJobOffersUsecase, GetJobOffersUsecaseImpl } from "@App/domain/usecases/jobOffer/getJobOffers.usecase"
 
 const router = express.Router()
 const getJobOfferFTUsecase: GetJobOfferFTUsecase = GetJobOfferFTUsecaseImpl
 const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecaseimpl
+const getJobOffersUsecase: GetJobOffersUsecase = GetJobOffersUsecaseImpl
 
 // TODO Faire un usecase qui fetch tout ce que l'on a pour l'instant.
 router.get(
     "/",
     query("keywords").notEmpty().isString().escape(),
     query("cityCode").notEmpty().isString().escape(),
-    query("page")
-        .isNumeric()
-        .custom((value: number) => {
-            if (value < 1) {
-                throw new Error("Page value range should be between 1 and infinity")
-            }
-        })
-        .default(1),
+    query("page").isString().default("1"),
     cacheSuccesses,
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
         if (!validator.isEmpty()) {
-            return res.status(404).send({ error: validator })
+            return res.status(404).send(validator)
         }
 
-        const result = await getJobOfferFTUsecase.perform({
+        const result = await getJobOffersUsecase.perform({
             keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,
             page: parseInt(req.query.page as string),

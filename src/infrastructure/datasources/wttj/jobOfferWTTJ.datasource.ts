@@ -49,10 +49,6 @@ const scrapFromPage = async (page: Page): Promise<JobOfferWTTJ[]> => {
     const result: JobOfferWTTJ[] = []
 
     const rows = await page.$$("li.ais-Hits-list-item")
-
-    console.clear()
-    console.log(rows)
-
     for (const row of rows) {
         const imageSelectors = await row.$$("img")
         const imageUrl = (await imageSelectors[0].evaluate((img) => img.getAttribute("src"))) as string
