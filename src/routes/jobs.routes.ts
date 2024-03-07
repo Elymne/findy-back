@@ -81,7 +81,7 @@ router.get(
         const result = await getJobOffersWTTJUsecase.perform({
             keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,
-            page: 1,
+            page: 40,
         })
 
         if ("errorCode" in result && typeof result.errorCode === "number") {

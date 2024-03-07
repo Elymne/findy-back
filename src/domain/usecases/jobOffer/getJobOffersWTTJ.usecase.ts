@@ -55,7 +55,8 @@ export const GetJobOffersWTTJUsecaseimpl: GetJobOffersWTTJUsecase = {
             const jobOffersWTTJ = await this.jobOfferWTTJDatasource.findAllByQuery(
                 params.keyWords,
                 geoCity.centre.coordinates[1],
-                geoCity.centre.coordinates[0]
+                geoCity.centre.coordinates[0],
+                params.page
             )
 
             const { jobOffersWTTJFiltered, newKnownJobOffers } = await this.jobOfferWTTJService.filter(

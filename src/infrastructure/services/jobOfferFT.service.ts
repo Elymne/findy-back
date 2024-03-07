@@ -39,7 +39,6 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
             const foundFilters = filters.filter((filter) => {
                 return elem.intitule.includes(filter.value) || elem.entreprise?.nom?.includes(filter.value)
             })
-
             if (foundFilters.length != 0) {
                 newKnownJobOffers.push({
                     id: uuid(),

@@ -26,17 +26,18 @@ export const JobOfferWTTJServiceImpl: JobOfferWTTJService = {
                 return !f[0].is_banned
             }
 
-            filters.forEach((filter) => {
-                if (elem.title.includes(filter.value)) {
-                    newKnownJobOffers.push({
-                        id: uuid(),
-                        source_url: elem.accessUrl,
-                        is_banned: true,
-                        source: SourceSite.WTTJ,
-                    })
-                    return false
-                }
+            const foundFilters = filters.filter((filter) => {
+                return elem.title.includes(filter.value) || elem.company.includes(filter.value)
             })
+            if (foundFilters.length != 0) {
+                newKnownJobOffers.push({
+                    id: uuid(),
+                    source_url: elem.accessUrl,
+                    source: SourceSite.WTTJ,
+                    is_banned: true,
+                })
+                return false
+            }
 
             newKnownJobOffers.push({
                 id: uuid(),
