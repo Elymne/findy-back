@@ -37,54 +37,6 @@ router.get(
     }
 )
 
-router.get(
-    "/ft",
-    query("keywords").notEmpty().isString().escape(),
-    query("cityCode").notEmpty().isString().escape(),
-    cacheSuccesses,
-    async (req: Request, res: Response) => {
-        const validator = validationResult(req)
-        if (!validator.isEmpty()) {
-            return res.status(404).send("Inputs are missing.")
-        }
-
-        const result = await getJobOfferFTUsecase.perform({
-            keyWords: req.query.keywords as string,
-            cityCode: req.query.cityCode as string,
-            page: 4,
-        })
-
-        if ("errorCode" in result && typeof result.errorCode === "number") {
-            return res.status(result.errorCode).send(result)
-        }
-
-        res.status(200).send(result)
-    }
-)
-
-router.get(
-    "/wttj",
-    query("keywords").notEmpty().isString().escape(),
-    query("cityCode").notEmpty().isString().escape(),
-    cacheSuccesses,
-    async (req: Request, res: Response) => {
-        const validator = validationResult(req)
-        if (!validator.isEmpty()) {
-            return res.status(404).send("Inputs are missing.")
-        }
-
-        const result = await getJobOffersWTTJUsecase.perform({
-            keyWords: req.query.keywords as string,
-            cityCode: req.query.cityCode as string,
-            page: 40,
-        })
-
-        if ("errorCode" in result && typeof result.errorCode === "number") {
-            return res.status(result.errorCode).send(result)
-        }
-
-        res.status(200).send(result)
-    }
-)
+router.get("/categories", async () => {})
 
 export default router
