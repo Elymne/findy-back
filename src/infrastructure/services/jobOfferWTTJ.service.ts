@@ -9,7 +9,7 @@ export interface JobOfferWTTJService {
         source: JobOfferWTTJ[],
         filters: TextFilter[],
         KnownJobOffer: KnownJobOffer[]
-    ) => Promise<{ jobOffersWTTJFiltered: JobOfferWTTJ[]; newKnownJobOffers: KnownJobOffer[] }>
+    ) => Promise<{ sourceFiltered: JobOfferWTTJ[]; newKnownJobOffers: KnownJobOffer[] }>
 }
 
 export const JobOfferWTTJServiceImpl: JobOfferWTTJService = {
@@ -17,7 +17,7 @@ export const JobOfferWTTJServiceImpl: JobOfferWTTJService = {
         source: JobOfferWTTJ[],
         filters: TextFilter[],
         KnownJobOffer: KnownJobOffer[]
-    ): Promise<{ jobOffersWTTJFiltered: JobOfferWTTJ[]; newKnownJobOffers: KnownJobOffer[] }> {
+    ): Promise<{ sourceFiltered: JobOfferWTTJ[]; newKnownJobOffers: KnownJobOffer[] }> {
         const newKnownJobOffers: KnownJobOffer[] = []
 
         const result = source.filter((elem) => {
@@ -48,6 +48,6 @@ export const JobOfferWTTJServiceImpl: JobOfferWTTJService = {
             return true
         })
 
-        return { jobOffersWTTJFiltered: result, newKnownJobOffers: newKnownJobOffers }
+        return { sourceFiltered: result, newKnownJobOffers: newKnownJobOffers }
     },
 }

@@ -9,7 +9,7 @@ export interface JobOfferFTService {
         source: JobOfferFT[],
         filters: TextFilter[],
         knownJobOffers: KnownJobOffer[]
-    ) => Promise<{ jobOfferFTFiltered: JobOfferFT[]; newKnownJobOffers: KnownJobOffer[] }>
+    ) => Promise<{ sourceFiltered: JobOfferFT[]; newKnownJobOffers: KnownJobOffer[] }>
 }
 
 export const JobOfferFTServiceImpl: JobOfferFTService = {
@@ -17,7 +17,7 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
         source: JobOfferFT[],
         filters: TextFilter[],
         knownJobOffers: KnownJobOffer[]
-    ): Promise<{ jobOfferFTFiltered: JobOfferFT[]; newKnownJobOffers: KnownJobOffer[] }> {
+    ): Promise<{ sourceFiltered: JobOfferFT[]; newKnownJobOffers: KnownJobOffer[] }> {
         const newKnownJobOffers: KnownJobOffer[] = []
 
         const result = source.filter((elem) => {
@@ -58,6 +58,6 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
             return true
         })
 
-        return { jobOfferFTFiltered: result, newKnownJobOffers: newKnownJobOffers }
+        return { sourceFiltered: result, newKnownJobOffers: newKnownJobOffers }
     },
 }

@@ -19,6 +19,7 @@ export const CityFTDatasourceImpl: CityFTDatasource = {
 
         return response.data
     },
+
     findOne: async function (code: string, tokken: TokenFT): Promise<CityFT | undefined> {
         const response = await axios.get<CityFT[]>(`${ftapiUrl}/${ftapiVersion}/referentiel/communes`, {
             headers: {
