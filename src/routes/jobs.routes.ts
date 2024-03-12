@@ -42,8 +42,9 @@ router.get(
 router.get(
     "/ftapi",
     query("keywords").notEmpty().isString().escape(),
-    query("cityCode").notEmpty().isString().escape(),
     query("page").notEmpty().isString().escape(),
+    query("cityCode").isString().escape().optional({ nullable: true }),
+
     cacheSuccesses,
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
@@ -54,8 +55,8 @@ router.get(
 
         const result = await getJobOfferFTUsecase.perform({
             keyWords: req.query.keywords as string,
-            cityCode: req.query.cityCode as string,
             page: parseInt(req.query.page as string),
+            cityCode: req.query.cityCode as string,
         })
 
         if (result instanceof Failure) {

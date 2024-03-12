@@ -7,11 +7,10 @@ import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructur
 import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/parser/jobOfferWTTJ.parser"
 import { Failure, Result, Success, Usecase } from "@App/core/usecase"
 import { JobOffer } from "../entities/jobOffer.entity"
-import { JobOffersUsecaseParams } from "./params/jobOfferUsecaseParams"
 import { SourceSite } from "../entities/enums/sourceData.enum"
 import { logger } from "@App/core/tools/logger"
 
-export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], JobOffersUsecaseParams> {
+export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], Params> {
     doesCityExistsUsecase: DoesCityExistsUsecase
     jobOfferWTTJDatasource: JobOfferWTTJDatasource
     geoapiDatasource: GeoapiDatasource
@@ -30,7 +29,7 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
     jobOfferWTTJService: JobOfferWTTJServiceImpl,
     jobOfferWTTJParser: JobOfferWTTJParserImpl,
 
-    perform: async function (params: JobOffersUsecaseParams): Promise<Result<JobOffer[]>> {
+    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
             const doesCityExistsResult = await this.doesCityExistsUsecase.perform({ code: params.cityCode })
             if (doesCityExistsResult instanceof Failure) return doesCityExistsResult
@@ -78,4 +77,10 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
             })
         }
     },
+}
+
+interface Params {
+    keyWords: string
+    cityCode: string
+    page: number
 }

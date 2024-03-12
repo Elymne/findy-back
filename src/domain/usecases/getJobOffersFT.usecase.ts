@@ -7,12 +7,11 @@ import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infra
 import { JobOfferFTDatasource, JobOfferFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/jobOfferFt.datasource"
 import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
-import { JobOffersUsecaseParams } from "./params/jobOfferUsecaseParams"
 import { ContractType } from "@App/domain/entities/enums/contractType.enum"
 import { GetTokenFTUsecase, GetTokenFTUsecaseImpl } from "./getFTToken.usecase"
 import { DoesCityExistsUsecase, DoesCityExistsUsecaseImpl } from "./doesCityExists"
 
-export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], JobOffersUsecaseParams> {
+export interface GetJobOfferFTUsecase extends Usecase<JobOffer[], Params> {
     getTokenFTUsecase: GetTokenFTUsecase
     doesCityExistsUsecase: DoesCityExistsUsecase
     jobOfferFtDatasource: JobOfferFTDatasource
@@ -31,22 +30,24 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
     jobOfferFTService: JobOfferFTServiceImpl,
     jobOfferParserFT: JobOfferParserFTImpl,
 
-    perform: async function (params: JobOffersUsecaseParams): Promise<Result<JobOffer[]>> {
+    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
-            const [doesCityExistsResult, tokenResult] = await Promise.all([
-                this.doesCityExistsUsecase.perform({ code: params.cityCode }),
-                this.getTokenFTUsecase.perform(),
-            ])
+            if (params.cityCode) {
+                const doesCityExistsResult = await this.doesCityExistsUsecase.perform({ code: params.cityCode })
+                if (doesCityExistsResult instanceof Failure) {
+                    return doesCityExistsResult
+                }
+                if (!doesCityExistsResult.data) {
+                    return new Failure({
+                        message: doesCityExistsResult.message,
+                        errorCode: 404,
+                    })
+                }
+            }
 
-            if (doesCityExistsResult instanceof Failure) return doesCityExistsResult
-
-            if (tokenResult instanceof Failure) return tokenResult
-
-            if (!doesCityExistsResult.data) {
-                return new Failure({
-                    message: doesCityExistsResult.message,
-                    errorCode: 404,
-                })
+            const tokenResult = await this.getTokenFTUsecase.perform()
+            if (tokenResult instanceof Failure) {
+                return tokenResult
             }
 
             const [jobOffersRawData, textFiltersData, knownJobOffersData] = await Promise.all([
@@ -55,7 +56,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
                         typeContrat: ContractType.CDD,
                         motsCles: `Alternance ${params.keyWords}`,
                         commune: params.cityCode,
-                        range: `${(params.page - 1) * 30 + 1}-${params.page * 30 + 1}`,
+                        range: `${(params.page! - 1) * 30 + 1}-${params.page! * 30 + 1}`,
                     },
                     tokenResult.data!
                 ),
@@ -80,11 +81,17 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
             })
         } catch (error) {
             logger.error("[GetJobOfferFTUsecaseImpl]", error)
-            return {
+            return new Failure({
                 message: "An internal error occur",
-                data: [],
                 errorCode: 500,
-            } as Failure<JobOffer[]>
+            })
         }
     },
+}
+
+interface Params {
+    keyWords: string
+    page: number
+
+    cityCode?: string
 }

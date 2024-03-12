@@ -1,11 +1,10 @@
 import { Failure, Result, Success, Usecase } from "@App/core/usecase"
 import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "./getJobOffersFT.usecase"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOffersWTTJ.usecase"
-import { JobOffersUsecaseParams } from "./params/jobOfferUsecaseParams"
 import { JobOffer } from "../entities/jobOffer.entity"
 import { logger } from "@App/core/tools/logger"
 
-export interface GetJobOffersAllUsecase extends Usecase<JobOffer[], JobOffersUsecaseParams> {
+export interface GetJobOffersAllUsecase extends Usecase<JobOffer[], Params> {
     getJobOfferFTUsecase: GetJobOfferFTUsecase
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase
 }
@@ -14,7 +13,7 @@ export const GetJobOffersUsecaseImpl: GetJobOffersAllUsecase = {
     getJobOfferFTUsecase: GetJobOfferFTUsecaseImpl,
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecaseImpl,
 
-    perform: async function (params: JobOffersUsecaseParams): Promise<Result<JobOffer[]>> {
+    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
             const [jobOffersFTResult, jobOffersWTTJResult] = await Promise.all([
                 this.getJobOfferFTUsecase.perform(params),
@@ -50,4 +49,10 @@ export const GetJobOffersUsecaseImpl: GetJobOffersAllUsecase = {
             })
         }
     },
+}
+
+interface Params {
+    keyWords: string
+    cityCode: string
+    page: number
 }
