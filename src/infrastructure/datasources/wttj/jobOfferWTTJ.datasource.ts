@@ -11,76 +11,41 @@ import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
 import puppeteer, { Browser, Page } from "puppeteer"
 
 export interface JobOfferWTTJDatasource {
-    findAll: (keyWords: string, lat: number, lng: number) => Promise<JobOfferWTTJ[]>
+    findAllByQuery: (keyWords: string, lat: number, lng: number, page: number) => Promise<JobOfferWTTJ[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
-    findAll: async function (keyWords: string, lat: number, lng: number): Promise<JobOfferWTTJ[]> {
-        const url = `
-        ${wttjUrl}?${wttjCountryQuery}=FR&${wttjContractTypeQuery}=apprenticeship&${wttjParamsQuery}=${keyWords}&${wttjPageQuery}=1&${wttjAroundLatLng}=${lat},${lng}&${wttjAroundRadius}=20`
+    findAllByQuery: async function (keyWords: string, lat: number, lng: number, page: number): Promise<JobOfferWTTJ[]> {
+        const url: string = "".concat(
+            wttjUrl,
+            `?${wttjCountryQuery}=FR`,
+            `&${wttjContractTypeQuery}=apprenticeship`,
+            `&${wttjParamsQuery}=${keyWords}`,
+            `&${wttjAroundLatLng}=${lat},${lng}`,
+            `&${wttjPageQuery}=${page}`,
+            `&${wttjAroundRadius}=20`
+        )
 
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })
-
-        const { nbPages, firstResult } = await firstCall(browser, url)
-
-        if (nbPages && nbPages == 0) return firstResult
-
-        const result: JobOfferWTTJ[] = [...firstResult]
-
-        const callSequenses: Promise<JobOfferWTTJ[]>[] = []
-
-        for (let i = 2; i < nbPages!; i++) {
-            const nextUrl = `${wttjUrl}?${wttjCountryQuery}=FR&${wttjContractTypeQuery}=apprenticeship&${wttjParamsQuery}=${keyWords}&${wttjPageQuery}=${i}&${wttjAroundLatLng}=${lat},${lng}&${wttjAroundRadius}=20`
-            callSequenses.push(nextCall(browser, nextUrl))
-        }
-
-        const sequenseResults = await Promise.all(callSequenses)
-
-        sequenseResults.forEach((elem) => {
-            result.push(...elem)
-        })
+        const result = await getJobOffersFromBrowser(browser, url)
 
         browser.close()
-
         return result
     },
 }
 
-const firstCall = async (browser: Browser, url: string): Promise<{ nbPages?: number; firstResult: JobOfferWTTJ[] }> => {
+const getJobOffersFromBrowser = async (browser: Browser, url: string): Promise<JobOfferWTTJ[]> => {
     const page = await browser.newPage()
-    await page.goto(url, { timeout: 5000 })
-    await new Promise((f) => setTimeout(f, 2000))
+    await page.goto(url, { timeout: 10000 })
+    await new Promise((f) => setTimeout(f, 3000))
 
-    const pagerDiv = await page.$(`[aria-label="Pagination"]`)
-    const pagerRows = await pagerDiv?.$$("li")
-
-    let nbPages = 0
-
-    if (pagerRows) {
-        const liv = await pagerRows[pagerRows.length - 2].$("a")
-        nbPages = parseInt((await liv?.evaluate((x) => x.textContent)) ?? "0")
-    }
-
-    const result = await scrapJobOffers(page)
-
-    await page.close()
-
-    return { nbPages: nbPages, firstResult: result }
-}
-
-const nextCall = async (browser: Browser, url: string): Promise<JobOfferWTTJ[]> => {
-    const page = await browser.newPage()
-    await page.goto(url, { timeout: 3000 })
-    await new Promise((f) => setTimeout(f, 2000))
-
-    const result = await scrapJobOffers(page)
-
+    const result = await scrapFromPage(page)
     await page.close()
 
     return result
 }
 
-const scrapJobOffers = async (page: Page): Promise<JobOfferWTTJ[]> => {
+const scrapFromPage = async (page: Page): Promise<JobOfferWTTJ[]> => {
     const result: JobOfferWTTJ[] = []
 
     const rows = await page.$$("li.ais-Hits-list-item")

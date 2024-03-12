@@ -1,49 +1,53 @@
-import { TextFilter } from "@App/domain/entities/databases/textFilter.entity"
+import { TextFilter } from "@App/domain/entities/textFilter.entity"
 import { JobOfferWTTJ } from "../datasources/wttj/models/JobOfferWTTJ"
-import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
 import { uuid } from "@App/core/tools/uuid"
+import { KnownJobOffer } from "@App/domain/entities/knownJobOffer.entity"
+import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
 
 export interface JobOfferWTTJService {
     filter: (
         source: JobOfferWTTJ[],
         filters: TextFilter[],
-        histories: JobOfferHistory[]
-    ) => Promise<{ jobOffersWTTJFiltered: JobOfferWTTJ[]; newHistories: JobOfferHistory[] }>
+        KnownJobOffer: KnownJobOffer[]
+    ) => Promise<{ sourceFiltered: JobOfferWTTJ[]; newKnownJobOffers: KnownJobOffer[] }>
 }
 
 export const JobOfferWTTJServiceImpl: JobOfferWTTJService = {
     filter: async function (
         source: JobOfferWTTJ[],
         filters: TextFilter[],
-        histories: JobOfferHistory[]
-    ): Promise<{ jobOffersWTTJFiltered: JobOfferWTTJ[]; newHistories: JobOfferHistory[] }> {
-        const newHistories: JobOfferHistory[] = []
+        KnownJobOffer: KnownJobOffer[]
+    ): Promise<{ sourceFiltered: JobOfferWTTJ[]; newKnownJobOffers: KnownJobOffer[] }> {
+        const newKnownJobOffers: KnownJobOffer[] = []
 
         const result = source.filter((elem) => {
-            const f = histories.filter((history) => history.source_url == elem.accessUrl)
-            if (f.length != 0) return !f[0].is_banned
+            const f = KnownJobOffer.filter((history) => history.source_url == elem.accessUrl)
+            if (f.length != 0) {
+                return !f[0].is_banned
+            }
 
-            filters.forEach((filter) => {
-                if (elem.title.includes(filter.value)) {
-                    newHistories.push({
-                        id: uuid,
-                        source_url: elem.accessUrl,
-                        is_banned: true,
-                        source: JobOfferSource.wttj,
-                    })
-                    return false
-                }
+            const foundFilters = filters.filter((filter) => {
+                return elem.title.includes(filter.value) || elem.company.includes(filter.value)
             })
+            if (foundFilters.length != 0) {
+                newKnownJobOffers.push({
+                    id: uuid(),
+                    source_url: elem.accessUrl,
+                    source: SourceSite.WTTJ,
+                    is_banned: true,
+                })
+                return false
+            }
 
-            newHistories.push({
-                id: uuid,
+            newKnownJobOffers.push({
+                id: uuid(),
                 source_url: elem.accessUrl,
                 is_banned: false,
-                source: JobOfferSource.wttj,
+                source: SourceSite.WTTJ,
             })
             return true
         })
 
-        return { jobOffersWTTJFiltered: result, newHistories: newHistories }
+        return { sourceFiltered: result, newKnownJobOffers: newKnownJobOffers }
     },
 }

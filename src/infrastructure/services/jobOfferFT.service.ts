@@ -1,57 +1,63 @@
-import { JobOfferHistory, JobOfferSource } from "@App/domain/entities/databases/jobOfferHistory"
 import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
-import { TextFilter } from "@App/domain/entities/databases/textFilter.entity"
+import { TextFilter } from "@App/domain/entities/textFilter.entity"
 import { uuid } from "@App/core/tools/uuid"
+import { KnownJobOffer } from "@App/domain/entities/knownJobOffer.entity"
+import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
 
 export interface JobOfferFTService {
     filter: (
         source: JobOfferFT[],
         filters: TextFilter[],
-        histories: JobOfferHistory[]
-    ) => Promise<{ jobOfferFTFiltered: JobOfferFT[]; newHistories: JobOfferHistory[] }>
+        knownJobOffers: KnownJobOffer[]
+    ) => Promise<{ sourceFiltered: JobOfferFT[]; newKnownJobOffers: KnownJobOffer[] }>
 }
 
 export const JobOfferFTServiceImpl: JobOfferFTService = {
     filter: async function (
         source: JobOfferFT[],
         filters: TextFilter[],
-        histories: JobOfferHistory[]
-    ): Promise<{ jobOfferFTFiltered: JobOfferFT[]; newHistories: JobOfferHistory[] }> {
-        const newHistories: JobOfferHistory[] = []
+        knownJobOffers: KnownJobOffer[]
+    ): Promise<{ sourceFiltered: JobOfferFT[]; newKnownJobOffers: KnownJobOffer[] }> {
+        const newKnownJobOffers: KnownJobOffer[] = []
+
         const result = source.filter((elem) => {
-            const f = histories.filter((history) => history.source_id == elem.id)
-            if (f.length != 0) return !f[0].is_banned
+            const f = knownJobOffers.filter((knownJobOffer) => knownJobOffer.source_id === elem.id)
+            if (f.length != 0) {
+                return !f[0].is_banned
+            }
 
             if (elem.alternance == false) {
-                newHistories.push({
-                    id: uuid,
+                newKnownJobOffers.push({
+                    id: uuid(),
                     source_id: elem.id,
                     is_banned: true,
-                    source: JobOfferSource.ftapi,
+                    source: SourceSite.FTAPI,
                 })
                 return false
             }
 
-            filters.forEach((filter) => {
-                if (elem.intitule.includes(filter.value)) {
-                    newHistories.push({
-                        id: uuid,
-                        source_id: elem.id,
-                        is_banned: true,
-                        source: JobOfferSource.ftapi,
-                    })
-                    return false
-                }
+            const foundFilters = filters.filter((filter) => {
+                return elem.intitule.includes(filter.value) || elem.entreprise?.nom?.includes(filter.value)
             })
+            if (foundFilters.length != 0) {
+                newKnownJobOffers.push({
+                    id: uuid(),
+                    source_id: elem.id,
+                    source: SourceSite.FTAPI,
+                    is_banned: true,
+                })
+                return false
+            }
 
-            newHistories.push({
-                id: uuid,
+            newKnownJobOffers.push({
+                id: uuid(),
                 source_id: elem.id,
                 is_banned: false,
-                source: JobOfferSource.ftapi,
+                source: SourceSite.FTAPI,
             })
             return true
         })
-        return { jobOfferFTFiltered: result, newHistories: newHistories }
+
+        return { sourceFiltered: result, newKnownJobOffers: newKnownJobOffers }
     },
 }

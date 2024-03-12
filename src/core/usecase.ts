@@ -6,13 +6,24 @@ export interface UsecaseNoParams<R> {
     perform: () => Promise<Result<R>>
 }
 
-export interface Result<D> {
-    message: string
-    data: D
+export abstract class Result<D> {
+    public message: string
+    public data: D
 }
 
-export interface Success<D> extends Result<D> {}
+export class Success<D> extends Result<D> {
+    constructor(params: { message: string; data: D }) {
+        super()
+        this.message = params.message
+        this.data = params.data
+    }
+}
 
-export interface Failure<D> extends Result<D> {
-    errorCode: number
+export class Failure<D> extends Result<D> {
+    public errorCode: number
+    constructor(params: { message: string; errorCode: number }) {
+        super()
+        this.message = params.message
+        this.errorCode = params.errorCode
+    }
 }

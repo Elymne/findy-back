@@ -1,21 +1,29 @@
-import { Result, Usecase } from "@App/core/usecase"
-import { UUID } from "crypto"
+import { Failure, Result, Success, UsecaseNoParams } from "@App/core/usecase"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
-import { TextFilter } from "../entities/databases/textFilter.entity"
+import { TextFilter } from "../entities/textFilter.entity"
+import { logger } from "@App/core/tools/logger"
 
-export interface GetSchoolsUsecase extends Usecase<TextFilter[], GetSchoolsUsecaseParams> {
-    schoolDatasource: TextFilterDatasource
+export interface GetTextFiltersUsecase extends UsecaseNoParams<TextFilter[]> {
+    textFilterDatasource: TextFilterDatasource
 }
 
-export const getSchoolsUsecaseImpl: GetSchoolsUsecase = {
-    schoolDatasource: TextFilterDatasourceImpl,
-    perform: function (params: GetSchoolsUsecaseParams): Promise<Result<TextFilter[]>> {
-        params.ids
-        throw new Error("Function not implemented.")
+export const GetTextFiltersUsecaseImpl: GetTextFiltersUsecase = {
+    textFilterDatasource: TextFilterDatasourceImpl,
+
+    perform: async function (): Promise<Result<TextFilter[]>> {
+        try {
+            const result = await this.textFilterDatasource.findAll()
+
+            return new Success({
+                message: "TextFilters data has been successfully fetched from server.",
+                data: result,
+            })
+        } catch (error) {
+            logger.error("[GetTextFiltersUsecase]", error)
+            return new Failure({
+                message: "An error occured from server",
+                errorCode: 500,
+            })
+        }
     },
-}
-
-export interface GetSchoolsUsecaseParams {
-    ids?: UUID[]
-    names?: string[]
 }

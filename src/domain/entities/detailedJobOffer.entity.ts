@@ -1,6 +1,15 @@
+import { SourceSite } from "./enums/sourceData.enum"
+
 export interface DetailedJobOffer {
     id?: string
     title: string
+    imageUrl: string
+    sourceUrl: string
+    sourceData: SourceSite
+    createdAt?: number
+    updatedAt?: number
+    createdWhile?: string
+
     jobDomain: string
     description: string
     contractType: string
@@ -12,9 +21,6 @@ export interface DetailedJobOffer {
     expRequirement: ExpRequirement
     softSkills?: SoftSkill[]
     skills?: Skill[]
-    origineUrl?: string
-    createdAt: number
-    updatedAt: number
 }
 
 export interface Company {
