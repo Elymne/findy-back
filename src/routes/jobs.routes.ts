@@ -5,15 +5,16 @@ import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "@App/domain/usec
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "@App/domain/usecases/getJobOffersWTTJ.usecase"
 import { GetJobOffersAllUsecase, GetJobOffersUsecaseImpl } from "@App/domain/usecases/getJobOffersAll.usecase"
 import { Failure } from "@App/core/usecase"
+import { GetSampleJobOffersUsecase, GetSampleJobOffersUsecaseimpl } from "@App/domain/usecases/getSampleJobOffers.usecase"
 
 const router = express.Router()
-const getJobOfferFTUsecase: GetJobOfferFTUsecase = GetJobOfferFTUsecaseImpl
-const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecaseImpl
 const getJobOffersUsecase: GetJobOffersAllUsecase = GetJobOffersUsecaseImpl
+const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecaseImpl
+const getJobOfferFTUsecase: GetJobOfferFTUsecase = GetJobOfferFTUsecaseImpl
+const getSampleJobOffersUsecase: GetSampleJobOffersUsecase = GetSampleJobOffersUsecaseimpl
 
-// TODO Faire un usecase qui fetch tout ce que l'on a pour l'instant.
 router.get(
-    "/",
+    "/all",
     query("keywords").isString().notEmpty().escape(),
     query("cityCode").isString().notEmpty().escape(),
     query("page").isInt().optional({ values: "null" }),
@@ -103,5 +104,15 @@ router.get(
         res.status(200).send(result)
     }
 )
+
+router.get("/sample", cacheSuccesses, async (req: Request, res: Response) => {
+    const result = await getSampleJobOffersUsecase.perform()
+
+    if (result instanceof Failure) {
+        return res.status(result.errorCode).send(result)
+    }
+
+    res.status(200).send(result)
+})
 
 export default router
