@@ -11,19 +11,25 @@ import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
 import puppeteer, { Browser, Page } from "puppeteer"
 
 export interface JobOfferWTTJDatasource {
-    findAllByQuery: (keyWords: string, lat: number, lng: number, page: number) => Promise<JobOfferWTTJ[]>
+    findAllByQuery: (p: { keyWords: string; lat: number; lng: number; page: number; radius: number }) => Promise<JobOfferWTTJ[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
-    findAllByQuery: async function (keyWords: string, lat: number, lng: number, page: number): Promise<JobOfferWTTJ[]> {
+    findAllByQuery: async function (p: {
+        keyWords: string
+        lat: number
+        lng: number
+        page: number
+        radius: number
+    }): Promise<JobOfferWTTJ[]> {
         const url: string = "".concat(
             wttjUrl,
             `?${wttjCountryQuery}=FR`,
             `&${wttjContractTypeQuery}=apprenticeship`,
-            `&${wttjParamsQuery}=${keyWords}`,
-            `&${wttjAroundLatLng}=${lat},${lng}`,
-            `&${wttjPageQuery}=${page}`,
-            `&${wttjAroundRadius}=20`
+            `&${wttjParamsQuery}=${p.keyWords}`,
+            `&${wttjAroundLatLng}=${p.lat},${p.lng}`,
+            `&${wttjPageQuery}=${p.page}`,
+            `&${wttjAroundRadius}=${p.radius}`
         )
 
         const browser = await puppeteer.launch({ headless: true, defaultViewport: null })

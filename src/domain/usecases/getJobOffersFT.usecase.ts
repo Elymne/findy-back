@@ -32,17 +32,16 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
 
     perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
-            if (params.cityCode) {
-                const doesCityExistsResult = await this.doesCityExistsUsecase.perform({ code: params.cityCode })
-                if (doesCityExistsResult instanceof Failure) {
-                    return doesCityExistsResult
-                }
-                if (!doesCityExistsResult.data) {
-                    return new Failure({
-                        message: doesCityExistsResult.message,
-                        errorCode: 404,
-                    })
-                }
+            const doesCityExistsResult = await this.doesCityExistsUsecase.perform({ code: params.cityCode })
+            if (doesCityExistsResult instanceof Failure) {
+                return doesCityExistsResult
+            }
+
+            if (!doesCityExistsResult.data) {
+                return new Failure({
+                    message: doesCityExistsResult.message,
+                    errorCode: 404,
+                })
             }
 
             const tokenResult = await this.getTokenFTUsecase.perform()
@@ -57,6 +56,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
                         motsCles: `Alternance ${params.keyWords}`,
                         commune: params.cityCode,
                         range: `${(params.page! - 1) * 30 + 1}-${params.page! * 30 + 1}`,
+                        distance: params.radius,
                     },
                     tokenResult.data!
                 ),
@@ -91,7 +91,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
 
 interface Params {
     keyWords: string
+    cityCode: string
     page: number
-
-    cityCode?: string
+    radius: number
 }

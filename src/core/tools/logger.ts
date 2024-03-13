@@ -31,7 +31,10 @@ class CustomLogger implements Logger {
     public error(message?: any, ...optionalParams: any[]): void {
         this.updateFileDate()
         this.append("ERROR", `${message.toString()} ${JSON.stringify(optionalParams)}`)
-        if (process.env.NODE_ENV == "development") console.log(message)
+        if (process.env.NODE_ENV == "development") {
+            console.log(message)
+            // console.log(optionalParams)
+        }
     }
 
     private updateFileDate(): void {

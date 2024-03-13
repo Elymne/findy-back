@@ -47,12 +47,13 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
                 this.knownJobOfferDatasource.findAllBySource(SourceSite.WTTJ),
             ])
 
-            const jobOffersRawData = await this.jobOfferWTTJDatasource.findAllByQuery(
-                params.keyWords,
-                geoCityData.centre.coordinates[1],
-                geoCityData.centre.coordinates[0],
-                params.page
-            )
+            const jobOffersRawData = await this.jobOfferWTTJDatasource.findAllByQuery({
+                keyWords: params.keyWords,
+                page: params.page,
+                radius: params.radius,
+                lat: geoCityData.centre.coordinates[1],
+                lng: geoCityData.centre.coordinates[0],
+            })
 
             const { sourceFiltered: jobOffersRawDataFiltered, newKnownJobOffers } = await this.jobOfferWTTJService.filter(
                 jobOffersRawData,
@@ -83,4 +84,5 @@ interface Params {
     keyWords: string
     cityCode: string
     page: number
+    radius: number
 }

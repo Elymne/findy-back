@@ -55,4 +55,5 @@ interface Params {
     keyWords: string
     cityCode: string
     page: number
+    radius: number
 }

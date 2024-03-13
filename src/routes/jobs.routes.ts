@@ -14,9 +14,10 @@ const getJobOffersUsecase: GetJobOffersAllUsecase = GetJobOffersUsecaseImpl
 // TODO Faire un usecase qui fetch tout ce que l'on a pour l'instant.
 router.get(
     "/",
-    query("keywords").notEmpty().isString().escape(),
-    query("cityCode").notEmpty().isString().escape(),
-    query("page").isString().default("1"),
+    query("keywords").isString().notEmpty().escape(),
+    query("cityCode").isString().notEmpty().escape(),
+    query("page").isInt().optional({ values: "null" }),
+    query("radius").isInt().optional({ values: "null" }),
     cacheSuccesses,
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
@@ -28,7 +29,8 @@ router.get(
         const result = await getJobOffersUsecase.perform({
             keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,
-            page: parseInt(req.query.page as string),
+            page: parseInt((req.query.page ?? 1) as string),
+            radius: parseInt((req.query.radius ?? 20) as string),
         })
 
         if (result instanceof Failure) {
@@ -40,11 +42,11 @@ router.get(
 )
 
 router.get(
-    "/ftapi",
-    query("keywords").notEmpty().isString().escape(),
-    query("page").notEmpty().isString().escape(),
-    query("cityCode").isString().escape().optional({ nullable: true }),
-
+    "/wttj",
+    query("keywords").isString().notEmpty().escape(),
+    query("cityCode").isString().notEmpty().escape(),
+    query("page").isInt().optional({ values: "null" }),
+    query("radius").isInt().optional({ values: "null" }),
     cacheSuccesses,
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
@@ -53,10 +55,11 @@ router.get(
             return
         }
 
-        const result = await getJobOfferFTUsecase.perform({
+        const result = await getJobOffersWTTJUsecase.perform({
             keyWords: req.query.keywords as string,
-            page: parseInt(req.query.page as string),
             cityCode: req.query.cityCode as string,
+            page: parseInt((req.query.page ?? 1) as string),
+            radius: parseInt((req.query.radius ?? 20) as string),
         })
 
         if (result instanceof Failure) {
@@ -69,10 +72,11 @@ router.get(
 )
 
 router.get(
-    "/wttj",
-    query("keywords").notEmpty().isString().escape(),
-    query("cityCode").notEmpty().isString().escape(),
-    query("page").isString().default("1"),
+    "/ftapi",
+    query("keywords").isString().notEmpty().escape(),
+    query("cityCode").isString().notEmpty().escape(),
+    query("page").isInt().optional({ values: "null" }),
+    query("radius").isInt().optional({ values: "null" }),
     cacheSuccesses,
     async (req: Request, res: Response) => {
         const validator = validationResult(req)
@@ -81,10 +85,14 @@ router.get(
             return
         }
 
-        const result = await getJobOffersWTTJUsecase.perform({
+        console.clear()
+        console.log(`RADIUS : ${req.query.radius}`)
+
+        const result = await getJobOfferFTUsecase.perform({
             keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,
-            page: parseInt(req.query.page as string),
+            page: parseInt((req.query.page ?? 1) as string),
+            radius: parseInt((req.query.radius ?? 20) as string),
         })
 
         if (result instanceof Failure) {
