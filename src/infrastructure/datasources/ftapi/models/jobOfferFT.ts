@@ -13,6 +13,7 @@ export interface JobOfferFT {
     }
     entreprise: {
         nom: string
+        description: string
         logo: string
     }
     typeContrat: string

@@ -86,9 +86,6 @@ router.get(
             return
         }
 
-        console.clear()
-        console.log(`RADIUS : ${req.query.radius}`)
-
         const result = await getJobOfferFTUsecase.perform({
             keyWords: req.query.keywords as string,
             cityCode: req.query.cityCode as string,

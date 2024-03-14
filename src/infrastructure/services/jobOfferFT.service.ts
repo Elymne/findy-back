@@ -36,6 +36,16 @@ export const JobOfferFTServiceImpl: JobOfferFTService = {
                 return false
             }
 
+            if (!elem.entreprise.nom) {
+                newKnownJobOffers.push({
+                    id: uuid(),
+                    source_id: elem.id,
+                    is_banned: true,
+                    source: SourceSite.FTAPI,
+                })
+                return false
+            }
+
             const foundFilters = filters.filter((filter) => {
                 return elem.intitule.includes(filter.value) || elem.entreprise?.nom?.includes(filter.value)
             })

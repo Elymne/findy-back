@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express"
-import { cacheSuccesses } from "@App/core/tools/cache"
 import { GetTokenFTUsecase, GetTokenFTUsecaseImpl } from "@App/domain/usecases/getFTToken.usecase"
 
 const router = express.Router()

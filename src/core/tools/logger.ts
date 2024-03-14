@@ -33,7 +33,7 @@ class CustomLogger implements Logger {
         this.append("ERROR", `${message.toString()} ${JSON.stringify(optionalParams)}`)
         if (process.env.NODE_ENV == "development") {
             console.log(message)
-            // console.log(optionalParams)
+            console.log(optionalParams)
         }
     }
 

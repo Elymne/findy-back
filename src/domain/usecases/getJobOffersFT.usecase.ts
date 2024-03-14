@@ -80,7 +80,7 @@ export const GetJobOfferFTUsecaseImpl: GetJobOfferFTUsecase = {
                 data: jobOffersData,
             })
         } catch (error) {
-            logger.error("[GetJobOfferFTUsecaseImpl]", error)
+            logger.error("[GetJobOfferFTUsecase]", error)
             return new Failure({
                 message: "An internal error occur",
                 errorCode: 500,
