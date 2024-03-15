@@ -11,44 +11,18 @@ export const GetSampleFromFTUsecaseImpl: GetSampleFromFTUsecase = {
     getJobOfferFTUsecase: GetJobOfferFTUsecaseImpl,
     perform: async function (): Promise<Result<SamplejobOffers>> {
         try {
-            const buffer = await Promise.all([
-                this.getJobOfferFTUsecase.perform({
-                    cityCode: "75107",
-                    keyWords: "marketing",
-                    page: 1,
-                    radius: 20,
-                }),
-                this.getJobOfferFTUsecase.perform({
-                    cityCode: "75107",
-                    keyWords: "communication",
-                    page: 1,
-                    radius: 20,
-                }),
-                this.getJobOfferFTUsecase.perform({
-                    cityCode: "75107",
-                    keyWords: "comptabilité",
-                    page: 1,
-                    radius: 20,
-                }),
-                this.getJobOfferFTUsecase.perform({
-                    cityCode: "75107",
-                    keyWords: "développement web",
-                    page: 1,
-                    radius: 20,
-                }),
-                this.getJobOfferFTUsecase.perform({
-                    cityCode: "75107",
-                    keyWords: "rh",
-                    page: 1,
-                    radius: 20,
-                }),
-                this.getJobOfferFTUsecase.perform({
-                    cityCode: "75107",
-                    keyWords: "commercial",
-                    page: 1,
-                    radius: 20,
-                }),
-            ])
+            const fetchers = ["marketing", "communication", "comptabilité", "dévelopement web", "rh", "commercial"]
+
+            const buffer = await Promise.all(
+                fetchers.map((fetcher) => {
+                    return this.getJobOfferFTUsecase.perform({
+                        keyWords: fetcher,
+                        cityCode: "75107",
+                        page: 1,
+                        radius: 20,
+                    })
+                })
+            )
 
             return new Success({
                 message: "the sample of job offers from france.travail has been fetched successfully",
