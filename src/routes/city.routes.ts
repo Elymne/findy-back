@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express"
-import { cacheSuccesses } from "@App/core/tools/cache"
+import { cacheSuccesses } from "@App/core/cache"
 import { GetCitiesUsecase, GetCitiesUsecaseImpl } from "@App/domain/usecases/getCities.usecase"
-import { Failure } from "@App/core/usecase"
+import { Failure } from "@App/domain/usecases/abstract.usecase"
 
 const router = express.Router()
 const getAllMunicipalities: GetCitiesUsecase = GetCitiesUsecaseImpl

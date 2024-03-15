@@ -1,5 +1,5 @@
-import { DBDataSource } from "@App/core/databases/database.datasource"
-import { PgClient } from "@App/core/databases/pgClient"
+import { DBDataSource } from "@App/infrastructure/datasources/local/abstractDatabase.datasource"
+import { PgClient } from "@App/infrastructure/tools/clients/pg.client"
 import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
 import { KnownJobOffer } from "@App/domain/entities/knownJobOffer.entity"
 

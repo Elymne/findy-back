@@ -1,13 +1,14 @@
-import { Failure, Result, Success, UsecaseNoParams } from "@App/core/usecase"
+import { Failure, Result, Success, UsecaseNoParams } from "@App/domain/usecases/abstract.usecase"
 import { JobOffer } from "../entities/jobOffer.entity"
 import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "./getJobOffersFT.usecase"
-import { logger } from "@App/core/tools/logger"
+import { logger } from "@App/core/logger"
+import { SamplejobOffers } from "../entities/sampleJobOffer"
 
-export interface GetSampleJobOffersUsecase extends UsecaseNoParams<SamplejobOffers> {
+export interface GetSampleFromFTUsecase extends UsecaseNoParams<SamplejobOffers> {
     getJobOfferFTUsecase: GetJobOfferFTUsecase
 }
 
-export const GetSampleJobOffersUsecaseimpl: GetSampleJobOffersUsecase = {
+export const GetSampleFromFTUsecaseImpl: GetSampleFromFTUsecase = {
     getJobOfferFTUsecase: GetJobOfferFTUsecaseImpl,
     perform: async function (): Promise<Result<SamplejobOffers>> {
         try {
@@ -62,20 +63,11 @@ export const GetSampleJobOffersUsecaseimpl: GetSampleJobOffersUsecase = {
                 },
             })
         } catch (error) {
-            logger.error("[GetSampleJobOffersUsecase]", error)
+            logger.error("[GetSampleFromFTUsecase]", error)
             return new Failure({
                 message: "An internal error occur",
                 errorCode: 500,
             })
         }
     },
-}
-
-interface SamplejobOffers {
-    marketing: JobOffer[]
-    communication: JobOffer[]
-    comptability: JobOffer[]
-    webDev: JobOffer[]
-    humanResources: JobOffer[]
-    commercial: JobOffer[]
 }

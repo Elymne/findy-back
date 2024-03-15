@@ -1,17 +1,19 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { cacheSuccesses } from "@App/core/tools/cache"
+import { cacheSuccesses } from "@App/core/cache"
 import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "@App/domain/usecases/getJobOffersFT.usecase"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "@App/domain/usecases/getJobOffersWTTJ.usecase"
 import { GetJobOffersAllUsecase, GetJobOffersUsecaseImpl } from "@App/domain/usecases/getJobOffersAll.usecase"
-import { Failure } from "@App/core/usecase"
-import { GetSampleJobOffersUsecase, GetSampleJobOffersUsecaseimpl } from "@App/domain/usecases/getSampleJobOffers.usecase"
+import { Failure } from "@App/domain/usecases/abstract.usecase"
+import { GetSampleFromFTUsecase, GetSampleFromFTUsecaseImpl } from "@App/domain/usecases/getSampleFromFT.usecase"
+import { GetSampleFromWTTJUsecase, GetSampleFromWTTJUsecaseImpl } from "@App/domain/usecases/getSampleFromWTTJ.usecase"
 
 const router = express.Router()
 const getJobOffersUsecase: GetJobOffersAllUsecase = GetJobOffersUsecaseImpl
 const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecaseImpl
 const getJobOfferFTUsecase: GetJobOfferFTUsecase = GetJobOfferFTUsecaseImpl
-const getSampleJobOffersUsecase: GetSampleJobOffersUsecase = GetSampleJobOffersUsecaseimpl
+const getSampleJobOffersUsecase: GetSampleFromFTUsecase = GetSampleFromFTUsecaseImpl
+const getSampleFromWTTJUsecase: GetSampleFromWTTJUsecase = GetSampleFromWTTJUsecaseImpl
 
 router.get(
     "/all",
@@ -102,8 +104,18 @@ router.get(
     }
 )
 
-router.get("/sample", cacheSuccesses, async (req: Request, res: Response) => {
+router.get("/ftapi/sample", cacheSuccesses, async (req: Request, res: Response) => {
     const result = await getSampleJobOffersUsecase.perform()
+
+    if (result instanceof Failure) {
+        return res.status(result.errorCode).send(result)
+    }
+
+    res.status(200).send(result)
+})
+
+router.get("/wttj/sample", cacheSuccesses, async (req: Request, res: Response) => {
+    const result = await getSampleFromWTTJUsecase.perform()
 
     if (result instanceof Failure) {
         return res.status(result.errorCode).send(result)

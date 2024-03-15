@@ -1,5 +1,5 @@
-import { logger } from "@App/core/tools/logger"
-import { Usecase, Failure, Success, Result } from "@App/core/usecase"
+import { logger } from "@App/core/logger"
+import { Usecase, Failure, Success, Result } from "@App/domain/usecases/abstract.usecase"
 import { JobOfferParserFT, JobOfferParserFTImpl } from "@App/infrastructure/parser/jobOfferFT.parser"
 import { JobOfferFTService, JobOfferFTServiceImpl } from "@App/infrastructure/services/jobOfferFT.service"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"

@@ -1,29 +1,23 @@
 import { JobOfferWTTJDatasource, JobOfferWTTJDatasourceImpl } from "@App/infrastructure/datasources/wttj/jobOfferWTTJ.datasource"
-import { DoesCityExistsUsecase, DoesCityExistsUsecaseImpl } from "./doesCityExists"
-import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/datasources/geoapi/geoapiDatasource"
 import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/datasources/local/knownJobOffer.datasource"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
 import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/services/jobOfferWTTJ.service"
 import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/parser/jobOfferWTTJ.parser"
-import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
-import { JobOffer } from "../entities/jobOffer.entity"
 import { SourceSite } from "../entities/enums/sourceData.enum"
+import { JobOffer } from "../entities/jobOffer.entity"
+import { Failure, Result, Success, Usecase } from "./abstract.usecase"
 import { logger } from "@App/core/logger"
 
-export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], Params> {
-    doesCityExistsUsecase: DoesCityExistsUsecase
+export interface GetJobOffersWTTJRangeUsecase extends Usecase<JobOffer[], Params> {
     jobOfferWTTJDatasource: JobOfferWTTJDatasource
-    geoapiDatasource: GeoapiDatasource
     knownJobOfferDatasource: KnownJobOfferDatasource
     textFilterDatasource: TextFilterDatasource
     jobOfferWTTJService: JobOfferWTTJService
     jobOfferWTTJParser: JobOfferWTTJParser
 }
 
-export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
-    doesCityExistsUsecase: DoesCityExistsUsecaseImpl,
+export const GetJobOffersWTTJRangeUsecaseImpl: GetJobOffersWTTJRangeUsecase = {
     jobOfferWTTJDatasource: JobOfferWTTJDatasourceImpl,
-    geoapiDatasource: GeoapiDatasourceImpl,
     knownJobOfferDatasource: KnownJobOfferDatasourceImpl,
     textFilterDatasource: TextFilterDatasourceImpl,
     jobOfferWTTJService: JobOfferWTTJServiceImpl,
@@ -31,29 +25,15 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
 
     perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
-            const doesCityExistsResult = await this.doesCityExistsUsecase.perform({ code: params.cityCode })
-            if (doesCityExistsResult instanceof Failure) return doesCityExistsResult
-
-            if (!doesCityExistsResult.data) {
-                return new Failure({
-                    message: doesCityExistsResult.message,
-                    errorCode: 404,
-                })
-            }
-
-            const [geoCityData, textFiltersData, knownJobOffersData] = await Promise.all([
-                this.geoapiDatasource.findOne(params.cityCode),
+            const [jobOffersRawData, textFiltersData, knownJobOffersData] = await Promise.all([
+                this.jobOfferWTTJDatasource.findRangeByQuery({
+                    keyWords: params.keyWords,
+                    page: params.page,
+                    nb: params.nb,
+                }),
                 this.textFilterDatasource.findAll(),
                 this.knownJobOfferDatasource.findAllBySource(SourceSite.WTTJ),
             ])
-
-            const jobOffersRawData = await this.jobOfferWTTJDatasource.findAllByQuery({
-                keyWords: params.keyWords,
-                page: params.page,
-                radius: params.radius,
-                lat: geoCityData.centre.coordinates[1],
-                lng: geoCityData.centre.coordinates[0],
-            })
 
             const { sourceFiltered: jobOffersRawDataFiltered, newKnownJobOffers } = await this.jobOfferWTTJService.filter(
                 jobOffersRawData,
@@ -67,11 +47,11 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
             ])
 
             return new Success({
-                message: "Job offers from WelcomeToTheJungle page fetched successfully",
+                message: `Job offers from WelcomeToTheJungle page fetched successfully`,
                 data: jobOffersData,
             })
         } catch (error) {
-            logger.error("[GetJobOffersWTTJUsecase]", error)
+            logger.error("[GetJobOffersWTTJRangeUsecase]", error)
             return new Failure({
                 message: "An internal error occur",
                 errorCode: 500,
@@ -82,7 +62,6 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
 
 interface Params {
     keyWords: string
-    cityCode: string
     page: number
-    radius: number
+    nb: number
 }

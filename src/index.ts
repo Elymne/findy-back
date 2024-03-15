@@ -1,4 +1,4 @@
-import { PgClient } from "./core/databases/pgClient"
+import { PgClient } from "./infrastructure/tools/clients/pg.client"
 import app from "./server"
 
 const port = process.env.PORT ?? "3000"

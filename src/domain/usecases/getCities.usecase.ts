@@ -1,7 +1,7 @@
-import { Failure, Result, Success, UsecaseNoParams } from "@App/core/usecase"
+import { Failure, Result, Success, UsecaseNoParams } from "@App/domain/usecases/abstract.usecase"
 import { CityFTDatasource, CityFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/municipalityFT.datasource"
 import { MunicipalityParser, MunicipalityParserImpl } from "@App/infrastructure/parser/municipality.parser"
-import { logger } from "@App/core/tools/logger"
+import { logger } from "@App/core/logger"
 import { City } from "@App/domain/entities/city.entity"
 import { GetTokenFTUsecase, GetTokenFTUsecaseImpl } from "./getFTToken.usecase"
 

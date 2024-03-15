@@ -1,7 +1,7 @@
-import { Failure, Result, Success, Usecase } from "@App/core/usecase"
+import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
 import { GetTokenFTUsecase, GetTokenFTUsecaseImpl } from "./getFTToken.usecase"
 import { CityFTDatasource, CityFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/municipalityFT.datasource"
-import { logger } from "@App/core/tools/logger"
+import { logger } from "@App/core/logger"
 
 export interface DoesCityExistsUsecase extends Usecase<boolean, GetJobOfferFTUsecaseParams> {
     getTokenFTUsecase: GetTokenFTUsecase

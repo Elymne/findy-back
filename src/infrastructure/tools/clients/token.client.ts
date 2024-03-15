@@ -1,13 +1,13 @@
-export class TokenManager {
-    private static instance: TokenManager
+export class TokenClient {
+    private static instance: TokenClient
     private _token?: Token
     public _last?: number
 
     private constructor() {}
 
-    public static getInstance(): TokenManager {
-        if (!TokenManager.instance) TokenManager.instance = new TokenManager()
-        return TokenManager.instance
+    public static getInstance(): TokenClient {
+        if (!TokenClient.instance) TokenClient.instance = new TokenClient()
+        return TokenClient.instance
     }
 
     public shouldRenew(): boolean {

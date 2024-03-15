@@ -1,8 +1,8 @@
-import { Failure, Result, Success, Usecase } from "@App/core/usecase"
+import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
 import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "./getJobOffersFT.usecase"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOffersWTTJ.usecase"
 import { JobOffer } from "../entities/jobOffer.entity"
-import { logger } from "@App/core/tools/logger"
+import { logger } from "@App/core/logger"
 
 export interface GetJobOffersAllUsecase extends Usecase<JobOffer[], Params> {
     getJobOfferFTUsecase: GetJobOfferFTUsecase
