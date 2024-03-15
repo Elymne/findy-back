@@ -45,6 +45,6 @@ export const scrapWTTJPage = async (
 }
 
 // TODO Surement utile, on va voir.
-export const scrapNbPage = async (page: Page): Promise<number> => {
-    return 0
-}
+// export const scrapNbPage = async (page: Page): Promise<number> => {
+//     return 0
+// }

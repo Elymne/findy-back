@@ -1,5 +1,5 @@
 import { Failure, Result, Success, UsecaseNoParams } from "@App/domain/usecases/abstract.usecase"
-import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
+import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/local/datasources/textFilter.datasource"
 import { TextFilter } from "../entities/textFilter.entity"
 import { logger } from "@App/core/logger"
 

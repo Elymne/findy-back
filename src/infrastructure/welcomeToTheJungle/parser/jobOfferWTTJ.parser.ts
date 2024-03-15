@@ -1,6 +1,6 @@
 import { JobOffer } from "@App/domain/entities/jobOffer.entity"
-import { JobOfferWTTJ } from "../datasources/wttj/models/JobOfferWTTJ"
-import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
+import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
+import { SourceSite } from "@App/domain/enums/sourceData.enum"
 
 export interface JobOfferWTTJParser {
     parse: (source: JobOfferWTTJ[]) => Promise<JobOffer[]>

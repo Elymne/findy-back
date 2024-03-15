@@ -1,8 +1,8 @@
 import { logger } from "@App/core/logger"
 import { Token, TokenClient } from "@App/infrastructure/tools/clients/token.client"
 import { Failure, Result, Success, UsecaseNoParams } from "@App/domain/usecases/abstract.usecase"
-import { TokenFT } from "@App/infrastructure/datasources/ftapi/models/tokenFT"
-import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/datasources/ftapi/tokkenFT.datasource"
+import { TokenFT } from "@App/infrastructure/franceTravail/models/tokenFT"
+import { TokenFTDatasource, TokenFTDatasourceImpl } from "@App/infrastructure/franceTravail/datasources/tokkenFT.datasource"
 
 export interface GetTokenFTUsecase extends UsecaseNoParams<Token> {
     tokenFTDatasource: TokenFTDatasource

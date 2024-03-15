@@ -1,7 +1,7 @@
 import { PupetteerClient } from "@App/infrastructure/tools/clients/pupetteer.client"
-import { JobOfferWTTJ } from "./models/JobOfferWTTJ"
-import { scrapWTTJPage } from "./scrappers/scrapWTTJFullPage"
-import { wttjConst } from "./configs/wttj.const"
+import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
+import { scrapWTTJPage } from "../scrappers/scrapWTTJFullPage"
+import { wttjConst } from "../configs/wttj.const"
 
 export interface JobOfferWTTJDatasource {
     findAllByQuery: (p: { keyWords: string; lat: number; lng: number; page: number; radius: number }) => Promise<JobOfferWTTJ[]>

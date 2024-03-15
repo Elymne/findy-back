@@ -1,7 +1,7 @@
 import { DetailedJobOffer } from "@App/domain/entities/detailedJobOffer.entity"
-import { DetailedJobOfferFT } from "../datasources/ftapi/models/detailedJobOfferFT"
-import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
-import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
+import { DetailedJobOfferFT } from "../models/detailedJobOfferFT"
+import { JobOfferFT } from "../models/jobOfferFT"
+import { SourceSite } from "@App/domain/enums/sourceData.enum"
 import { JobOffer } from "@App/domain/entities/jobOffer.entity"
 
 export interface JobOfferParserFT {

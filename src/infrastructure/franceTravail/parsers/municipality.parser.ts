@@ -1,5 +1,5 @@
 import { City } from "@App/domain/entities/city.entity"
-import { CityFT } from "../datasources/ftapi/models/municipalityFT"
+import { CityFT } from "../models/municipalityFT"
 
 export interface MunicipalityParser {
     parseFT: (source: CityFT[]) => Promise<City[]>

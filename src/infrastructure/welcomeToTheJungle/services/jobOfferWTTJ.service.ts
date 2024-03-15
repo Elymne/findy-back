@@ -1,8 +1,8 @@
 import { TextFilter } from "@App/domain/entities/textFilter.entity"
-import { JobOfferWTTJ } from "../datasources/wttj/models/JobOfferWTTJ"
+import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
 import { uuid } from "@App/core/uuid"
 import { KnownJobOffer } from "@App/domain/entities/knownJobOffer.entity"
-import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
+import { SourceSite } from "@App/domain/enums/sourceData.enum"
 
 export interface JobOfferWTTJService {
     filter: (

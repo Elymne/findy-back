@@ -1,8 +1,8 @@
-import { JobOfferFT } from "../datasources/ftapi/models/jobOfferFT"
+import { JobOfferFT } from "../models/jobOfferFT"
 import { TextFilter } from "@App/domain/entities/textFilter.entity"
 import { uuid } from "@App/core/uuid"
 import { KnownJobOffer } from "@App/domain/entities/knownJobOffer.entity"
-import { SourceSite } from "@App/domain/entities/enums/sourceData.enum"
+import { SourceSite } from "@App/domain/enums/sourceData.enum"
 
 export interface JobOfferFTService {
     filter: (

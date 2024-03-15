@@ -1,8 +1,8 @@
-import { DBDataSource } from "@App/infrastructure/datasources/local/abstractDatabase.datasource"
+import { DatabaseDatasource } from "@App/infrastructure/tools/interfaces/Database.datasource"
 import { PgClient } from "@App/infrastructure/tools/clients/pg.client"
 import { TextFilter } from "@App/domain/entities/textFilter.entity"
 
-export interface TextFilterDatasource extends DBDataSource<TextFilter> {}
+export interface TextFilterDatasource extends DatabaseDatasource<TextFilter> {}
 
 export const TextFilterDatasourceImpl: TextFilterDatasource = {
     tableName: "text_filter",

@@ -1,6 +1,6 @@
 import axios from "axios"
-import { TokenFT } from "./models/tokenFT"
-import { ftapiScopes, ftapiTokenUrl } from "./configs/ftapi.const"
+import { TokenFT } from "../models/tokenFT"
+import { ftapiConst } from "../configs/ftapi.const"
 
 export interface TokenFTDatasource {
     generate: () => Promise<TokenFT>
@@ -9,12 +9,12 @@ export interface TokenFTDatasource {
 export const TokenFTDatasourceImpl: TokenFTDatasource = {
     generate: async function (): Promise<TokenFT> {
         const response = await axios.post<TokenFT>(
-            `${ftapiTokenUrl}`,
+            `${ftapiConst.tokenUrl}`,
             {
                 grant_type: "client_credentials",
                 client_id: process.env.FRANCE_TRAVAIL_ID,
                 client_secret: process.env.FRANCE_TRAVAIL_KEY,
-                scope: ftapiScopes,
+                scope: ftapiConst.scopes,
             },
             {
                 params: {

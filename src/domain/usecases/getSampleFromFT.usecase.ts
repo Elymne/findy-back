@@ -1,5 +1,4 @@
 import { Failure, Result, Success, UsecaseNoParams } from "@App/domain/usecases/abstract.usecase"
-import { JobOffer } from "../entities/jobOffer.entity"
 import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "./getJobOffersFT.usecase"
 import { logger } from "@App/core/logger"
 import { SamplejobOffers } from "../entities/sampleJobOffer"

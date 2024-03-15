@@ -1,9 +1,12 @@
-import { JobOfferWTTJDatasource, JobOfferWTTJDatasourceImpl } from "@App/infrastructure/datasources/wttj/jobOfferWTTJ.datasource"
-import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/datasources/local/knownJobOffer.datasource"
-import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/datasources/local/textFilter.datasource"
-import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/services/jobOfferWTTJ.service"
-import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/parser/jobOfferWTTJ.parser"
-import { SourceSite } from "../entities/enums/sourceData.enum"
+import {
+    JobOfferWTTJDatasource,
+    JobOfferWTTJDatasourceImpl,
+} from "@App/infrastructure/welcomeToTheJungle/datasources/jobOfferWTTJ.datasource"
+import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/datasources/knownJobOffer.datasource"
+import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/local/datasources/textFilter.datasource"
+import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/welcomeToTheJungle/services/jobOfferWTTJ.service"
+import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/welcomeToTheJungle/parser/jobOfferWTTJ.parser"
+import { SourceSite } from "../enums/sourceData.enum"
 import { JobOffer } from "../entities/jobOffer.entity"
 import { Failure, Result, Success, Usecase } from "./abstract.usecase"
 import { logger } from "@App/core/logger"

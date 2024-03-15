@@ -1,4 +1,4 @@
-import { SourceSite } from "./enums/sourceData.enum"
+import { SourceSite } from "../enums/sourceData.enum"
 
 export interface DetailedJobOffer {
     id?: string
