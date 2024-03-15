@@ -1,4 +1,4 @@
-import { PupetteerClient } from "@App/infrastructure/tools/clients/pupetteer.client"
+import { PupetteerClient, WebSite } from "@App/infrastructure/tools/clients/pupetteer.client"
 import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
 import { scrapWTTJPage } from "../scrappers/scrapWTTJFullPage"
 import { wttjConst } from "../configs/wttj.const"
@@ -26,11 +26,12 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
             `&${wttjConst.aroundRadius}=${p.radius}`
         )
 
-        const page = await PupetteerClient.getInstance().createPage()
+        const page = await PupetteerClient.getInstance().createPage(WebSite.wttj)
         await page.goto(url, { timeout: 10000 })
         await new Promise((f) => setTimeout(f, 3000))
         const result = await scrapWTTJPage(page)
-        await page.close()
+
+        PupetteerClient.getInstance().closePage(page, WebSite.wttj)
 
         return result
     },
@@ -44,11 +45,12 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
             `&${wttjConst.pageQuery}=${p.page}`
         )
 
-        const page = await PupetteerClient.getInstance().createPage()
+        const page = await PupetteerClient.getInstance().createPage(WebSite.wttj)
         await page.goto(url, { timeout: 10000 })
         await new Promise((f) => setTimeout(f, 3000))
         const result = await scrapWTTJPage(page, { nb: p.nb })
-        await page.close()
+
+        PupetteerClient.getInstance().closePage(page, WebSite.wttj)
 
         return result
     },

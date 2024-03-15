@@ -12,38 +12,16 @@ export const GetSampleFromWTTJUsecaseImpl: GetSampleFromWTTJUsecase = {
 
     perform: async function (): Promise<Result<SamplejobOffers>> {
         try {
-            const buffer = await Promise.all([
-                this.getJobOffersWTTJRangeUsecase.perform({
-                    keyWords: "marketing",
-                    page: 1,
-                    nb: 10,
-                }),
-                this.getJobOffersWTTJRangeUsecase.perform({
-                    keyWords: "communication",
-                    page: 1,
-                    nb: 10,
-                }),
-                this.getJobOffersWTTJRangeUsecase.perform({
-                    keyWords: "comptabilité",
-                    page: 1,
-                    nb: 10,
-                }),
-                this.getJobOffersWTTJRangeUsecase.perform({
-                    keyWords: "dévelopement web",
-                    page: 1,
-                    nb: 10,
-                }),
-                this.getJobOffersWTTJRangeUsecase.perform({
-                    keyWords: "rh",
-                    page: 1,
-                    nb: 10,
-                }),
-                this.getJobOffersWTTJRangeUsecase.perform({
-                    keyWords: "commercial",
-                    page: 1,
-                    nb: 10,
-                }),
-            ])
+            const fetchers = ["marketing", "communication", "comptabilité", "dévelopement web", "rh", "commercial"]
+            const buffer = await Promise.all(
+                fetchers.map((fetcher) => {
+                    return this.getJobOffersWTTJRangeUsecase.perform({
+                        keyWords: fetcher,
+                        page: 1,
+                        nb: 10,
+                    })
+                })
+            )
 
             return new Success({
                 message: "the sample of job offers from france.travail has been fetched successfully",
