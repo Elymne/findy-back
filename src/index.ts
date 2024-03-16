@@ -1,10 +1,12 @@
 import { PgClient } from "./infrastructure/tools/clients/pg.client"
+import { PupetteerClient } from "./infrastructure/tools/clients/pupetteer.client"
 import app from "./server"
 
 const port = process.env.PORT ?? "3000"
 app.listen(port, async () => {
     // Database client connection.
     const pgClient = PgClient.getInstance()
+    PupetteerClient.getInstance()
     await pgClient.initClient({
         host: process.env.PG_HOST,
         port: Number.parseInt(process.env.PG_PORT ?? ""),

@@ -1,5 +1,4 @@
 import { getRandomInt, wait } from "@App/core/utils"
-import { uuid } from "@App/core/uuid"
 import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer"
 
 export class PupetteerClient {
@@ -24,11 +23,7 @@ export class PupetteerClient {
             this.browser = await puppeteer.launch(this.options)
         }
 
-        console.log(this.buffer.filter((e) => e === webSite).length)
-
         while (this.buffer.filter((e) => e === webSite).length > 2) {
-            console.log("On va devoir vraiment patienter")
-            console.log(this.buffer)
             await wait(1000)
         }
         if (this.buffer.lastIndexOf(webSite) !== -1) {
@@ -49,7 +44,6 @@ export class PupetteerClient {
 
     public async closePage(page: Page, webSite: WebSite): Promise<void> {
         this.buffer.splice(this.buffer.lastIndexOf(webSite), 1)
-        console.log("Et un de fermé")
         page.close()
     }
 }
