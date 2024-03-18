@@ -29,10 +29,10 @@ export const GetJobOffersWTTJRangeUsecaseImpl: GetJobOffersWTTJRangeUsecase = {
     perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
             const [jobOffersRawData, textFiltersData, knownJobOffersData] = await Promise.all([
-                this.jobOfferWTTJDatasource.findRangeByQuery({
+                this.jobOfferWTTJDatasource.findAllByQuery({
                     keyWords: params.keyWords,
                     page: params.page,
-                    nb: params.nb,
+                    nbElement: 10,
                 }),
                 this.textFilterDatasource.findAll(),
                 this.knownJobOfferDatasource.findAllBySource(SourceSite.WTTJ),

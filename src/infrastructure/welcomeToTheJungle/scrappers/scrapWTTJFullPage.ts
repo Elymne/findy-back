@@ -1,12 +1,10 @@
 import { Page } from "puppeteer"
 import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
-import { PupetteerClient, WebSite } from "@App/infrastructure/tools/clients/pupetteer.client"
-import { wttjConst } from "../configs/wttj.const"
 
 export const scrapWTTJPage = async (
     page: Page,
     options?: {
-        nb?: number | undefined | null
+        nb?: number
     }
 ): Promise<JobOfferWTTJ[]> => {
     const result: JobOfferWTTJ[] = []
@@ -35,7 +33,7 @@ export const scrapWTTJPage = async (
 
         result.push({
             title: title as string,
-            image: wttjConst.baseImageUrl + (imageUrl as string),
+            image: imageUrl as string,
             companyLogo: companyLogoUrl as string,
             company: companyName as string,
             city: cityName as string,
