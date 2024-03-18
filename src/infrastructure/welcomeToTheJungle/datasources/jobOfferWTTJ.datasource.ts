@@ -27,8 +27,9 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
         )
 
         const page = await PupetteerClient.getInstance().createPage(WebSite.wttj)
-        await page.goto(url, { timeout: 10000 })
-        await new Promise((f) => setTimeout(f, 3000))
+
+        await page.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
+
         const result = await scrapWTTJPage(page)
 
         PupetteerClient.getInstance().closePage(page, WebSite.wttj)

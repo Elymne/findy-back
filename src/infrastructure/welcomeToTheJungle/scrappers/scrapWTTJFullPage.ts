@@ -1,5 +1,7 @@
 import { Page } from "puppeteer"
 import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
+import { PupetteerClient, WebSite } from "@App/infrastructure/tools/clients/pupetteer.client"
+import { wttjConst } from "../configs/wttj.const"
 
 export const scrapWTTJPage = async (
     page: Page,
@@ -9,35 +11,36 @@ export const scrapWTTJPage = async (
 ): Promise<JobOfferWTTJ[]> => {
     const result: JobOfferWTTJ[] = []
 
-    const rows = await page.$$("li.ais-Hits-list-item")
+    const rows = await await page.$$("li.ais-Hits-list-item")
+
     const max = options?.nb && options.nb <= rows.length ? options.nb : rows.length
 
     for (let i = 0; i < max; i++) {
-        const imageSelectors = await rows[i].$$("img")
-        const imageUrl = (await imageSelectors[0].evaluate((img) => img.getAttribute("src"))) as string
-        const companyLogoUrl = (await imageSelectors[1].evaluate((img) => img.getAttribute("src"))) as string
+        const [imageSelectors, h4selectors, spanSelectors, aSelector] = await Promise.all([
+            rows[i].$$("img"),
+            rows[i].$$("h4"),
+            rows[i].$$("span"),
+            rows[i].$$("a"),
+        ])
 
-        const h4selectors = await rows[i].$$("h4")
-        const title = (await h4selectors[0].evaluate((h4) => h4.textContent)) as string
-
-        const spanSelectors = await rows[i].$$("span")
-        const companyName = (await spanSelectors[0].evaluate((span) => span.textContent)) as string
-        const cityName = (await spanSelectors[2].evaluate((span) => span.textContent)) as string
-
-        const aSelector = await rows[i].$$("a")
-        const sourceUrl = ("https://www.welcometothejungle.com" +
-            (await aSelector[0].evaluate((span) => span.getAttribute("href")))) as string
-
-        const dateCreation = (await spanSelectors[spanSelectors.length - 1].evaluate((span) => span.textContent)) as string
+        const [imageUrl, companyLogoUrl, title, companyName, cityName, sourceUrl, dateCreation] = await Promise.all([
+            imageSelectors[0].evaluate((img) => img.getAttribute("src")),
+            imageSelectors[1].evaluate((img) => img.getAttribute("src")),
+            h4selectors[0].evaluate((h4) => h4.textContent),
+            spanSelectors[0].evaluate((span) => span.textContent),
+            spanSelectors[2].evaluate((span) => span.textContent),
+            aSelector[0].evaluate((span) => span.getAttribute("href")),
+            spanSelectors[spanSelectors.length - 1].evaluate((span) => span.textContent),
+        ])
 
         result.push({
-            title: title,
-            image: imageUrl,
-            companyLogo: companyLogoUrl,
-            company: companyName,
-            city: cityName,
-            created: dateCreation,
-            accessUrl: sourceUrl,
+            title: title as string,
+            image: wttjConst.baseImageUrl + (imageUrl as string),
+            companyLogo: companyLogoUrl as string,
+            company: companyName as string,
+            city: cityName as string,
+            created: dateCreation as string,
+            accessUrl: sourceUrl as string,
         })
     }
 
