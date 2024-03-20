@@ -1,11 +1,11 @@
 import { City } from "@App/domain/entities/city.entity"
 import { CityFT } from "../models/municipalityFT"
 
-export interface MunicipalityParser {
+export interface CityFTParser {
     parseFT: (source: CityFT[]) => Promise<City[]>
 }
 
-export const MunicipalityParserImpl: MunicipalityParser = {
+export const CityFTParserImpl: CityFTParser = {
     parseFT: async function (source: CityFT[]): Promise<City[]> {
         return source.map((elem) => {
             return {
