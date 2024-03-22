@@ -7,13 +7,20 @@ import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/geoa
 import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/datasources/knownJobOffer.datasource"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/local/datasources/textFilter.datasource"
 import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/welcomeToTheJungle/services/jobOfferWTTJ.service"
-import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/welcomeToTheJungle/parsers/jobOfferWTTJ.parser"
+import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/geoapi/parsers/geoApi.parser"
 import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
-import { JobOffer } from "../entities/jobOffer.entity"
-import { SourceSite } from "../enums/sourceData.enum"
-import { logger } from "@App/core/logger"
+import logger from "@App/core/logger"
+import JobOffer from "../entities/jobOffer.entity"
+import SourceSite from "../enums/sourceData.enum"
 
-export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], Params> {
+type _Params = {
+    keyWords: string
+    cityCode: string
+    page: number
+    radius: number
+}
+
+export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], _Params> {
     doesCityExistsUsecase: DoesCityExistsUsecase
     jobOfferWTTJDatasource: JobOfferWTTJDatasource
     geoapiDatasource: GeoapiDatasource
@@ -32,7 +39,7 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
     jobOfferWTTJService: JobOfferWTTJServiceImpl,
     jobOfferWTTJParser: JobOfferWTTJParserImpl,
 
-    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
+    perform: async function (params: _Params): Promise<Result<JobOffer[]>> {
         try {
             const doesCityExistsResult = await this.doesCityExistsUsecase.perform({ code: params.cityCode })
             if (doesCityExistsResult instanceof Failure) return doesCityExistsResult
@@ -81,11 +88,4 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
             })
         }
     },
-}
-
-interface Params {
-    keyWords: string
-    cityCode: string
-    page: number
-    radius: number
 }

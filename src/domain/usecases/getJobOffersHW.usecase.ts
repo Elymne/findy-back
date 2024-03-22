@@ -1,6 +1,8 @@
 import { JobOfferHWDatasource, JobOfferHWDatasourceImpl } from "@App/infrastructure/hw/datasources/jobOfferHW.datasource"
-import { JobOffer } from "../entities/jobOffer.entity"
 import { Result, Usecase } from "./abstract.usecase"
+import JobOffer from "../entities/jobOffer.entity"
+
+type _Params = {}
 
 export interface GetJobOffersHWUsecase extends Usecase<JobOffer[], _Params> {
     jobOfferHWDatasource: JobOfferHWDatasource
@@ -13,5 +15,3 @@ export const GetJobOffersHWUsecaseimpl: GetJobOffersHWUsecase = {
         throw new Error("Function not implemented.")
     },
 }
-
-type _Params = {}

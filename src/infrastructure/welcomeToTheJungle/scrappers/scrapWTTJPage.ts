@@ -1,17 +1,11 @@
+import JobOffer from "@App/domain/entities/jobOffer.entity"
+import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
-import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
 
-export const scrapWTTJPage = async (
-    page: Page,
-    options?: {
-        nb?: number
-    }
-): Promise<JobOfferWTTJ[]> => {
-    const result: JobOfferWTTJ[] = []
-
+export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]> {
     const rows = await page.$$("li.ais-Hits-list-item")
-
-    const max = options?.nb && options.nb <= rows.length ? options.nb : rows.length
+    const max = nb && nb <= rows.length ? nb : rows.length
+    const result = new Array<JobOffer>(max)
 
     for (let i = 0; i < max; i++) {
         const [imageSelectors, h4selectors, spanSelectors, aSelector] = await Promise.all([
@@ -32,20 +26,19 @@ export const scrapWTTJPage = async (
         ])
 
         result.push({
+            id: undefined,
+            sourceData: SourceSite.WTTJ,
             title: title as string,
-            image: imageUrl as string,
-            companyLogo: companyLogoUrl as string,
-            company: companyName as string,
-            city: cityName as string,
-            created: dateCreation as string,
-            accessUrl: sourceUrl as string,
+            cityName: cityName as string,
+            companyName: companyName as string,
+            companyLogoUrl: companyLogoUrl as string,
+            imageUrl: imageUrl as string,
+            sourceUrl: sourceUrl as string,
+            createdWhile: dateCreation as string,
+            createdAt: undefined,
+            updatedAt: undefined,
         })
     }
 
     return result
 }
-
-// TODO Surement utile, on va voir.
-// export const scrapNbPage = async (page: Page): Promise<number> => {
-//     return 0
-// }

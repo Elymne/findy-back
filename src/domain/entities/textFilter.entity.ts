@@ -1,4 +1,4 @@
-export interface TextFilter {
+export default interface TextFilter {
     id: string
     value: string
 }

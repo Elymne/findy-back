@@ -1,4 +1,4 @@
-export const geoApiConst = {
+const geoApiConst = {
     url: "https://geo.api.gouv.fr",
     cityParam: "communes",
 
@@ -9,3 +9,5 @@ export const geoApiConst = {
     nameQuery: "nom",
     limitQuery: "limit",
 }
+
+export default geoApiConst

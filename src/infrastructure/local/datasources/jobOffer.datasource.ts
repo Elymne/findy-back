@@ -1,6 +1,6 @@
-import { DatabaseDatasource } from "@App/infrastructure/tools/interfaces/Database.datasource"
-import { PgClient } from "@App/infrastructure/tools/clients/pg.client"
-import { JobOffer } from "@App/domain/entities/jobOffer.entity"
+import JobOffer from "@App/domain/entities/jobOffer.entity"
+import { PgClient } from "@App/infrastructure/configs/clients/pg.client"
+import { DatabaseDatasource } from "@App/infrastructure/configs/interfaces/Database.datasource"
 
 export interface JobOfferDatasource extends DatabaseDatasource<JobOffer> {}
 
@@ -25,15 +25,15 @@ export const JobOfferDatasourceImpl: JobOfferDatasource = {
             .query<JobOffer>(query, [
                 jobOffer.id,
                 jobOffer.title,
-                jobOffer.image_url,
-                jobOffer.company_name,
-                jobOffer.company_logo_url,
-                jobOffer.city_name,
-                jobOffer.source_url,
-                jobOffer.source_data,
-                jobOffer.created_at,
-                jobOffer.updated_at,
-                jobOffer.created_while,
+                jobOffer.imageUrl,
+                jobOffer.companyName,
+                jobOffer.companyLogoUrl,
+                jobOffer.cityName,
+                jobOffer.sourceUrl,
+                jobOffer.sourceData,
+                jobOffer.createdAt,
+                jobOffer.updatedAt,
+                jobOffer.createdWhile,
             ])
         return jobOffer
     },
@@ -56,39 +56,39 @@ export const JobOfferDatasourceImpl: JobOfferDatasource = {
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.image_url)
+            values.push(jobOffer.imageUrl)
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.company_name)
+            values.push(jobOffer.companyName)
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.company_logo_url)
+            values.push(jobOffer.companyLogoUrl)
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.city_name)
+            values.push(jobOffer.cityName)
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.source_url)
+            values.push(jobOffer.sourceUrl)
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.source_data)
+            values.push(jobOffer.sourceData)
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.created_at ?? null)
+            values.push(jobOffer.createdAt ?? null)
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.updated_at ?? null)
+            values.push(jobOffer.updatedAt ?? null)
 
             query += `,$${index}),`
             index++
-            values.push(jobOffer.created_while ?? null)
+            values.push(jobOffer.createdWhile ?? null)
         }
 
         query = query.substring(0, query.length - 1)

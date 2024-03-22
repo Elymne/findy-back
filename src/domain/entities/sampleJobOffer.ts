@@ -1,6 +1,6 @@
-import { JobOffer } from "./jobOffer.entity"
+import JobOffer from "./jobOffer.entity"
 
-export interface SamplejobOffers {
+export default interface SamplejobOffers {
     marketing: JobOffer[]
     communication: JobOffer[]
     comptability: JobOffer[]

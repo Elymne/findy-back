@@ -1,7 +1,7 @@
-import { PupetteerClient, WebSite } from "@App/infrastructure/tools/clients/pupetteer.client"
+import JobOffer from "@App/domain/entities/jobOffer.entity"
+import { PupetteerClient, WebSite } from "@App/infrastructure/configs/clients/pupetteer.client"
 import { hwConst } from "../configs/hw.const"
 import { scrapHWPage } from "../scrappers/scrapHWPage"
-import { JobOfferHW } from "../models/jobOfferHW"
 
 type QueryParams = {
     keyWords: string
@@ -12,11 +12,11 @@ type QueryParams = {
 }
 
 export interface JobOfferHWDatasource {
-    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: QueryParams) => Promise<JobOfferHW[]>
+    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: QueryParams) => Promise<JobOffer[]>
 }
 
 export const JobOfferHWDatasourceImpl: JobOfferHWDatasource = {
-    findAllByQuery: async function ({ keyWords, cityName, page, radius }: QueryParams): Promise<JobOfferHW[]> {
+    findAllByQuery: async function ({ keyWords, cityName, page, radius }: QueryParams): Promise<JobOffer[]> {
         const url = "".concat(
             hwConst.url,
             `?${hwConst.keywords}=${keyWords}`,

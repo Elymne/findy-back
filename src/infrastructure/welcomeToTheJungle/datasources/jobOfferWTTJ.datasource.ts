@@ -1,7 +1,7 @@
-import { PupetteerClient, WebSite } from "@App/infrastructure/tools/clients/pupetteer.client"
-import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
+import JobOffer from "@App/domain/entities/jobOffer.entity"
+import { PupetteerClient, WebSite } from "@App/infrastructure/configs/clients/pupetteer.client"
+import wttjConst from "../configs/wttj.const"
 import { scrapWTTJPage } from "../scrappers/scrapWTTJPage"
-import { wttjConst } from "../configs/wttj.const"
 
 type QueryParams = {
     keyWords: string
@@ -13,11 +13,11 @@ type QueryParams = {
 }
 
 export interface JobOfferWTTJDatasource {
-    findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: QueryParams) => Promise<JobOfferWTTJ[]>
+    findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: QueryParams) => Promise<JobOffer[]>
 }
 
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
-    findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: QueryParams): Promise<JobOfferWTTJ[]> {
+    findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: QueryParams): Promise<JobOffer[]> {
         const url: string = "".concat(
             wttjConst.url,
             `?${wttjConst.country}=FR`,
@@ -25,15 +25,14 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
             `&${wttjConst.page}=${page ?? 1}`,
             `&${wttjConst.radius}=${radius ?? 20}`,
             `&${wttjConst.keywords}=${keyWords}`,
-
+            // Optionnals queries.
             lat && lng ? `&${wttjConst.aroundLatLng}=${lat},${lng}` : ""
         )
 
         const newPage = await PupetteerClient.getInstance().createPage(WebSite.wttj)
-
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
-        const result = await scrapWTTJPage(newPage, { nb: nbElement })
+        const result = await scrapWTTJPage(newPage, nbElement)
 
         PupetteerClient.getInstance().closePage(newPage, WebSite.wttj)
 

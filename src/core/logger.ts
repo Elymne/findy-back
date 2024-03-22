@@ -55,4 +55,6 @@ class CustomLogger implements Logger {
     }
 }
 
-export const logger: CustomLogger = new CustomLogger()
+const logger: CustomLogger = new CustomLogger()
+
+export default logger

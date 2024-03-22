@@ -1,4 +1,4 @@
-export const wttjConst = {
+const wttjConst = {
     url: "https://www.welcometothejungle.com/fr/jobs",
 
     country: "refinementList[offices.country_code][]",
@@ -10,3 +10,5 @@ export const wttjConst = {
 
     baseImageUrl: "https://www.welcometothejungle.com",
 }
+
+export default wttjConst

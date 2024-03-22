@@ -1,6 +1,6 @@
-import { DatabaseDatasource } from "@App/infrastructure/tools/interfaces/Database.datasource"
-import { PgClient } from "@App/infrastructure/tools/clients/pg.client"
-import { TextFilter } from "@App/domain/entities/textFilter.entity"
+import TextFilter from "@App/domain/entities/textFilter.entity"
+import { PgClient } from "@App/infrastructure/configs/clients/pg.client"
+import { DatabaseDatasource } from "@App/infrastructure/configs/interfaces/Database.datasource"
 
 export interface TextFilterDatasource extends DatabaseDatasource<TextFilter> {}
 

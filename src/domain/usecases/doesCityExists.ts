@@ -1,6 +1,11 @@
 import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
-import { logger } from "@App/core/logger"
 import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/geoapi/datasources/geoapiDatasource"
+import logger from "@App/core/logger"
+
+type _Params = {
+    code?: string
+    name?: string
+}
 
 export interface DoesCityExistsUsecase extends Usecase<boolean, _Params> {
     geoapiDatasource: GeoapiDatasource
@@ -53,9 +58,4 @@ export const DoesCityExistsUsecaseImpl: DoesCityExistsUsecase = {
             })
         }
     },
-}
-
-type _Params = {
-    code?: string
-    name?: string
 }

@@ -1,24 +1,25 @@
-import { logger } from "@App/core/logger"
-import { SamplejobOffers } from "../entities/sampleJobOffer"
+import logger from "@App/core/logger"
+import SamplejobOffers from "../entities/sampleJobOffer"
 import { Failure, Result, Success, UsecaseNoParams } from "./abstract.usecase"
-import { GetJobOffersWTTJRangeUsecase, GetJobOffersWTTJRangeUsecaseImpl } from "./getJobOffersWTTJRange.usecase"
+import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOffersWTTJ.usecase"
 
 export interface GetSampleFromWTTJUsecase extends UsecaseNoParams<SamplejobOffers> {
-    getJobOffersWTTJRangeUsecase: GetJobOffersWTTJRangeUsecase
+    getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase
 }
 
 export const GetSampleFromWTTJUsecaseImpl: GetSampleFromWTTJUsecase = {
-    getJobOffersWTTJRangeUsecase: GetJobOffersWTTJRangeUsecaseImpl,
+    getJobOffersWTTJUsecase: GetJobOffersWTTJUsecaseImpl,
 
     perform: async function (): Promise<Result<SamplejobOffers>> {
         try {
             const fetchers = ["marketing", "communication", "comptabilité", "dévelopement web", "rh", "commercial"]
             const buffer = await Promise.all(
                 fetchers.map((fetcher) => {
-                    return this.getJobOffersWTTJRangeUsecase.perform({
+                    return this.getJobOffersWTTJUsecase.perform({
                         keyWords: fetcher,
                         page: 1,
-                        nb: 10,
+                        cityCode: "",
+                        radius: 10,
                     })
                 })
             )

@@ -1,6 +1,6 @@
-import { SourceSite } from "../enums/sourceData.enum"
+import SourceSite from "../enums/sourceData.enum"
 
-export interface KnownJobOffer {
+export default interface KnownJobOffer {
     id: string
     source_id?: string
     source_url?: string

@@ -1,4 +1,6 @@
-export enum SourceSite {
-    FTAPI = "FTAPI",
+enum SourceSite {
     WTTJ = "WTTJ",
+    HW = "HW",
 }
+
+export default SourceSite

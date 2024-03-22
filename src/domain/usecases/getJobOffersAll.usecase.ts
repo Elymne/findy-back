@@ -1,26 +1,27 @@
 import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
-import { GetJobOfferFTUsecase, GetJobOfferFTUsecaseImpl } from "./getJobOffersFT.usecase"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOffersWTTJ.usecase"
-import { JobOffer } from "../entities/jobOffer.entity"
-import { logger } from "@App/core/logger"
+import JobOffer from "../entities/jobOffer.entity"
+import logger from "@App/core/logger"
 
-export interface GetJobOffersAllUsecase extends Usecase<JobOffer[], Params> {
-    getJobOfferFTUsecase: GetJobOfferFTUsecase
+interface _Params {
+    keyWords: string
+    cityCode: string
+    page: number
+    radius: number
+}
+
+export interface GetJobOffersAllUsecase extends Usecase<JobOffer[], _Params> {
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase
 }
 
 export const GetJobOffersUsecaseImpl: GetJobOffersAllUsecase = {
-    getJobOfferFTUsecase: GetJobOfferFTUsecaseImpl,
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecaseImpl,
 
-    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
+    perform: async function (params: _Params): Promise<Result<JobOffer[]>> {
         try {
-            const [jobOffersFTResult, jobOffersWTTJResult] = await Promise.all([
-                this.getJobOfferFTUsecase.perform(params),
-                this.getJobOffersWTTJUsecase.perform(params),
-            ])
+            const [jobOffersWTTJResult] = await Promise.all([this.getJobOffersWTTJUsecase.perform(params)])
 
-            if (jobOffersFTResult instanceof Failure && jobOffersWTTJResult instanceof Failure) {
+            if (jobOffersWTTJResult instanceof Failure) {
                 return new Failure({
                     message: "Une erreur s'est produite lors de la récupération des données",
                     errorCode: 500,
@@ -28,10 +29,6 @@ export const GetJobOffersUsecaseImpl: GetJobOffersAllUsecase = {
             }
 
             const jobOffers: JobOffer[] = []
-
-            if (jobOffersFTResult instanceof Success) {
-                jobOffers.push(...jobOffersFTResult.data)
-            }
 
             if (jobOffersWTTJResult instanceof Success) {
                 jobOffers.push(...jobOffersWTTJResult.data)
@@ -49,11 +46,4 @@ export const GetJobOffersUsecaseImpl: GetJobOffersAllUsecase = {
             })
         }
     },
-}
-
-interface Params {
-    keyWords: string
-    cityCode: string
-    page: number
-    radius: number
 }

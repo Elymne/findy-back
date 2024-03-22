@@ -1,6 +1,6 @@
 import axios from "axios"
-import { GeoCity } from "../models/geoCity"
-import { geoApiConst } from "../configs/geoapi.const"
+import geoApiConst from "../configs/geoapi.const"
+import GeoCity from "../models/geoCity"
 
 export interface GeoapiDatasource {
     findAll: () => Promise<GeoCity[]>
