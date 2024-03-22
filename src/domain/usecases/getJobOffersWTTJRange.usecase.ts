@@ -5,7 +5,7 @@ import {
 import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/datasources/knownJobOffer.datasource"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/local/datasources/textFilter.datasource"
 import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/welcomeToTheJungle/services/jobOfferWTTJ.service"
-import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/welcomeToTheJungle/parser/jobOfferWTTJ.parser"
+import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/welcomeToTheJungle/parsers/jobOfferWTTJ.parser"
 import { SourceSite } from "../enums/sourceData.enum"
 import { JobOffer } from "../entities/jobOffer.entity"
 import { Failure, Result, Success, Usecase } from "./abstract.usecase"

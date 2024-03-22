@@ -1,5 +1,11 @@
 export const geoApiConst = {
     url: "https://geo.api.gouv.fr",
-    city: "communes",
-    staticQuery: "fields=centre&format=json&geometry=centre",
+    cityParam: "communes",
+
+    fieldsQuery: "fields",
+    formatQuery: "format",
+    geometryQuery: "geometry",
+    boostQuery: "boost",
+    nameQuery: "nom",
+    limitQuery: "limit",
 }

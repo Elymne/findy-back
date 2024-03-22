@@ -1,4 +1,4 @@
-export interface GeoCity {
+export type GeoCity = {
     centre: {
         type: string
         coordinates: number[] // lng and lat (this order).

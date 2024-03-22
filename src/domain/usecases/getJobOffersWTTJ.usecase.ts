@@ -7,7 +7,7 @@ import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/geoa
 import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/datasources/knownJobOffer.datasource"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/local/datasources/textFilter.datasource"
 import { JobOfferWTTJService, JobOfferWTTJServiceImpl } from "@App/infrastructure/welcomeToTheJungle/services/jobOfferWTTJ.service"
-import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/welcomeToTheJungle/parser/jobOfferWTTJ.parser"
+import { JobOfferWTTJParser, JobOfferWTTJParserImpl } from "@App/infrastructure/welcomeToTheJungle/parsers/jobOfferWTTJ.parser"
 import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
 import { JobOffer } from "../entities/jobOffer.entity"
 import { SourceSite } from "../enums/sourceData.enum"
@@ -45,7 +45,7 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
             }
 
             const [geoCityData, textFiltersData, knownJobOffersData] = await Promise.all([
-                this.geoapiDatasource.findOne(params.cityCode),
+                this.geoapiDatasource.findOneByCode(params.cityCode),
                 this.textFilterDatasource.findAll(),
                 this.knownJobOfferDatasource.findAllBySource(SourceSite.WTTJ),
             ])
