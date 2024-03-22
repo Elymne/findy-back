@@ -1,6 +1,6 @@
 import { PupetteerClient, WebSite } from "@App/infrastructure/tools/clients/pupetteer.client"
 import { JobOfferWTTJ } from "../models/JobOfferWTTJ"
-import { scrapWTTJPage } from "../scrappers/scrapWTTJFullPage"
+import { scrapWTTJPage } from "../scrappers/scrapWTTJPage"
 import { wttjConst } from "../configs/wttj.const"
 
 type QueryParams = {
@@ -20,11 +20,11 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
     findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: QueryParams): Promise<JobOfferWTTJ[]> {
         const url: string = "".concat(
             wttjConst.url,
-            `?${wttjConst.countryQuery}=FR`,
-            `&${wttjConst.contractTypeQuery}=apprenticeship`,
-            `&${wttjConst.pageQuery}=${page ?? 1}`,
-            `&${wttjConst.aroundRadius}=${radius ?? 20}`,
-            `&${wttjConst.paramsQuery}=${keyWords}`,
+            `?${wttjConst.country}=FR`,
+            `&${wttjConst.contractType}=apprenticeship`,
+            `&${wttjConst.page}=${page ?? 1}`,
+            `&${wttjConst.radius}=${radius ?? 20}`,
+            `&${wttjConst.keywords}=${keyWords}`,
 
             lat && lng ? `&${wttjConst.aroundLatLng}=${lat},${lng}` : ""
         )

@@ -1,12 +1,12 @@
 export const wttjConst = {
     url: "https://www.welcometothejungle.com/fr/jobs",
 
-    countryQuery: "refinementList[offices.country_code][]",
-    contractTypeQuery: "refinementList[contract_type][]",
-    paramsQuery: "query",
-    pageQuery: "page",
+    country: "refinementList[offices.country_code][]",
+    contractType: "refinementList[contract_type][]",
+    keywords: "query",
+    page: "page",
     aroundLatLng: "aroundLatLng",
-    aroundRadius: "aroundRadius",
+    radius: "aroundRadius",
 
     baseImageUrl: "https://www.welcometothejungle.com",
 }

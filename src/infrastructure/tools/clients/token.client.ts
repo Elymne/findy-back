@@ -25,7 +25,7 @@ export class TokenClient {
     }
 }
 
-export interface Token {
+export type Token = {
     scope: string
     expires_in: number
     token_type: string

@@ -1,5 +1,6 @@
 import { getRandomInt, wait } from "@App/core/utils"
-import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer"
+import puppeteer, { Browser, Page, PuppeteerError, PuppeteerLaunchOptions } from "puppeteer"
+import { ErrorLevel } from "ts-postgres"
 
 export class PupetteerClient {
     private static instance: PupetteerClient
@@ -18,9 +19,15 @@ export class PupetteerClient {
         return PupetteerClient.instance
     }
 
-    public async createPage(webSite: WebSite): Promise<Page> {
+    public async initBrowser(): Promise<void> {
         if (!this.browser) {
             this.browser = await puppeteer.launch(this.options)
+        }
+    }
+
+    public async createPage(webSite: WebSite): Promise<Page> {
+        if (!this.browser) {
+            throw new PuppeteerError("No browser has been init. Page cannot be created.")
         }
 
         while (this.buffer.filter((e) => e === webSite).length > 5) {
@@ -60,11 +67,5 @@ export class PupetteerClient {
 
 export enum WebSite {
     wttj,
-}
-
-export interface Token {
-    scope: string
-    expires_in: number
-    token_type: string
-    access_token: string
+    hw,
 }

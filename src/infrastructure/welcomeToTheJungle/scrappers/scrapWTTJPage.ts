@@ -9,7 +9,7 @@ export const scrapWTTJPage = async (
 ): Promise<JobOfferWTTJ[]> => {
     const result: JobOfferWTTJ[] = []
 
-    const rows = await await page.$$("li.ais-Hits-list-item")
+    const rows = await page.$$("li.ais-Hits-list-item")
 
     const max = options?.nb && options.nb <= rows.length ? options.nb : rows.length
 

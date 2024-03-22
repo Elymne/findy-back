@@ -1,16 +1,12 @@
 import express, { Request, Response } from "express"
-import { GetTokenFTUsecase, GetTokenFTUsecaseImpl } from "@App/domain/usecases/getFTToken.usecase"
+import { JobOfferHWDatasource, JobOfferHWDatasourceImpl } from "@App/infrastructure/hw/datasources/jobOfferHW.datasource"
 
 const router = express.Router()
 
-const getTokenFTUsecase: GetTokenFTUsecase = GetTokenFTUsecaseImpl
+const jobOfferHWDatasource: JobOfferHWDatasource = JobOfferHWDatasourceImpl
 
 router.get("/", async (req: Request, res: Response) => {
-    const result = await getTokenFTUsecase.perform()
-
-    if ("errorCode" in result && typeof result.errorCode === "number") {
-        return res.status(result.errorCode).send(result)
-    }
+    const result = await jobOfferHWDatasource.findAllByQuery({ keyWords: "Marketing", cityName: "NANTES" })
 
     res.status(200).send(result)
 })
