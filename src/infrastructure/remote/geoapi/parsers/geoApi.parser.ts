@@ -1,11 +1,11 @@
 import City from "@App/domain/entities/city.entity"
 import GeoCity from "../models/geoCity"
 
-export interface JobOfferWTTJParser {
+export interface GeoApiParser {
     parse: (sources: GeoCity[]) => Promise<City[]>
 }
 
-export const JobOfferWTTJParserImpl: JobOfferWTTJParser = {
+export const GeoApiParserImpl: GeoApiParser = {
     parse: async function (sources: GeoCity[]): Promise<City[]> {
         const parsedSource = new Array<City>(sources.length)
         for (let i = 0; i < sources.length; i++) {

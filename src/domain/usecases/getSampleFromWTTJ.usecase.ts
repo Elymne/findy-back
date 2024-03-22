@@ -17,9 +17,7 @@ export const GetSampleFromWTTJUsecaseImpl: GetSampleFromWTTJUsecase = {
                 fetchers.map((fetcher) => {
                     return this.getJobOffersWTTJUsecase.perform({
                         keyWords: fetcher,
-                        page: 1,
-                        cityCode: "",
-                        radius: 10,
+                        nbElements: 8,
                     })
                 })
             )

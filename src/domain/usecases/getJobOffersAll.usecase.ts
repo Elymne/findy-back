@@ -3,21 +3,21 @@ import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOf
 import JobOffer from "../entities/jobOffer.entity"
 import logger from "@App/core/logger"
 
-interface _Params {
+interface Params {
     keyWords: string
     cityCode: string
     page: number
     radius: number
 }
 
-export interface GetJobOffersAllUsecase extends Usecase<JobOffer[], _Params> {
+export interface GetJobOffersAllUsecase extends Usecase<JobOffer[], Params> {
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase
 }
 
 export const GetJobOffersUsecaseImpl: GetJobOffersAllUsecase = {
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecaseImpl,
 
-    perform: async function (params: _Params): Promise<Result<JobOffer[]>> {
+    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
             const [jobOffersWTTJResult] = await Promise.all([this.getJobOffersWTTJUsecase.perform(params)])
 

@@ -1,6 +1,5 @@
 import { getRandomInt, wait } from "@App/core/utils"
 import puppeteer, { Browser, Page, PuppeteerError, PuppeteerLaunchOptions } from "puppeteer"
-import { ErrorLevel } from "ts-postgres"
 
 export class PupetteerClient {
     private static instance: PupetteerClient

@@ -1,17 +1,30 @@
-import { JobOfferHWDatasource, JobOfferHWDatasourceImpl } from "@App/infrastructure/hw/datasources/jobOfferHW.datasource"
 import { Result, Usecase } from "./abstract.usecase"
 import JobOffer from "../entities/jobOffer.entity"
+import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "./getOneCity.usecase"
+import { JobOfferHWDatasource, JobOfferHWDatasourceImpl } from "@App/infrastructure/remote/helloWork/datasources/jobOfferHW.datasource"
+import { FilterJobOffersUsecase, FilterJobOffersUsecaseImpl } from "./filterJobOffers.usecase"
 
-type _Params = {}
+type Params = {
+    keyWords: string
+    cityCode?: string
+    page?: number
+    radius?: number
+    nbElements?: number
+}
 
-export interface GetJobOffersHWUsecase extends Usecase<JobOffer[], _Params> {
+export interface GetJobOffersHWUsecase extends Usecase<JobOffer[], Params> {
     jobOfferHWDatasource: JobOfferHWDatasource
+    getOneCityUsecase: GetOneCityUsecase
+    filterJobOfferUsecase: FilterJobOffersUsecase
 }
 
 export const GetJobOffersHWUsecaseimpl: GetJobOffersHWUsecase = {
     jobOfferHWDatasource: JobOfferHWDatasourceImpl,
+    getOneCityUsecase: GetOneCityUsecaseImpl,
+    filterJobOfferUsecase: FilterJobOffersUsecaseImpl,
 
-    perform: function (params: _Params): Promise<Result<JobOffer[]>> {
+    perform: function (params: Params): Promise<Result<JobOffer[]>> {
+        console.log(params)
         throw new Error("Function not implemented.")
     },
 }

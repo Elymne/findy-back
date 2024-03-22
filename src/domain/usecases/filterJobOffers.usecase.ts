@@ -1,17 +1,17 @@
 import { Failure, Result, Success, Usecase } from "./abstract.usecase"
-import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/local/datasources/textFilter.datasource"
-import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/datasources/knownJobOffer.datasource"
 import uuid from "@App/core/uuid"
 import logger from "@App/core/logger"
 import JobOffer from "../entities/jobOffer.entity"
 import TextFilter from "../entities/textFilter.entity"
 import KnownJobOffer from "../entities/knownJobOffer.entity"
+import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/native/datasources/knownJobOffer.datasource"
+import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/native/datasources/textFilter.datasource"
 
-type _Params = {
+type Params = {
     sources: JobOffer[]
 }
 
-export interface FilterJobOffersUsecase extends Usecase<JobOffer[], _Params> {
+export interface FilterJobOffersUsecase extends Usecase<JobOffer[], Params> {
     textFilterDatasource: TextFilterDatasource
     knownJobOfferDatasource: KnownJobOfferDatasource
 }
@@ -20,7 +20,7 @@ export const FilterJobOffersUsecaseImpl: FilterJobOffersUsecase = {
     textFilterDatasource: TextFilterDatasourceImpl,
     knownJobOfferDatasource: KnownJobOfferDatasourceImpl,
 
-    perform: async function (params: _Params): Promise<Result<JobOffer[]>> {
+    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
         try {
             const [textFilters, kownJobOffers] = await Promise.all([
                 this.textFilterDatasource.findAll(),
