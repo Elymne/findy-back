@@ -12,14 +12,14 @@ import {
 export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], Params> {
     jobOfferWTTJDatasource: JobOfferWTTJDatasource
 
-    getOneCity: GetOneCityUsecase
+    getOneUsecaseCity: GetOneCityUsecase
     filterJobUsecase: FilterJobOffersUsecase
 }
 
 export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
     jobOfferWTTJDatasource: JobOfferWTTJDatasourceImpl,
 
-    getOneCity: GetOneCityUsecaseImpl,
+    getOneUsecaseCity: GetOneCityUsecaseImpl,
     filterJobUsecase: FilterJobOffersUsecaseImpl,
 
     perform: async function (params: Params): Promise<Result<JobOffer[]>> {
@@ -34,7 +34,7 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
             } as JobOfferWTTJQuery
 
             if (params.cityCode) {
-                const cityResult = await this.getOneCity.perform({ code: params.cityCode })
+                const cityResult = await this.getOneUsecaseCity.perform({ code: params.cityCode })
                 if (cityResult instanceof Failure) return cityResult
                 query.lat = cityResult.data.coordinates.lat
                 query.lng = cityResult.data.coordinates.lng

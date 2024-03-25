@@ -66,24 +66,31 @@ type CheckSourceResult = {
     isBanned: boolean
 }
 function checkSource(source: JobOffer, textFilters: TextFilter[], kownJobOffers: KnownJobOffer[]): CheckSourceResult {
-    for (const kownJobOffer of kownJobOffers) {
-        if (source.id && source.id === kownJobOffer.source_id) {
+    for (const key in kownJobOffers) {
+        if (source.id && source.id === kownJobOffers[key].source_id) {
             return {
                 isKnown: true,
-                isBanned: kownJobOffer.is_banned,
+                isBanned: kownJobOffers[key].is_banned,
             } as CheckSourceResult
         }
 
-        if (source.sourceUrl === kownJobOffer.source_url) {
+        if (source.sourceUrl === kownJobOffers[key].source_url) {
             return {
                 isKnown: true,
-                isBanned: kownJobOffer.is_banned,
+                isBanned: kownJobOffers[key].is_banned,
             } as CheckSourceResult
         }
     }
 
-    for (const textFilter of textFilters) {
-        if (source.title.includes(textFilter.value) || source.companyName.includes(textFilter.value)) {
+    if (!source.sourceUrl || !source.title || !source.companyName) {
+        return {
+            isKnown: false,
+            isBanned: true,
+        } as CheckSourceResult
+    }
+
+    for (const key in textFilters) {
+        if (source.title.includes(textFilters[key].value) || source.companyName.includes(textFilters[key].value)) {
             return {
                 isKnown: false,
                 isBanned: true,
