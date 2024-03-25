@@ -1,5 +1,5 @@
-import { PgClient } from "./infrastructure/tools/clients/pg.client"
-import { PupetteerClient } from "./infrastructure/tools/clients/pupetteer.client"
+import { PgClient } from "./core/clients/pg.client"
+import { PupetteerClient } from "./core/clients/pupetteer.client"
 import app from "./server"
 
 const port = process.env.PORT ?? "3000"

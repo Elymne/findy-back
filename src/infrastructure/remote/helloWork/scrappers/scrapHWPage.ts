@@ -1,11 +1,11 @@
+import JobOffer from "@App/domain/entities/jobOffer.entity"
+import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
-import { JobOfferHW } from "../models/jobOfferHW"
 
-export async function scrapHWPage(page: Page): Promise<JobOfferHW[]> {
-    const result: JobOfferHW[] = []
-
-    console.clear()
+export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
     const rows = await page.$$("section.serp > div > section > ul.crushed > li")
+    const result = new Array<JobOffer>(rows.length)
+
     for (let i = 0; i < rows.length; i++) {
         const [imagesSelector, companySelector, hrefSelector, tagsSelector, createdSelector] = await Promise.all([
             rows[i].$$("img"),
@@ -47,13 +47,17 @@ export async function scrapHWPage(page: Page): Promise<JobOfferHW[]> {
         }
 
         result.push({
-            title: title,
-            company: companyName,
-            city: cityName,
-            image1: image1,
-            image2: image2,
-            accessUrl: accessUrl,
-            created: created,
+            id: undefined,
+            sourceData: SourceSite.HW,
+            title: title as string,
+            cityName: cityName as string,
+            companyName: companyName as string,
+            companyLogoUrl: image2 as string,
+            imageUrl: image1 as string,
+            sourceUrl: accessUrl as string,
+            createdWhile: created as string,
+            createdAt: undefined,
+            updatedAt: undefined,
         })
     }
 

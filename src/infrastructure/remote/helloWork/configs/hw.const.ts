@@ -1,4 +1,4 @@
-export const hwConst = {
+const hwConst = {
     url: "https://www.hellowork.com/fr-fr/emploi/recherche.html",
     keywords: "k",
     cityName: "l",
@@ -6,3 +6,5 @@ export const hwConst = {
     contractType: "c",
     radius: "ray",
 }
+
+export default hwConst

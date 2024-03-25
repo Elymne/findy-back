@@ -1,13 +1,13 @@
-import logger from "@App/core/logger"
-import SamplejobOffers from "../entities/sampleJobOffer"
-import { Failure, Result, Success, UsecaseNoParams } from "./abstract.usecase"
+import logger from "@App/core/tools/logger"
+import SamplejobOffers from "../../entities/sampleJobOffer"
+import { Failure, Result, Success, UsecaseNoParams } from "../../../core/interfaces/abstract.usecase"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOffersWTTJ.usecase"
 
-export interface GetSampleFromWTTJUsecase extends UsecaseNoParams<SamplejobOffers> {
+export interface GetSampleUsecase extends UsecaseNoParams<SamplejobOffers> {
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase
 }
 
-export const GetSampleFromWTTJUsecaseImpl: GetSampleFromWTTJUsecase = {
+export const GetSampleUsecaseImpl: GetSampleUsecase = {
     getJobOffersWTTJUsecase: GetJobOffersWTTJUsecaseImpl,
 
     perform: async function (): Promise<Result<SamplejobOffers>> {

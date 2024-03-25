@@ -1,7 +1,7 @@
+import { PgClient } from "@App/core/clients/pg.client"
+import { DatabaseDatasource } from "@App/core/interfaces/Database.datasource"
 import KnownJobOffer from "@App/domain/entities/knownJobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
-import { PgClient } from "@App/infrastructure/configs/clients/pg.client"
-import { DatabaseDatasource } from "@App/infrastructure/configs/interfaces/Database.datasource"
 
 export interface KnownJobOfferDatasource extends DatabaseDatasource<KnownJobOffer> {
     findAllBySource: (source: SourceSite) => Promise<KnownJobOffer[]>

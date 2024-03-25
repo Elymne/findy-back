@@ -1,7 +1,7 @@
 import JobOffer from "@App/domain/entities/jobOffer.entity"
-import { PupetteerClient, WebSite } from "@App/infrastructure/configs/clients/pupetteer.client"
-import { hwConst } from "../configs/hw.const"
+import hwConst from "../configs/hw.const"
 import { scrapHWPage } from "../scrappers/scrapHWPage"
+import { PupetteerClient, WebSite } from "@App/core/clients/pupetteer.client"
 
 type QueryParams = {
     keyWords: string

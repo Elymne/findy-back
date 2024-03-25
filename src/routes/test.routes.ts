@@ -1,14 +1,12 @@
+import { JobOfferHWDatasource, JobOfferHWDatasourceImpl } from "@App/infrastructure/remote/helloWork/datasources/jobOfferHW.datasource"
 import express, { Request, Response } from "express"
-import { JobOfferHWDatasource, JobOfferHWDatasourceImpl } from "@App/infrastructure/hw/datasources/jobOfferHW.datasource"
-
-const router = express.Router()
 
 const jobOfferHWDatasource: JobOfferHWDatasource = JobOfferHWDatasourceImpl
 
-router.get("/", async (req: Request, res: Response) => {
+const testRouter = express.Router().get("/", async (req: Request, res: Response) => {
     const result = await jobOfferHWDatasource.findAllByQuery({ keyWords: "Marketing", cityName: "NANTES" })
 
     res.status(200).send(result)
 })
 
-export default router
+export default testRouter

@@ -1,6 +1,6 @@
-import { Result, Usecase } from "./abstract.usecase"
-import JobOffer from "../entities/jobOffer.entity"
-import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "./getOneCity.usecase"
+import { Result, Usecase } from "../../../core/interfaces/abstract.usecase"
+import JobOffer from "../../entities/jobOffer.entity"
+import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "../cities/getOneCity.usecase"
 import { JobOfferHWDatasource, JobOfferHWDatasourceImpl } from "@App/infrastructure/remote/helloWork/datasources/jobOfferHW.datasource"
 import { FilterJobOffersUsecase, FilterJobOffersUsecaseImpl } from "./filterJobOffers.usecase"
 

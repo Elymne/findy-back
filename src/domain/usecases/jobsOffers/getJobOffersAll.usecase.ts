@@ -1,7 +1,7 @@
-import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
+import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOffersWTTJ.usecase"
-import JobOffer from "../entities/jobOffer.entity"
-import logger from "@App/core/logger"
+import JobOffer from "../../entities/jobOffer.entity"
+import logger from "@App/core/tools/logger"
 
 interface Params {
     keyWords: string

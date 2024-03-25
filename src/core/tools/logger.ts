@@ -11,21 +11,37 @@ class CustomLogger implements Logger {
     public trace(message?: any, ...optionalParams: any[]): void {
         this.updateFileDate()
         this.append("TRACE", `${message} ${JSON.stringify(optionalParams)}`)
+        if (process.env.NODE_ENV == "development") {
+            console.log(message)
+            console.log(optionalParams)
+        }
     }
 
     public debug(message?: any, ...optionalParams: any[]): void {
         this.updateFileDate()
         this.append("DEBUG", `${message} ${JSON.stringify(optionalParams)}`)
+        if (process.env.NODE_ENV == "development") {
+            console.log(message)
+            console.log(optionalParams)
+        }
     }
 
     public info(message?: any, ...optionalParams: any[]): void {
         this.updateFileDate()
         this.append("INFO ", `${message} ${JSON.stringify(optionalParams)}`)
+        if (process.env.NODE_ENV == "development") {
+            console.log(message)
+            console.log(optionalParams)
+        }
     }
 
     public warn(message?: any, ...optionalParams: any[]): void {
         this.updateFileDate()
         this.append("WARN ", `${message} ${JSON.stringify(optionalParams)}`)
+        if (process.env.NODE_ENV == "development") {
+            console.log(message)
+            console.log(optionalParams)
+        }
     }
 
     public error(message?: any, ...optionalParams: any[]): void {

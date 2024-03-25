@@ -3,7 +3,7 @@ import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
 
 export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]> {
-    const rows = await page.$$("li.ais-Hits-list-item")
+    const rows = await page.$$('[data-testid="search-results-list-item-wrapper"]')
     const max = nb && nb <= rows.length ? nb : rows.length
     const result = new Array<JobOffer>(max)
 

@@ -1,6 +1,6 @@
+import { PgClient } from "@App/core/clients/pg.client"
+import { DatabaseDatasource } from "@App/core/interfaces/Database.datasource"
 import JobOffer from "@App/domain/entities/jobOffer.entity"
-import { PgClient } from "@App/infrastructure/configs/clients/pg.client"
-import { DatabaseDatasource } from "@App/infrastructure/configs/interfaces/Database.datasource"
 
 export interface JobOfferDatasource extends DatabaseDatasource<JobOffer> {}
 

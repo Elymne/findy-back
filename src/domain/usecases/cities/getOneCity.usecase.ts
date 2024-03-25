@@ -1,6 +1,6 @@
-import { Failure, Result, Success, Usecase } from "@App/domain/usecases/abstract.usecase"
-import logger from "@App/core/logger"
-import City from "../entities/city.entity"
+import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
+import logger from "@App/core/tools/logger"
+import City from "../../entities/city.entity"
 import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/datasources/geoapiDatasource"
 import { GeoApiParser, GeoApiParserImpl } from "@App/infrastructure/remote/geoapi/parsers/geoApi.parser"
 
@@ -29,14 +29,15 @@ export const GetOneCityUsecaseImpl: GetOneCityUsecase = {
                     })
                 }
 
+                const city = await this.geoCityParser.parseOne(geoCity)
                 return new Success({
                     message: `The city with code ${params.code} does exists in geo.api.`,
-                    data: (await this.geoCityParser.parse([geoCity]))[0],
+                    data: city,
                 })
             }
 
             if (params.name) {
-                const geoCity = await this.geoapiDatasource.findOneByCode(params.name)
+                const geoCity = await this.geoapiDatasource.findOneByName(params.name)
                 if (!geoCity) {
                     return new Failure({
                         message: `The city with name ${params.name} does not exists in geo.api.`,
@@ -44,9 +45,10 @@ export const GetOneCityUsecaseImpl: GetOneCityUsecase = {
                     })
                 }
 
+                const city = await this.geoCityParser.parseOne(geoCity)
                 return new Success({
                     message: `The city with name ${params.name} does exists in geo.api.`,
-                    data: (await this.geoCityParser.parse([geoCity]))[0],
+                    data: city,
                 })
             }
 

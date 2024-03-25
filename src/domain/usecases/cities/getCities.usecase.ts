@@ -1,5 +1,5 @@
-import { Failure, Result, Success, UsecaseNoParams } from "@App/domain/usecases/abstract.usecase"
-import logger from "@App/core/logger"
+import { Failure, Result, Success, UsecaseNoParams } from "@App/core/interfaces/abstract.usecase"
+import logger from "@App/core/tools/logger"
 import City from "@App/domain/entities/city.entity"
 import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/datasources/geoapiDatasource"
 import { GeoApiParser, GeoApiParserImpl } from "@App/infrastructure/remote/geoapi/parsers/geoApi.parser"

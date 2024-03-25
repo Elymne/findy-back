@@ -1,11 +1,11 @@
-import { Failure, Result, Success, Usecase } from "./abstract.usecase"
-import uuid from "@App/core/uuid"
-import logger from "@App/core/logger"
-import JobOffer from "../entities/jobOffer.entity"
-import TextFilter from "../entities/textFilter.entity"
-import KnownJobOffer from "../entities/knownJobOffer.entity"
+import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
+import JobOffer from "../../entities/jobOffer.entity"
+import TextFilter from "../../entities/textFilter.entity"
+import KnownJobOffer from "../../entities/knownJobOffer.entity"
 import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/native/datasources/knownJobOffer.datasource"
 import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/native/datasources/textFilter.datasource"
+import logger from "@App/core/tools/logger"
+import uuid from "@App/core/tools/uuid"
 
 type Params = {
     sources: JobOffer[]
@@ -29,17 +29,17 @@ export const FilterJobOffersUsecaseImpl: FilterJobOffersUsecase = {
             const result = new Array<JobOffer>()
             const newKnownJobOffers = new Array<KnownJobOffer>()
 
-            for (const source of params.sources) {
-                const checkResult = checkSource(source, textFilters, kownJobOffers)
+            for (const key in params.sources) {
+                const checkResult = checkSource(params.sources[key], textFilters, kownJobOffers)
                 if (!checkResult.isBanned) {
-                    result.push(source)
+                    result.push(params.sources[key])
                 }
 
                 if (!checkResult.isKnown) {
                     newKnownJobOffers.push({
                         id: uuid(),
-                        source_url: source.sourceUrl,
-                        source: source.sourceData,
+                        source_url: params.sources[key].sourceUrl,
+                        source: params.sources[key].sourceData,
                         is_banned: checkResult.isBanned,
                     })
                 }

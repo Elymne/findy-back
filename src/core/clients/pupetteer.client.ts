@@ -1,9 +1,12 @@
-import { getRandomInt, wait } from "@App/core/utils"
 import puppeteer, { Browser, Page, PuppeteerError, PuppeteerLaunchOptions } from "puppeteer"
+import { getRandomInt, wait } from "../tools/utils"
+import logger from "../tools/logger"
+
+type onBrowserDestroyed = (client: PupetteerClient) => void
 
 export class PupetteerClient {
     private static instance: PupetteerClient
-    private browser: Browser
+    private browser: Browser | null
     private options: PuppeteerLaunchOptions | undefined
     private buffer: WebSite[] = []
 
@@ -19,9 +22,13 @@ export class PupetteerClient {
     }
 
     public async initBrowser(): Promise<void> {
-        if (!this.browser) {
-            this.browser = await puppeteer.launch(this.options)
-        }
+        this.browser = null
+        this.browser = await puppeteer.launch(this.options)
+
+        this.browser.on("disconnected", async () => {
+            logger.warn("[PupetteerClient]", ["Browser has been disconnected", "A new one will be initialized"])
+            this.initBrowser()
+        })
     }
 
     public async createPage(webSite: WebSite): Promise<Page> {
