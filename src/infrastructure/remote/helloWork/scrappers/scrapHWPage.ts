@@ -48,7 +48,7 @@ export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
 
         result.push({
             id: undefined,
-            sourceData: SourceSite.HW,
+            sourceData: SourceSite.hw,
             title: title as string,
             cityName: cityName as string,
             companyName: companyName as string,

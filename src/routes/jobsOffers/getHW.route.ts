@@ -1,20 +1,20 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
-import { cacheSuccesses } from "@App/core/tools/cache"
-import { GetJobOffersHWUsecase, GetJobOffersHWUsecaseimpl } from "@App/domain/usecases/jobsOffers/getJobOffersHW.usecase"
+import { cache24Successes } from "@App/core/tools/cache"
+import { GetJobOffersHWUsecase, GetJobOffersHWUsecaseImpl } from "@App/domain/usecases/jobsOffers/getJobOffersHW.usecase"
 
-const getJobOffersHWUsecase: GetJobOffersHWUsecase = GetJobOffersHWUsecaseimpl
+const getJobOffersHWUsecase: GetJobOffersHWUsecase = GetJobOffersHWUsecaseImpl
 
 const getHwJobOffersRoute = express
     .Router()
     .get(
         "/hw",
         query("keywords").isString().notEmpty().escape(),
-        query("cityCode").isString().notEmpty().escape(),
+        query("cityCode").isString().escape(),
         query("page").isInt().optional({ values: "null" }),
         query("radius").isInt().optional({ values: "null" }),
-        cacheSuccesses,
+        cache24Successes,
         async (req: Request, res: Response) => {
             const validator = validationResult(req)
             if (!validator.isEmpty()) {

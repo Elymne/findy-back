@@ -1,5 +1,5 @@
 const wttjConst = {
-    url: "https://www.welcometothejungle.com/fr/jobs",
+    basurl: "https://www.welcometothejungle.com/fr/jobs",
 
     country: "refinementList[offices.country_code][]",
     contractType: "refinementList[contract_type][]",

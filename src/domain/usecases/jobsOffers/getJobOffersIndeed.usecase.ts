@@ -1,22 +1,22 @@
-import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
-import JobOffer from "../../entities/jobOffer.entity"
-import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "../cities/getOneCity.usecase"
 import {
-    JobOfferHWDatasource,
-    JobOfferHWDatasourceImpl,
-    JobOfferHWQuery,
-} from "@App/infrastructure/remote/helloWork/datasources/jobOfferHW.datasource"
+    JobOfferIndeedDatasource,
+    JobOfferIndeedDatasourceImpl,
+    JobOfferIndeedQuery,
+} from "@App/infrastructure/remote/indeed/datasources/jobOffersIndeed.datasource"
+import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "../cities/getOneCity.usecase"
 import { FilterJobOffersUsecase, FilterJobOffersUsecaseImpl } from "./filterJobOffers.usecase"
+import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import logger from "@App/core/tools/logger"
+import JobOffer from "@App/domain/entities/jobOffer.entity"
 
-export interface GetJobOffersHWUsecase extends Usecase<JobOffer[], Params> {
-    jobOfferHWDatasource: JobOfferHWDatasource
+export interface GetJobOffersIndeedUsecase extends Usecase<JobOffer[], Params> {
+    jobOfferIndeedDatasource: JobOfferIndeedDatasource
     getOneCityUsecase: GetOneCityUsecase
     filterJobOfferUsecase: FilterJobOffersUsecase
 }
 
-export const GetJobOffersHWUsecaseImpl: GetJobOffersHWUsecase = {
-    jobOfferHWDatasource: JobOfferHWDatasourceImpl,
+export const GetJobOffersIndeedUsecaseimpl: GetJobOffersIndeedUsecase = {
+    jobOfferIndeedDatasource: JobOfferIndeedDatasourceImpl,
     getOneCityUsecase: GetOneCityUsecaseImpl,
     filterJobOfferUsecase: FilterJobOffersUsecaseImpl,
 
@@ -28,7 +28,7 @@ export const GetJobOffersHWUsecaseImpl: GetJobOffersHWUsecase = {
                 page: params.page,
                 nbElement: params.nbElements,
                 cityName: undefined,
-            } as JobOfferHWQuery
+            } as JobOfferIndeedQuery
 
             if (params.cityCode) {
                 const cityResult = await this.getOneCityUsecase.perform({ code: params.cityCode })
@@ -36,7 +36,7 @@ export const GetJobOffersHWUsecaseImpl: GetJobOffersHWUsecase = {
                 query.cityName = cityResult.data.name
             }
 
-            const jobOffers = await this.jobOfferHWDatasource.findAllByQuery(query)
+            const jobOffers = await this.jobOfferIndeedDatasource.findAllByQuery(query)
 
             const jobOffersFilteredResult = await this.filterJobOfferUsecase.perform({
                 sources: jobOffers,
@@ -44,11 +44,11 @@ export const GetJobOffersHWUsecaseImpl: GetJobOffersHWUsecase = {
             if (jobOffersFilteredResult instanceof Failure) return jobOffersFilteredResult
 
             return new Success({
-                message: "Job offers from HelloWork page fetched successfully",
+                message: "Job offers from Indeed page fetched successfully",
                 data: jobOffersFilteredResult.data,
             })
         } catch (error) {
-            logger.error("[GetJobOffersHWUsecase]", error)
+            logger.error("[GetJobOffersIndeedUsecase]", error)
             return new Failure({
                 message: "An internal error occur",
                 errorCode: 500,

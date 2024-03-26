@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "@App/domain/usecases/jobsOffers/getJobOffersWTTJ.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
-import { cacheSuccesses } from "@App/core/tools/cache"
+import { cache24Successes } from "@App/core/tools/cache"
 
 const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecaseImpl
 
@@ -11,10 +11,10 @@ const getWttjJobOffersRoute = express
     .get(
         "/wttj",
         query("keywords").isString().notEmpty().escape(),
-        query("cityCode").isString().notEmpty().escape(),
+        query("cityCode").isString().escape(),
         query("page").isInt().optional({ values: "null" }),
         query("radius").isInt().optional({ values: "null" }),
-        cacheSuccesses,
+        cache24Successes,
         async (req: Request, res: Response) => {
             const validator = validationResult(req)
             if (!validator.isEmpty()) {

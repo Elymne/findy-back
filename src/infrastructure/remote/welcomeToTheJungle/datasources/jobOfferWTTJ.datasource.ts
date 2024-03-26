@@ -1,7 +1,7 @@
 import JobOffer from "@App/domain/entities/jobOffer.entity"
 import wttjConst from "../configs/wttj.const"
 import { scrapWTTJPage } from "../scrappers/scrapWTTJPage"
-import { PupetteerClient, WebSite } from "@App/core/clients/pupetteer.client"
+import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 
 export interface JobOfferWTTJDatasource {
     findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: JobOfferWTTJQuery) => Promise<JobOffer[]>
@@ -10,7 +10,7 @@ export interface JobOfferWTTJDatasource {
 export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
     findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: JobOfferWTTJQuery): Promise<JobOffer[]> {
         const url: string = "".concat(
-            wttjConst.url,
+            wttjConst.basurl,
             `?${wttjConst.country}=FR`,
             `&${wttjConst.contractType}=apprenticeship`,
             `&${wttjConst.keywords}=${keyWords}`,
@@ -19,12 +19,10 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
             lat && lng ? `&${wttjConst.aroundLatLng}=${lat},${lng}` : ""
         )
 
-        const newPage = await PupetteerClient.getInstance().createPage(WebSite.wttj)
+        const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.wttj)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
-
         const result = await scrapWTTJPage(newPage, nbElement)
-
-        PupetteerClient.getInstance().closePage(newPage, WebSite.wttj)
+        newPage.close()
 
         return result
     },

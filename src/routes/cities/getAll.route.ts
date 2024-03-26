@@ -1,11 +1,11 @@
 import express, { Request, Response } from "express"
 import { GetCitiesUsecase, GetCitiesUsecaseImpl } from "@App/domain/usecases/cities/getCities.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
-import { cacheSuccesses } from "@App/core/tools/cache"
+import { cache24Successes } from "@App/core/tools/cache"
 
 const getCitiesUsecase: GetCitiesUsecase = GetCitiesUsecaseImpl
 
-const getAllCitiesRoute = express.Router().get("/", cacheSuccesses, async (req: Request, res: Response) => {
+const getAllCitiesRoute = express.Router().get("/", cache24Successes, async (req: Request, res: Response) => {
     const result = await getCitiesUsecase.perform()
 
     if (result instanceof Failure) {

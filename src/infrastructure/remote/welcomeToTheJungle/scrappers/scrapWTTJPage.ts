@@ -27,7 +27,7 @@ export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]
 
         result.push({
             id: undefined,
-            sourceData: SourceSite.WTTJ,
+            sourceData: SourceSite.wttj,
             title: title as string,
             cityName: cityName as string,
             companyName: companyName as string,

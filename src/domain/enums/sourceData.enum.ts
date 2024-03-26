@@ -1,6 +1,7 @@
 enum SourceSite {
-    WTTJ = "WTTJ",
-    HW = "HW",
+    wttj = "WTTJ",
+    hw = "HW",
+    indeed = "INDEED",
 }
 
 export default SourceSite

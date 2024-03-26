@@ -1,17 +1,17 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { GetJobOffersAllUsecase, GetJobOffersUsecaseImpl } from "@App/domain/usecases/jobsOffers/getJobOffersAll.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
+import { GetJobOffersIndeedUsecase, GetJobOffersIndeedUsecaseimpl } from "@App/domain/usecases/jobsOffers/getJobOffersIndeed.usecase"
 
-const getJobOffersUsecase: GetJobOffersAllUsecase = GetJobOffersUsecaseImpl
+const getJobOffersIndeedUsecase: GetJobOffersIndeedUsecase = GetJobOffersIndeedUsecaseimpl
 
-const getAllJobOffersRoute = express
+const getIndeedJobOffersRoute = express
     .Router()
     .get(
-        "/",
+        "/indeed",
         query("keywords").isString().notEmpty().escape(),
-        query("cityCode").isString().notEmpty().escape(),
+        query("cityCode").isString().escape(),
         query("page").isInt().optional({ values: "null" }),
         query("radius").isInt().optional({ values: "null" }),
         cache24Successes,
@@ -22,7 +22,7 @@ const getAllJobOffersRoute = express
                 return
             }
 
-            const result = await getJobOffersUsecase.perform({
+            const result = await getJobOffersIndeedUsecase.perform({
                 keyWords: req.query.keywords as string,
                 cityCode: req.query.cityCode as string,
                 page: parseInt((req.query.page ?? 1) as string),
@@ -30,11 +30,12 @@ const getAllJobOffersRoute = express
             })
 
             if (result instanceof Failure) {
-                return res.status(result.errorCode).send(result)
+                res.status(result.errorCode).send(result)
+                return
             }
 
             res.status(200).send(result)
         }
     )
 
-export default getAllJobOffersRoute
+export default getIndeedJobOffersRoute
