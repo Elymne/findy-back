@@ -47,16 +47,16 @@ export const GeoapiDatasourceImpl: GeoapiDatasource = {
             `?${geoApiConst.fieldsQuery}=centre`,
             `&${geoApiConst.formatQuery}=json`,
             `&${geoApiConst.geometryQuery}=centre`,
-            `&${geoApiConst.boostQuery}=population`,
             `&${geoApiConst.nameQuery}=${name}`,
+            `&${geoApiConst.boostQuery}=population`,
             `&${geoApiConst.limitQuery}=1`
         )
 
-        const response = await axios.get<GeoCityCoordinated>(url, {
+        const response = await axios.get<GeoCityCoordinated[]>(url, {
             headers: {
                 Accept: "application/json",
             },
         })
-        return response.data
+        return response.data[0]
     },
 }
