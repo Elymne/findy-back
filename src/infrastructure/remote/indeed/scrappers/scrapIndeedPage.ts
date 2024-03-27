@@ -4,7 +4,7 @@ import { Page } from "puppeteer"
 
 export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
     const rows = await page.$$("#mosaic-provider-jobcards > ul > li")
-    const result = new Array<JobOffer>(rows.length)
+    const result = new Array<JobOffer>()
 
     for (let i = 0; i < rows.length; i++) {
         const [imagesSelector, hrefSelector, companySelector, citySelector, createdWhileSelector] = await Promise.all([

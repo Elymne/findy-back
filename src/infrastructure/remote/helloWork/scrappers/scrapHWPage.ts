@@ -4,7 +4,7 @@ import { Page } from "puppeteer"
 
 export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
     const rows = await page.$$("section.serp > div > section > ul.crushed > li")
-    const result = new Array<JobOffer>(rows.length)
+    const result = new Array<JobOffer>()
 
     for (let i = 0; i < rows.length; i++) {
         const [imagesSelector, companySelector, hrefSelector, tagsSelector, createdSelector] = await Promise.all([

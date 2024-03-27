@@ -1,23 +1,17 @@
 import axios from "axios"
 import geoApiConst from "../configs/geoapi.const"
-import GeoCity from "../models/geoCity"
+import GeoCity, { GeoCityCoordinated } from "../models/geoCity"
 
 export interface GeoapiDatasource {
     findAll: () => Promise<GeoCity[]>
-    findOneByCode: (code: string) => Promise<GeoCity>
-    findOneByName: (name: string) => Promise<GeoCity>
+    findOneByCode: (code: string) => Promise<GeoCityCoordinated>
+    findOneByName: (name: string) => Promise<GeoCityCoordinated>
 }
 
 export const GeoapiDatasourceImpl: GeoapiDatasource = {
     findAll: async function (): Promise<GeoCity[]> {
-        const url = "".concat(
-            `${geoApiConst.url}`,
-            `/${geoApiConst.cityParam}`,
-            `?${geoApiConst.fieldsQuery}=centre`,
-            `&${geoApiConst.formatQuery}=json`,
-            `&${geoApiConst.geometryQuery}=centre`,
-            `&${geoApiConst.boostQuery}=population`
-        )
+        const url = "".concat(`${geoApiConst.url}`, `/${geoApiConst.cityParam}`, `?${geoApiConst.boostQuery}=population`)
+
         const response = await axios.get<GeoCity[]>(url, {
             headers: {
                 Accept: "application/json",
@@ -26,7 +20,7 @@ export const GeoapiDatasourceImpl: GeoapiDatasource = {
         return response.data
     },
 
-    findOneByCode: async function (code: string): Promise<GeoCity> {
+    findOneByCode: async function (code: string): Promise<GeoCityCoordinated> {
         const url = "".concat(
             `${geoApiConst.url}`,
             `/${geoApiConst.cityParam}`,
@@ -38,7 +32,7 @@ export const GeoapiDatasourceImpl: GeoapiDatasource = {
             `&${geoApiConst.limitQuery}=1`
         )
 
-        const response = await axios.get<GeoCity>(url, {
+        const response = await axios.get<GeoCityCoordinated>(url, {
             headers: {
                 Accept: "application/json",
             },
@@ -46,7 +40,7 @@ export const GeoapiDatasourceImpl: GeoapiDatasource = {
         return response.data
     },
 
-    findOneByName: async function (name: string): Promise<GeoCity> {
+    findOneByName: async function (name: string): Promise<GeoCityCoordinated> {
         const url = "".concat(
             `${geoApiConst.url}`,
             `/${geoApiConst.cityParam}`,
@@ -58,7 +52,7 @@ export const GeoapiDatasourceImpl: GeoapiDatasource = {
             `&${geoApiConst.limitQuery}=1`
         )
 
-        const response = await axios.get<GeoCity>(url, {
+        const response = await axios.get<GeoCityCoordinated>(url, {
             headers: {
                 Accept: "application/json",
             },
