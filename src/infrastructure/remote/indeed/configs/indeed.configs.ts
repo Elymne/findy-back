@@ -1,6 +1,7 @@
 const indeedConst = {
-    baseUrl: "https://fr.indeed.com/emplois",
+    baseUrl: "https://fr.indeed.com",
 
+    jobPath: "emplois",
     keywords: "q",
     cityName: "l",
     page: "start",

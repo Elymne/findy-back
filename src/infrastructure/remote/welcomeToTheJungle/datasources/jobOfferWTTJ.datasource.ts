@@ -11,6 +11,7 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
     findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: JobOfferWTTJQuery): Promise<JobOffer[]> {
         const url: string = "".concat(
             wttjConst.basurl,
+            `/${wttjConst.jobPath}`,
             `?${wttjConst.country}=FR`,
             `&${wttjConst.contractType}=apprenticeship`,
             `&${wttjConst.keywords}=${keyWords}`,

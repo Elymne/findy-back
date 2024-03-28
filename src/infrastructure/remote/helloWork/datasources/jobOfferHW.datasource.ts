@@ -11,6 +11,7 @@ export const JobOfferHWDatasourceImpl: JobOfferHWDatasource = {
     findAllByQuery: async function ({ keyWords, cityName, page, radius }: JobOfferHWQuery): Promise<JobOffer[]> {
         const url = "".concat(
             hwConst.baseUrl,
+            `/${hwConst.jobPath}`,
             `?${hwConst.keywords}=${keyWords}`,
             `&${hwConst.page}=${page ?? 1}`,
             `&${hwConst.radius}=${radius ?? 20}`,

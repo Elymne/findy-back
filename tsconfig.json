@@ -9,7 +9,6 @@
         "types": ["node", "jest", "express"],
         "esModuleInterop": true,
         "strict": true,
-        "strictNullChecks": true,
         "resolveJsonModule": true,
         "skipDefaultLibCheck": true,
         "emitDecoratorMetadata": true,

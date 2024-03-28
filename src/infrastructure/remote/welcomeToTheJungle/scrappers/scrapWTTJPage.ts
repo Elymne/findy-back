@@ -1,6 +1,7 @@
 import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
+import wttjConst from "../configs/wttj.const"
 
 export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]> {
     const rows = await page.$$('[data-testid="search-results-list-item-wrapper"]')
@@ -33,11 +34,11 @@ export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]
             companyName: companyName as string,
             companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
             imageUrl: imageUrl ?? "http://localhost:3000/static/images/placeholder.jpg",
-            sourceUrl: sourceUrl as string,
+            sourceUrl: (wttjConst.basurl + sourceUrl) as string,
             createdWhile: dateCreation as string,
             createdAt: undefined,
             updatedAt: undefined,
-        })
+        } as JobOffer)
     }
 
     return result

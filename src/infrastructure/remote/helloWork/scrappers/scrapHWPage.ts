@@ -1,6 +1,7 @@
 import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
+import indeedConst from "../../indeed/configs/indeed.configs"
 
 export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
     const rows = await page.$$("section.serp > div > section > ul.crushed > li")
@@ -52,13 +53,15 @@ export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
             title: title as string,
             cityName: cityName as string,
             companyName: companyName as string,
-            companyLogoUrl: image2 ?? "http://localhost:3000/static/images/logo_placeholder.png",
-            imageUrl: image1 ?? "http://localhost:3000/static/images/placeholder.jpg",
-            sourceUrl: accessUrl as string,
+            companyLogoUrl: image2 ?? image1 ?? "http://localhost:3000/static/images/logo_placeholder.png",
+            imageUrl: image2
+                ? image1 ?? "http://localhost:3000/static/images/placeholder.jpg"
+                : "http://localhost:3000/static/images/placeholder.jpg",
+            sourceUrl: (indeedConst.baseUrl + accessUrl) as string,
             createdWhile: created as string,
             createdAt: undefined,
             updatedAt: undefined,
-        })
+        } as JobOffer)
     }
 
     return result

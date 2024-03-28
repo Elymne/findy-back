@@ -1,6 +1,7 @@
 import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
+import indeedConst from "../configs/indeed.configs"
 
 export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
     const rows = await page.$$("#mosaic-provider-jobcards > ul > li")
@@ -45,17 +46,18 @@ export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
 
         result.push({
             id: undefined,
+            createdAt: undefined,
+            updatedAt: undefined,
+
             title: title as string,
             cityName: cityName as string,
             companyName: companyName as string,
-            sourceUrl: sourceUrl as string,
             createdWhile: createdWhile as string,
             companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
             imageUrl: "http://localhost:3000/static/images/placeholder.jpg",
             sourceData: SourceSite.indeed,
-            createdAt: undefined,
-            updatedAt: undefined,
-        })
+            sourceUrl: sourceUrl ? indeedConst.baseUrl + sourceUrl : null,
+        } as JobOffer)
     }
 
     return result
