@@ -16,48 +16,30 @@ export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
             rows[i].$('[data-testid="myJobsStateDate"]'),
         ])
 
-        let title: string | null | undefined = undefined
-        let companyLogoUrl: string | null | undefined = undefined
-        let sourceUrl: string | null | undefined = undefined
-        let companyName: string | null | undefined = undefined
-        let cityName: string | null | undefined = undefined
-        let createdWhile: string | null | undefined = undefined
+        const companyLogoUrl = await imagesSelector?.evaluate((img) => img.getAttribute("src"))
+        const sourceUrl = await hrefSelector?.evaluate((a) => a.getAttribute("href"))
+        const title = await hrefSelector?.evaluate((a) => a.textContent)
+        const companyName = await companySelector?.evaluate((span) => span.textContent)
+        const cityName = await citySelector?.evaluate((div) => div.textContent)
+        const createdWhile = await createdWhileSelector?.evaluate((span) => span.textContent)
 
-        if (imagesSelector && typeof imagesSelector !== "undefined") {
-            companyLogoUrl = await imagesSelector.evaluate((img) => img.getAttribute("src"))
+        if (title && companyName && cityName && sourceUrl && createdWhile) {
+            result.push({
+                sourceData: SourceSite.indeed,
+                sourceUrl: indeedConst.baseUrl + sourceUrl,
+                title: title,
+                companyName: companyName,
+                cityName: cityName,
+                createdWhile: createdWhile,
+
+                companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
+                imageUrl: "http://localhost:3000/static/images/placeholder.jpg",
+
+                id: undefined,
+                createdAt: undefined,
+                updatedAt: undefined,
+            } as JobOffer)
         }
-
-        if (hrefSelector && typeof hrefSelector !== "undefined") {
-            sourceUrl = await hrefSelector.evaluate((a) => a.getAttribute("href"))
-            title = await hrefSelector.evaluate((a) => a.textContent)
-        }
-
-        if (companySelector && typeof companySelector !== "undefined") {
-            companyName = await companySelector.evaluate((span) => span.textContent)
-        }
-
-        if (citySelector && typeof citySelector !== "undefined") {
-            cityName = await citySelector.evaluate((div) => div.textContent)
-        }
-
-        if (createdWhileSelector && typeof createdWhileSelector !== "undefined") {
-            createdWhile = await createdWhileSelector.evaluate((span) => span.textContent)
-        }
-
-        result.push({
-            id: undefined,
-            createdAt: undefined,
-            updatedAt: undefined,
-
-            title: title as string,
-            cityName: cityName as string,
-            companyName: companyName as string,
-            createdWhile: createdWhile as string,
-            companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
-            imageUrl: "http://localhost:3000/static/images/placeholder.jpg",
-            sourceData: SourceSite.indeed,
-            sourceUrl: sourceUrl ? indeedConst.baseUrl + sourceUrl : null,
-        } as JobOffer)
     }
 
     return result

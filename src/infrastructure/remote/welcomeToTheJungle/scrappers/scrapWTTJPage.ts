@@ -16,29 +16,33 @@ export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]
             rows[i].$$("a"),
         ])
 
-        const [imageUrl, companyLogoUrl, title, companyName, cityName, sourceUrl, dateCreation] = await Promise.all([
-            imageSelectors[0].evaluate((img) => img.getAttribute("src")),
-            imageSelectors[1].evaluate((img) => img.getAttribute("src")),
-            h4selectors[0].evaluate((h4) => h4.textContent),
-            spanSelectors[0].evaluate((span) => span.textContent),
-            spanSelectors[2].evaluate((span) => span.textContent),
-            aSelector[0].evaluate((span) => span.getAttribute("href")),
-            spanSelectors[spanSelectors.length - 1].evaluate((span) => span.textContent),
+        const [imageUrl, companyLogoUrl, title, companyName, cityName, sourceUrl, createdWhile] = await Promise.all([
+            imageSelectors[0]?.evaluate((img) => img.getAttribute("src")),
+            imageSelectors[1]?.evaluate((img) => img.getAttribute("src")),
+            h4selectors[0]?.evaluate((h4) => h4.textContent),
+            spanSelectors[0]?.evaluate((span) => span.textContent),
+            spanSelectors[2]?.evaluate((span) => span.textContent),
+            aSelector[0]?.evaluate((span) => span.getAttribute("href")),
+            spanSelectors[spanSelectors.length - 1]?.evaluate((span) => span.textContent),
         ])
 
-        result.push({
-            id: undefined,
-            sourceData: SourceSite.wttj,
-            title: title as string,
-            cityName: cityName as string,
-            companyName: companyName as string,
-            companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
-            imageUrl: imageUrl ?? "http://localhost:3000/static/images/placeholder.jpg",
-            sourceUrl: (wttjConst.basurl + sourceUrl) as string,
-            createdWhile: dateCreation as string,
-            createdAt: undefined,
-            updatedAt: undefined,
-        } as JobOffer)
+        if (title && companyName && cityName && sourceUrl && createdWhile) {
+            result.push({
+                sourceData: SourceSite.wttj,
+                sourceUrl: wttjConst.basurl + sourceUrl,
+                title: title,
+                companyName: companyName,
+                cityName: cityName,
+                createdWhile: createdWhile,
+
+                companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
+                imageUrl: imageUrl ?? "http://localhost:3000/static/images/placeholder.jpg",
+
+                id: undefined,
+                createdAt: undefined,
+                updatedAt: undefined,
+            } as JobOffer)
+        }
     }
 
     return result

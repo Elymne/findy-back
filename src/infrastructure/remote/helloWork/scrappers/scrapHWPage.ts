@@ -3,6 +3,7 @@ import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
 import indeedConst from "../../indeed/configs/indeed.configs"
 
+/// TODO Faire un checking plus poussé pour les images. Il y a des paternes qui se répète pour l'utilisation des image sur ce site.
 export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
     const rows = await page.$$("section.serp > div > section > ul.crushed > li")
     const result = new Array<JobOffer>()
@@ -16,30 +17,14 @@ export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
             rows[i].$$('[data-cy="publishDate"]'),
         ])
 
-        let title: string | null | undefined = undefined
-        let companyName: string | null | undefined = undefined
-        let cityName: string | null | undefined = undefined
-        let image1: string | null | undefined = undefined
-        let image2: string | null | undefined = undefined
-        let accessUrl: string | null | undefined = undefined
-        let created: string | null | undefined = undefined
+        const image1 = await imagesSelector[0]?.evaluate((img) => img.getAttribute("src"))
+        const image2 = await imagesSelector[1]?.evaluate((img) => img.getAttribute("src"))
+        const companyName = await companySelector[0]?.evaluate((span) => span.textContent)
+        const title = await hrefSelector[0]?.evaluate((a) => a.textContent?.trim())
+        const sourceUrl = await hrefSelector[0]?.evaluate((a) => a.getAttribute("href"))
+        const createdWhile = await createdSelector[0]?.evaluate((span) => span.textContent?.trim())
 
-        if (typeof imagesSelector[0] !== "undefined") {
-            image1 = await imagesSelector[0].evaluate((img) => img.getAttribute("src"))
-        }
-        if (typeof imagesSelector[1] !== "undefined") {
-            image2 = await imagesSelector[1].evaluate((img) => img.getAttribute("src"))
-        }
-        if (typeof companySelector[0] !== "undefined") {
-            companyName = await await companySelector[0].evaluate((span) => span.textContent)
-        }
-        if (typeof hrefSelector[0] !== "undefined") {
-            title = await hrefSelector[0].evaluate((a) => a.textContent?.trim())
-            accessUrl = await hrefSelector[0].evaluate((a) => a.getAttribute("href"))
-        }
-        if (typeof createdSelector[0] !== "undefined") {
-            created = await createdSelector[0].evaluate((span) => span.textContent?.trim())
-        }
+        let cityName: string | null | undefined = undefined
         for (let j = 0; j < tagsSelector.length; j++) {
             const spanSelector = await tagsSelector[j].$("span > span")
             if (spanSelector) {
@@ -47,21 +32,25 @@ export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
             }
         }
 
-        result.push({
-            id: undefined,
-            sourceData: SourceSite.hw,
-            title: title as string,
-            cityName: cityName as string,
-            companyName: companyName as string,
-            companyLogoUrl: image2 ?? image1 ?? "http://localhost:3000/static/images/logo_placeholder.png",
-            imageUrl: image2
-                ? image1 ?? "http://localhost:3000/static/images/placeholder.jpg"
-                : "http://localhost:3000/static/images/placeholder.jpg",
-            sourceUrl: (indeedConst.baseUrl + accessUrl) as string,
-            createdWhile: created as string,
-            createdAt: undefined,
-            updatedAt: undefined,
-        } as JobOffer)
+        if (title && companyName && cityName && sourceUrl && createdWhile) {
+            result.push({
+                sourceData: SourceSite.hw,
+                sourceUrl: indeedConst.baseUrl + sourceUrl,
+                title: title,
+                companyName: companyName,
+                cityName: cityName,
+                createdWhile: createdWhile,
+
+                companyLogoUrl: image2 ?? image1 ?? "http://localhost:3000/static/images/logo_placeholder.png",
+                imageUrl: image2
+                    ? image1 ?? "http://localhost:3000/static/images/placeholder.jpg"
+                    : "http://localhost:3000/static/images/placeholder.jpg",
+
+                id: undefined,
+                createdAt: undefined,
+                updatedAt: undefined,
+            } as JobOffer)
+        }
     }
 
     return result
