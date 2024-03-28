@@ -19,6 +19,7 @@ app.use(
 )
 
 app.use(apiRoute)
+app.use("/static", express.static("public"))
 app.get("/", (req: express.Request, res: express.Response) => {
     res.json({ status: "API is running on /api" })
 })

@@ -47,11 +47,11 @@ export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
             id: undefined,
             title: title as string,
             cityName: cityName as string,
-            companyLogoUrl: companyLogoUrl as string,
             companyName: companyName as string,
             sourceUrl: sourceUrl as string,
             createdWhile: createdWhile as string,
-            imageUrl: "", // Todo gérer une image par défaut.
+            companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
+            imageUrl: "http://localhost:3000/static/images/placeholder.jpg",
             sourceData: SourceSite.indeed,
             createdAt: undefined,
             updatedAt: undefined,
