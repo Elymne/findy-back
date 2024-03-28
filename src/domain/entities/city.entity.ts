@@ -3,7 +3,7 @@ export default interface City {
     code: string
 }
 
-export interface CityDetailed extends City {
+export interface CityWithCoordinates extends City {
     coordinates: {
         lng: number
         lat: number

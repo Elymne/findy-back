@@ -1,6 +1,6 @@
 import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import logger from "@App/core/tools/logger"
-import { CityDetailed } from "../../entities/city.entity"
+import { CityWithCoordinates } from "../../entities/city.entity"
 import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/datasources/geoapiDatasource"
 import { GeoApiParser, GeoApiParserImpl } from "@App/infrastructure/remote/geoapi/parsers/geoApi.parser"
 
@@ -9,7 +9,7 @@ type Params = {
     name?: string
 }
 
-export interface GetOneCityUsecase extends Usecase<CityDetailed, Params> {
+export interface GetOneCityUsecase extends Usecase<CityWithCoordinates, Params> {
     geoapiDatasource: GeoapiDatasource
     geoCityParser: GeoApiParser
 }
@@ -18,7 +18,7 @@ export const GetOneCityUsecaseImpl: GetOneCityUsecase = {
     geoapiDatasource: GeoapiDatasourceImpl,
     geoCityParser: GeoApiParserImpl,
 
-    perform: async function (params: Params): Promise<Result<CityDetailed>> {
+    perform: async function (params: Params): Promise<Result<CityWithCoordinates>> {
         try {
             if (params.code) {
                 const geoCity = await this.geoapiDatasource.findOneByCode(params.code)

@@ -1,9 +1,9 @@
-import City, { CityDetailed } from "@App/domain/entities/city.entity"
+import City, { CityWithCoordinates } from "@App/domain/entities/city.entity"
 import GeoCity, { GeoCityCoordinated } from "../models/geoCity"
 
 export interface GeoApiParser {
     parse: (sources: GeoCity[]) => Promise<City[]>
-    parseOne: (source: GeoCityCoordinated) => Promise<CityDetailed>
+    parseOne: (source: GeoCityCoordinated) => Promise<CityWithCoordinates>
 }
 
 export const GeoApiParserImpl: GeoApiParser = {
@@ -18,7 +18,7 @@ export const GeoApiParserImpl: GeoApiParser = {
         return parsedSource
     },
 
-    parseOne: async function (source: GeoCityCoordinated): Promise<CityDetailed> {
+    parseOne: async function (source: GeoCityCoordinated): Promise<CityWithCoordinates> {
         return {
             name: source.nom,
             code: source.code,
