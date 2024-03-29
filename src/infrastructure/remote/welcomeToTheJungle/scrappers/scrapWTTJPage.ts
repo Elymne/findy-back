@@ -2,9 +2,9 @@ import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
 import wttjConst from "../configs/wttj.const"
-import PageResult from "@App/domain/entities/pageResult.entity"
+import PageOffers from "@App/domain/entities/pageResult.entity"
 
-export async function scrapWTTJPage(page: Page, nbMax?: number): Promise<PageResult> {
+export async function scrapWTTJPage(page: Page, nbMax?: number): Promise<PageOffers> {
     const jobOffers = new Array<JobOffer>()
 
     const [jobRows, pageRows] = await Promise.all([
@@ -33,7 +33,7 @@ export async function scrapWTTJPage(page: Page, nbMax?: number): Promise<PageRes
         ])
 
         if (title && companyName && cityName && sourceUrl && createdWhile) {
-            jobOffers.push({
+            const jobOffer: JobOffer = {
                 sourceData: SourceSite.wttj,
                 sourceUrl: wttjConst.basurl + sourceUrl,
                 title: title,
@@ -47,15 +47,18 @@ export async function scrapWTTJPage(page: Page, nbMax?: number): Promise<PageRes
                 id: undefined,
                 createdAt: undefined,
                 updatedAt: undefined,
-            } as JobOffer)
+            }
+            jobOffers.push(jobOffer)
         }
     }
 
     const totalPages = await pageRows[pageRows.length - 2]?.$eval("a", (a) => a.textContent)
     const totalPagesAsNumber = parseInt(totalPages ?? "1")
 
-    return {
+    const pageOffers: PageOffers = {
         totalPagesNb: totalPagesAsNumber,
         jobOffers: jobOffers,
-    } as PageResult
+    }
+
+    return pageOffers
 }

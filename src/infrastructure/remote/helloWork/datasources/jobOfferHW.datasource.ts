@@ -2,14 +2,14 @@ import JobOffer from "@App/domain/entities/jobOffer.entity"
 import hwConst from "../configs/hw.const"
 import { scrapHWPage } from "../scrappers/scrapHWPage"
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
-import PageResult from "@App/domain/entities/pageResult.entity"
+import PageOffers from "@App/domain/entities/pageResult.entity"
 
 export interface PageOffersHWDatasource {
-    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryHWParams) => Promise<PageResult>
+    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryHWParams) => Promise<PageOffers>
 }
 
 export const PageOffersHWDatasourceImpl: PageOffersHWDatasource = {
-    findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryHWParams): Promise<PageResult> {
+    findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryHWParams): Promise<PageOffers> {
         const url = "".concat(
             hwConst.baseUrl,
             `/${hwConst.jobPath}`,

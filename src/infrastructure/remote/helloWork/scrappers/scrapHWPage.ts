@@ -2,10 +2,10 @@ import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
 import indeedConst from "../../indeed/configs/indeed.configs"
-import PageResult from "@App/domain/entities/pageResult.entity"
+import PageOffers from "@App/domain/entities/pageResult.entity"
 
 /// TODO Faire un checking plus poussé pour les images. Il y a des paternes qui se répète pour l'utilisation des image sur ce site.
-export async function scrapHWPage(page: Page): Promise<PageResult> {
+export async function scrapHWPage(page: Page): Promise<PageOffers> {
     const jobOffers = new Array<JobOffer>()
 
     const jobRows = await page.$$("section.serp > div > section > ul.crushed > li")
@@ -37,7 +37,7 @@ export async function scrapHWPage(page: Page): Promise<PageResult> {
         }
 
         if (title && companyName && cityName && sourceUrl && createdWhile) {
-            jobOffers.push({
+            const jobOffer: JobOffer = {
                 sourceData: SourceSite.hw,
                 sourceUrl: indeedConst.baseUrl + sourceUrl,
                 title: title,
@@ -53,12 +53,12 @@ export async function scrapHWPage(page: Page): Promise<PageResult> {
                 id: undefined,
                 createdAt: undefined,
                 updatedAt: undefined,
-            } as JobOffer)
+            }
+            jobOffers.push(jobOffer)
         }
     }
 
-    return {
-        totalPagesNb: 1,
-        jobOffers: jobOffers,
-    } as PageResult
+    const pageOffers: PageOffers = { totalPagesNb: 1, jobOffers: jobOffers }
+
+    return pageOffers
 }

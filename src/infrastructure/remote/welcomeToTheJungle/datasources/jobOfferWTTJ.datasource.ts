@@ -1,14 +1,14 @@
 import wttjConst from "../configs/wttj.const"
 import { scrapWTTJPage } from "../scrappers/scrapWTTJPage"
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
-import PageResult from "@App/domain/entities/pageResult.entity"
+import PageOffers from "@App/domain/entities/pageResult.entity"
 
 export interface PageOffersWTTJDatasource {
-    findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams) => Promise<PageResult>
+    findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams) => Promise<PageOffers>
 }
 
 export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
-    findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams): Promise<PageResult> {
+    findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams): Promise<PageOffers> {
         const url: string = "".concat(
             wttjConst.basurl,
             `/${wttjConst.jobPath}`,

@@ -1,14 +1,14 @@
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 import indeedConst from "../configs/indeed.configs"
 import { scrapIndeedPage } from "../scrappers/scrapIndeedPage"
-import PageResult from "@App/domain/entities/pageResult.entity"
+import PageOffers from "@App/domain/entities/pageResult.entity"
 
 export interface PageOffersIndeedDatasource {
-    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryIndeedParams) => Promise<PageResult>
+    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryIndeedParams) => Promise<PageOffers>
 }
 
 export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
-    findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryIndeedParams): Promise<PageResult> {
+    findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryIndeedParams): Promise<PageOffers> {
         const url = "".concat(
             indeedConst.baseUrl,
             `/${indeedConst.jobPath}`,

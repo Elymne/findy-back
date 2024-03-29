@@ -13,6 +13,7 @@ export const GetSampleUsecaseImpl: GetSampleUsecase = {
     perform: async function (): Promise<Result<SamplejobOffers>> {
         try {
             const fetchers = ["marketing", "communication", "comptabilité", "dévelopement web", "rh", "commercial"]
+
             const buffer = await Promise.all(
                 fetchers.map((fetcher) => {
                     return this.getJobOffersWTTJUsecase.perform({
@@ -22,19 +23,21 @@ export const GetSampleUsecaseImpl: GetSampleUsecase = {
                 })
             )
 
+            const sampleJobOffers: SamplejobOffers = {
+                marketing: buffer[0].data.jobOffers.slice(0, 4),
+                communication: buffer[1].data.jobOffers.slice(0, 4),
+                comptability: buffer[2].data.jobOffers.slice(0, 4),
+                webDev: buffer[3].data.jobOffers.slice(0, 4),
+                humanResources: buffer[4].data.jobOffers.slice(0, 4),
+                commercial: buffer[5].data.jobOffers.slice(0, 4),
+            }
+
             return new Success({
-                message: "the sample of job offers from france.travail has been fetched successfully",
-                data: {
-                    marketing: buffer[0].data.jobOffers.slice(0, 4),
-                    communication: buffer[1].data.jobOffers.slice(0, 4),
-                    comptability: buffer[2].data.jobOffers.slice(0, 4),
-                    webDev: buffer[3].data.jobOffers.slice(0, 4),
-                    humanResources: buffer[4].data.jobOffers.slice(0, 4),
-                    commercial: buffer[5].data.jobOffers.slice(0, 4),
-                },
+                message: "The sample of job offers has been fetched successfully",
+                data: sampleJobOffers,
             })
         } catch (error) {
-            logger.error("[GetSampleFromWTTJUsecase]", error)
+            logger.error("[GetSampleUsecase]", error)
             return new Failure({
                 message: "An internal error occur",
                 errorCode: 500,

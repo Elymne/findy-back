@@ -4,8 +4,9 @@ import JobOffer from "../../entities/jobOffer.entity"
 import logger from "@App/core/tools/logger"
 import { GetPageOffersHWUsecase, GetPageOffersHWUsecaseImpl } from "./getPageOffersHW.usecase"
 import { GetPageOffersIndeedUsecase, GetPageOffersIndeedUsecaseImpl } from "./getPageOffersIndeed.usecase"
+import PageOffers from "@App/domain/entities/pageResult.entity"
 
-export interface GetPageOffersUsecase extends Usecase<JobOffer[], Params> {
+export interface GetPageOffersUsecase extends Usecase<PageOffers, Params> {
     getPageOffersWTTJUsecase: GetPageOffersWTTJUsecase
     getPageOffersHWUsecase: GetPageOffersHWUsecase
     getPageOffersIndeedUsecase: GetPageOffersIndeedUsecase
@@ -15,7 +16,7 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
     getPageOffersWTTJUsecase: GetPageOffersWTTJUSecaseImpl,
     getPageOffersHWUsecase: GetPageOffersHWUsecaseImpl,
     getPageOffersIndeedUsecase: GetPageOffersIndeedUsecaseImpl,
-    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
+    perform: async function (params: Params): Promise<Result<PageOffers>> {
         try {
             const [pageOffersWTTJResult, pageOffersHWResult, pageOffersIndeedResult] = await Promise.all([
                 this.getPageOffersWTTJUsecase.perform(params),
@@ -24,8 +25,8 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
             ])
 
             if (
-                pageOffersWTTJResult instanceof Failure &&
-                pageOffersHWResult instanceof Failure &&
+                pageOffersWTTJResult instanceof Failure ||
+                pageOffersHWResult instanceof Failure ||
                 pageOffersIndeedResult instanceof Failure
             ) {
                 return new Failure({
@@ -34,26 +35,31 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
                 })
             }
 
-            const jobOffers: JobOffer[] = []
+            const mergedJobOffers = Array<JobOffer>()
 
             if (pageOffersWTTJResult instanceof Success) {
-                jobOffers.push(...pageOffersWTTJResult.data.jobOffers)
+                mergedJobOffers.push(...pageOffersWTTJResult.data.jobOffers)
             }
 
             if (pageOffersHWResult instanceof Success) {
-                jobOffers.push(...pageOffersHWResult.data.jobOffers)
+                mergedJobOffers.push(...pageOffersHWResult.data.jobOffers)
             }
 
             if (pageOffersIndeedResult instanceof Success) {
-                jobOffers.push(...pageOffersIndeedResult.data.jobOffers)
+                mergedJobOffers.push(...pageOffersIndeedResult.data.jobOffers)
+            }
+
+            const pageOffers: PageOffers = {
+                totalPagesNb: 1,
+                jobOffers: mergedJobOffers,
             }
 
             return new Success({
                 message: "Job offers from findy API fetched successfully",
-                data: jobOffers,
+                data: pageOffers,
             })
         } catch (error) {
-            logger.error("[GetJobOffersAllUsecase]", error)
+            logger.error("[GetPageOffersUsecase]", error)
             return new Failure({
                 message: "Une erreur interne s'est produite sur le serveur",
                 errorCode: 500,

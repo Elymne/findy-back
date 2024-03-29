@@ -5,53 +5,55 @@ import {
     PageOffersHWDatasourceImpl,
     FindAllByQueryHWParams,
 } from "@App/infrastructure/remote/helloWork/datasources/jobOfferHW.datasource"
-import { FilterJobOffersUsecase, FilterJobOffersUsecaseImpl } from "./filterJobOffers.usecase"
+import { FilterPageOffersUsecase, FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import logger from "@App/core/tools/logger"
-import PageResult from "@App/domain/entities/pageResult.entity"
+import PageOffers from "@App/domain/entities/pageResult.entity"
 
-export interface GetPageOffersHWUsecase extends Usecase<PageResult, Params> {
+export interface GetPageOffersHWUsecase extends Usecase<PageOffers, Params> {
     pageOffersHWDatasource: PageOffersHWDatasource
     getOneCityUsecase: GetOneCityUsecase
-    filterJobOfferUsecase: FilterJobOffersUsecase
+    filterJobOfferUsecase: FilterPageOffersUsecase
 }
 
 export const GetPageOffersHWUsecaseImpl: GetPageOffersHWUsecase = {
     pageOffersHWDatasource: PageOffersHWDatasourceImpl,
     getOneCityUsecase: GetOneCityUsecaseImpl,
-    filterJobOfferUsecase: FilterJobOffersUsecaseImpl,
+    filterJobOfferUsecase: FilterPageOffersUsecaseImpl,
 
-    perform: async function (params: Params): Promise<Result<PageResult>> {
+    perform: async function (params: Params): Promise<Result<PageOffers>> {
         try {
-            const query = {
+            const findAllByQueryHWParams: FindAllByQueryHWParams = {
                 keyWords: params.keyWords,
                 radius: params.radius,
                 page: params.page,
                 nbElement: params.nbElements,
                 cityName: undefined,
-            } as FindAllByQueryHWParams
+            }
 
             if (params.cityCode) {
                 const cityResult = await this.getOneCityUsecase.perform({ code: params.cityCode })
-                if (cityResult instanceof Failure) return cityResult
-                query.cityName = cityResult.data.name
+                if (cityResult instanceof Failure) {
+                    return cityResult
+                }
+                findAllByQueryHWParams.cityName = cityResult.data.name
             }
 
-            const pageResult = await this.pageOffersHWDatasource.findAllByQuery(query)
+            const pageOffersResult = await this.pageOffersHWDatasource.findAllByQuery(findAllByQueryHWParams)
 
-            const jobOffersFilteredResult = await this.filterJobOfferUsecase.perform({
-                sources: pageResult.jobOffers,
+            const pageOffersFilteredResult = await this.filterJobOfferUsecase.perform({
+                sources: pageOffersResult,
             })
-            if (jobOffersFilteredResult instanceof Failure) return jobOffersFilteredResult
+
+            if (pageOffersFilteredResult instanceof Failure) {
+                return pageOffersFilteredResult
+            }
 
             return new Success({
                 message: "Job offers from HelloWork page fetched successfully",
-                data: {
-                    totalPagesNb: pageResult.totalPagesNb,
-                    jobOffers: jobOffersFilteredResult.data,
-                },
+                data: pageOffersFilteredResult.data,
             })
         } catch (error) {
-            logger.error("[GetJobOffersHWUsecase]", error)
+            logger.error("[GetPageOffersHWUsecase]", error)
             return new Failure({
                 message: "An internal error occur",
                 errorCode: 500,
