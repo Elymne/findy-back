@@ -1,14 +1,14 @@
-import JobOffer from "@App/domain/entities/jobOffer.entity"
 import wttjConst from "../configs/wttj.const"
 import { scrapWTTJPage } from "../scrappers/scrapWTTJPage"
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
+import PageResult from "@App/domain/entities/pageResult.entity"
 
-export interface JobOfferWTTJDatasource {
-    findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: JobOfferWTTJQuery) => Promise<JobOffer[]>
+export interface PageOffersWTTJDatasource {
+    findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams) => Promise<PageResult>
 }
 
-export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
-    findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: JobOfferWTTJQuery): Promise<JobOffer[]> {
+export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
+    findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams): Promise<PageResult> {
         const url: string = "".concat(
             wttjConst.basurl,
             `/${wttjConst.jobPath}`,
@@ -29,7 +29,7 @@ export const JobOfferWTTJDatasourceImpl: JobOfferWTTJDatasource = {
     },
 }
 
-export type JobOfferWTTJQuery = {
+export type FindAllByQueryWTTJParams = {
     keyWords: string
     lat?: number
     lng?: number

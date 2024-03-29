@@ -2,19 +2,23 @@ import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
 import indeedConst from "../../indeed/configs/indeed.configs"
+import PageResult from "@App/domain/entities/pageResult.entity"
 
 /// TODO Faire un checking plus poussé pour les images. Il y a des paternes qui se répète pour l'utilisation des image sur ce site.
-export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
-    const rows = await page.$$("section.serp > div > section > ul.crushed > li")
-    const result = new Array<JobOffer>()
+export async function scrapHWPage(page: Page): Promise<PageResult> {
+    const jobOffers = new Array<JobOffer>()
 
-    for (let i = 0; i < rows.length; i++) {
+    const jobRows = await page.$$("section.serp > div > section > ul.crushed > li")
+
+    const pageRows = await page.$$("div > div > div > ul > li")
+
+    for (let i = 0; i < jobRows.length; i++) {
         const [imagesSelector, companySelector, hrefSelector, tagsSelector, createdSelector] = await Promise.all([
-            rows[i].$$("img"),
-            rows[i].$$('[data-cy="companyName"] > span'),
-            rows[i].$$("a"),
-            rows[i].$$("#infos"),
-            rows[i].$$('[data-cy="publishDate"]'),
+            jobRows[i].$$("img"),
+            jobRows[i].$$('[data-cy="companyName"] > span'),
+            jobRows[i].$$("a"),
+            jobRows[i].$$("#infos"),
+            jobRows[i].$$('[data-cy="publishDate"]'),
         ])
 
         const image1 = await imagesSelector[0]?.evaluate((img) => img.getAttribute("src"))
@@ -33,7 +37,7 @@ export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
         }
 
         if (title && companyName && cityName && sourceUrl && createdWhile) {
-            result.push({
+            jobOffers.push({
                 sourceData: SourceSite.hw,
                 sourceUrl: indeedConst.baseUrl + sourceUrl,
                 title: title,
@@ -53,5 +57,8 @@ export async function scrapHWPage(page: Page): Promise<JobOffer[]> {
         }
     }
 
-    return result
+    return {
+        totalPagesNb: 1,
+        jobOffers: jobOffers,
+    } as PageResult
 }

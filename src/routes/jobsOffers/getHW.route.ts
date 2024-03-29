@@ -2,9 +2,9 @@ import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
-import { GetJobOffersHWUsecase, GetJobOffersHWUsecaseImpl } from "@App/domain/usecases/jobsOffers/getJobOffersHW.usecase"
+import { GetPageOffersHWUsecase, GetPageOffersHWUsecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffersHW.usecase"
 
-const getJobOffersHWUsecase: GetJobOffersHWUsecase = GetJobOffersHWUsecaseImpl
+const getJobOffersHWUsecase: GetPageOffersHWUsecase = GetPageOffersHWUsecaseImpl
 
 const getHwJobOffersRoute = express
     .Router()

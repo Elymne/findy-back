@@ -1,28 +1,26 @@
 import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "../cities/getOneCity.usecase"
 import { FilterJobOffersUsecase, FilterJobOffersUsecaseImpl } from "./filterJobOffers.usecase"
 import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
-import JobOffer from "../../entities/jobOffer.entity"
 import logger from "@App/core/tools/logger"
 import {
-    JobOfferWTTJDatasource,
-    JobOfferWTTJDatasourceImpl,
-    JobOfferWTTJQuery,
+    PageOffersWTTJDatasource,
+    PageOffersWTTJDatasourceImpl,
+    FindAllByQueryWTTJParams,
 } from "@App/infrastructure/remote/welcomeToTheJungle/datasources/jobOfferWTTJ.datasource"
+import PageResult from "@App/domain/entities/pageResult.entity"
 
-export interface GetJobOffersWTTJUsecase extends Usecase<JobOffer[], Params> {
-    jobOfferWTTJDatasource: JobOfferWTTJDatasource
-
-    getOneUsecaseCity: GetOneCityUsecase
+export interface GetPageOffersWTTJUsecase extends Usecase<PageResult, Params> {
+    pageOffersWTTJDatasource: PageOffersWTTJDatasource
+    getOneCityUsecase: GetOneCityUsecase
     filterJobUsecase: FilterJobOffersUsecase
 }
 
-export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
-    jobOfferWTTJDatasource: JobOfferWTTJDatasourceImpl,
-
-    getOneUsecaseCity: GetOneCityUsecaseImpl,
+export const GetPageOffersWTTJUSecaseImpl: GetPageOffersWTTJUsecase = {
+    pageOffersWTTJDatasource: PageOffersWTTJDatasourceImpl,
+    getOneCityUsecase: GetOneCityUsecaseImpl,
     filterJobUsecase: FilterJobOffersUsecaseImpl,
 
-    perform: async function (params: Params): Promise<Result<JobOffer[]>> {
+    perform: async function (params: Params): Promise<Result<PageResult>> {
         try {
             const query = {
                 keyWords: params.keyWords,
@@ -31,23 +29,26 @@ export const GetJobOffersWTTJUsecaseImpl: GetJobOffersWTTJUsecase = {
                 nbElement: params.nbElements,
                 lat: undefined,
                 lng: undefined,
-            } as JobOfferWTTJQuery
+            } as FindAllByQueryWTTJParams
 
             if (params.cityCode) {
-                const cityResult = await this.getOneUsecaseCity.perform({ code: params.cityCode })
+                const cityResult = await this.getOneCityUsecase.perform({ code: params.cityCode })
                 if (cityResult instanceof Failure) return cityResult
                 query.lat = cityResult.data.coordinates.lat
                 query.lng = cityResult.data.coordinates.lng
             }
 
-            const jobOffers = await this.jobOfferWTTJDatasource.findAllByQuery(query)
+            const pageResult = await this.pageOffersWTTJDatasource.findAllByQuery(query)
 
-            const jobOffersFilteredResult = await this.filterJobUsecase.perform({ sources: jobOffers })
+            const jobOffersFilteredResult = await this.filterJobUsecase.perform({ sources: pageResult.jobOffers })
             if (jobOffersFilteredResult instanceof Failure) return jobOffersFilteredResult
 
             return new Success({
                 message: "Job offers from WelcomeToTheJungle page fetched successfully",
-                data: jobOffersFilteredResult.data,
+                data: {
+                    jobOffers: jobOffersFilteredResult.data,
+                    totalPagesNb: pageResult.totalPagesNb,
+                } as PageResult,
             })
         } catch (error) {
             logger.error("[GetJobOffersWTTJUsecase]", error)

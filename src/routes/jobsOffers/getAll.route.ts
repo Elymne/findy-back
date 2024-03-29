@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { GetJobOffersAllUsecase, GetJobOffersUsecaseImpl } from "@App/domain/usecases/jobsOffers/getJobOffersAll.usecase"
+import { GetPageOffersUsecase, GetPageOffersUsecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffers.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
 
-const getJobOffersUsecase: GetJobOffersAllUsecase = GetJobOffersUsecaseImpl
+const getJobOffersUsecase: GetPageOffersUsecase = GetPageOffersUsecaseImpl
 
 const getAllJobOffersRoute = express
     .Router()

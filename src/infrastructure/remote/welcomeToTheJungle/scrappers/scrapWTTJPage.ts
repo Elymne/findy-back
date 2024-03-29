@@ -2,18 +2,24 @@ import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
 import wttjConst from "../configs/wttj.const"
+import PageResult from "@App/domain/entities/pageResult.entity"
 
-export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]> {
-    const rows = await page.$$('[data-testid="search-results-list-item-wrapper"]')
-    const max = nb && nb <= rows.length ? nb : rows.length
-    const result = new Array<JobOffer>()
+export async function scrapWTTJPage(page: Page, nbMax?: number): Promise<PageResult> {
+    const jobOffers = new Array<JobOffer>()
 
-    for (let i = 0; i < max; i++) {
+    const [jobRows, pageRows] = await Promise.all([
+        page.$$('[data-testid="search-results-list-item-wrapper"]'),
+        page.$$('nav[aria-label="Pagination"] > ul > li'),
+    ])
+
+    const maxJobs = nbMax && nbMax <= jobRows.length ? nbMax : jobRows.length
+
+    for (let i = 0; i < maxJobs; i++) {
         const [imageSelectors, h4selectors, spanSelectors, aSelector] = await Promise.all([
-            rows[i].$$("img"),
-            rows[i].$$("h4"),
-            rows[i].$$("span"),
-            rows[i].$$("a"),
+            jobRows[i].$$("img"),
+            jobRows[i].$$("h4"),
+            jobRows[i].$$("span"),
+            jobRows[i].$$("a"),
         ])
 
         const [imageUrl, companyLogoUrl, title, companyName, cityName, sourceUrl, createdWhile] = await Promise.all([
@@ -27,7 +33,7 @@ export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]
         ])
 
         if (title && companyName && cityName && sourceUrl && createdWhile) {
-            result.push({
+            jobOffers.push({
                 sourceData: SourceSite.wttj,
                 sourceUrl: wttjConst.basurl + sourceUrl,
                 title: title,
@@ -45,5 +51,11 @@ export async function scrapWTTJPage(page: Page, nb?: number): Promise<JobOffer[]
         }
     }
 
-    return result
+    const totalPages = await pageRows[pageRows.length - 2]?.$eval("a", (a) => a.textContent)
+    const totalPagesAsNumber = parseInt(totalPages ?? "1")
+
+    return {
+        totalPagesNb: totalPagesAsNumber,
+        jobOffers: jobOffers,
+    } as PageResult
 }

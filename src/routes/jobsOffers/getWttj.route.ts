@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "@App/domain/usecases/jobsOffers/getJobOffersWTTJ.usecase"
+import { GetPageOffersWTTJUsecase, GetPageOffersWTTJUSecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffersWTTJ.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
 
-const getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase = GetJobOffersWTTJUsecaseImpl
+const getJobOffersWTTJUsecase: GetPageOffersWTTJUsecase = GetPageOffersWTTJUSecaseImpl
 
 const getWttjJobOffersRoute = express
     .Router()

@@ -2,10 +2,11 @@ import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 import { Page } from "puppeteer"
 import indeedConst from "../configs/indeed.configs"
+import PageResult from "@App/domain/entities/pageResult.entity"
 
-export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
+export async function scrapIndeedPage(page: Page): Promise<PageResult> {
     const rows = await page.$$("#mosaic-provider-jobcards > ul > li")
-    const result = new Array<JobOffer>()
+    const jobOffers = new Array<JobOffer>()
 
     for (let i = 0; i < rows.length; i++) {
         const [imagesSelector, hrefSelector, companySelector, citySelector, createdWhileSelector] = await Promise.all([
@@ -24,7 +25,7 @@ export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
         const createdWhile = await createdWhileSelector?.evaluate((span) => span.textContent)
 
         if (title && companyName && cityName && sourceUrl && createdWhile) {
-            result.push({
+            jobOffers.push({
                 sourceData: SourceSite.indeed,
                 sourceUrl: indeedConst.baseUrl + sourceUrl,
                 title: title,
@@ -42,5 +43,8 @@ export async function scrapIndeedPage(page: Page): Promise<JobOffer[]> {
         }
     }
 
-    return result
+    return {
+        totalPagesNb: 1,
+        jobOffers: jobOffers,
+    } as PageResult
 }

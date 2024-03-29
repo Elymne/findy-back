@@ -1,14 +1,14 @@
 import logger from "@App/core/tools/logger"
 import SamplejobOffers from "../../entities/sampleJobOffer"
 import { Failure, Result, Success, UsecaseNoParams } from "../../../core/interfaces/abstract.usecase"
-import { GetJobOffersWTTJUsecase, GetJobOffersWTTJUsecaseImpl } from "./getJobOffersWTTJ.usecase"
+import { GetPageOffersWTTJUsecase, GetPageOffersWTTJUSecaseImpl } from "./getPageOffersWTTJ.usecase"
 
 export interface GetSampleUsecase extends UsecaseNoParams<SamplejobOffers> {
-    getJobOffersWTTJUsecase: GetJobOffersWTTJUsecase
+    getJobOffersWTTJUsecase: GetPageOffersWTTJUsecase
 }
 
 export const GetSampleUsecaseImpl: GetSampleUsecase = {
-    getJobOffersWTTJUsecase: GetJobOffersWTTJUsecaseImpl,
+    getJobOffersWTTJUsecase: GetPageOffersWTTJUSecaseImpl,
 
     perform: async function (): Promise<Result<SamplejobOffers>> {
         try {
@@ -25,12 +25,12 @@ export const GetSampleUsecaseImpl: GetSampleUsecase = {
             return new Success({
                 message: "the sample of job offers from france.travail has been fetched successfully",
                 data: {
-                    marketing: buffer[0].data.slice(0, 4),
-                    communication: buffer[1].data.slice(0, 4),
-                    comptability: buffer[2].data.slice(0, 4),
-                    webDev: buffer[3].data.slice(0, 4),
-                    humanResources: buffer[4].data.slice(0, 4),
-                    commercial: buffer[5].data.slice(0, 4),
+                    marketing: buffer[0].data.jobOffers.slice(0, 4),
+                    communication: buffer[1].data.jobOffers.slice(0, 4),
+                    comptability: buffer[2].data.jobOffers.slice(0, 4),
+                    webDev: buffer[3].data.jobOffers.slice(0, 4),
+                    humanResources: buffer[4].data.jobOffers.slice(0, 4),
+                    commercial: buffer[5].data.jobOffers.slice(0, 4),
                 },
             })
         } catch (error) {

@@ -1,14 +1,14 @@
-import JobOffer from "@App/domain/entities/jobOffer.entity"
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 import indeedConst from "../configs/indeed.configs"
 import { scrapIndeedPage } from "../scrappers/scrapIndeedPage"
+import PageResult from "@App/domain/entities/pageResult.entity"
 
-export interface JobOfferIndeedDatasource {
-    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: JobOfferIndeedQuery) => Promise<JobOffer[]>
+export interface PageOffersIndeedDatasource {
+    findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryIndeedParams) => Promise<PageResult>
 }
 
-export const JobOfferIndeedDatasourceImpl: JobOfferIndeedDatasource = {
-    findAllByQuery: async function ({ keyWords, cityName, page, radius }: JobOfferIndeedQuery): Promise<JobOffer[]> {
+export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
+    findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryIndeedParams): Promise<PageResult> {
         const url = "".concat(
             indeedConst.baseUrl,
             `/${indeedConst.jobPath}`,
@@ -28,7 +28,7 @@ export const JobOfferIndeedDatasourceImpl: JobOfferIndeedDatasource = {
     },
 }
 
-export type JobOfferIndeedQuery = {
+export type FindAllByQueryIndeedParams = {
     keyWords: string
     cityName?: string
     radius?: number
