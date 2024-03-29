@@ -1,23 +1,23 @@
-import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "../cities/getOneCity.usecase"
-import { FilterPageOffersUsecase, FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
-import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
-import logger from "@App/core/tools/logger"
+import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import {
+    FindAllByQueryWTTJParams,
     PageOffersWTTJDatasource,
     PageOffersWTTJDatasourceImpl,
-    FindAllByQueryWTTJParams,
-} from "@App/infrastructure/remote/welcomeToTheJungle/datasources/jobOfferWTTJ.datasource"
+} from "@App/infrastructure/remote/welcomeToTheJungle/jobOfferWTTJ.datasource"
+import { GetOneCityByCodeUsecase, GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
+import { FilterPageOffersUsecase, FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import PageOffers from "@App/domain/entities/pageResult.entity"
+import logger from "@App/core/tools/logger"
 
 export interface GetPageOffersWTTJUsecase extends Usecase<PageOffers, Params> {
     pageOffersWTTJDatasource: PageOffersWTTJDatasource
-    getOneCityUsecase: GetOneCityUsecase
+    getOneCityByCodeUsecase: GetOneCityByCodeUsecase
     filterPageOffersUsecase: FilterPageOffersUsecase
 }
 
 export const GetPageOffersWTTJUSecaseImpl: GetPageOffersWTTJUsecase = {
     pageOffersWTTJDatasource: PageOffersWTTJDatasourceImpl,
-    getOneCityUsecase: GetOneCityUsecaseImpl,
+    getOneCityByCodeUsecase: GetOneCityByCodeUsecaseImpl,
     filterPageOffersUsecase: FilterPageOffersUsecaseImpl,
 
     perform: async function (params: Params): Promise<Result<PageOffers>> {
@@ -32,7 +32,7 @@ export const GetPageOffersWTTJUSecaseImpl: GetPageOffersWTTJUsecase = {
             }
 
             if (params.cityCode) {
-                const cityResult = await this.getOneCityUsecase.perform({ code: params.cityCode })
+                const cityResult = await this.getOneCityByCodeUsecase.perform({ code: params.cityCode })
                 if (cityResult instanceof Failure) {
                     return cityResult
                 }

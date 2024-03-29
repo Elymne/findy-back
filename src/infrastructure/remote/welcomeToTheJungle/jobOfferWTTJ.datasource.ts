@@ -1,7 +1,7 @@
-import wttjConst from "../configs/wttj.const"
-import { scrapWTTJPage } from "../scrappers/scrapWTTJPage"
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
+import wttjConst from "./configs/wttj.const"
+import { scrapWTTJPage } from "./scrappers/scrapWTTJPage"
 
 export interface PageOffersWTTJDatasource {
     findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams) => Promise<PageOffers>

@@ -1,8 +1,7 @@
-import JobOffer from "@App/domain/entities/jobOffer.entity"
-import hwConst from "../configs/hw.const"
-import { scrapHWPage } from "../scrappers/scrapHWPage"
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
+import hwConst from "./configs/hw.const"
+import { scrapHWPage } from "./scrappers/scrapHWPage"
 
 export interface PageOffersHWDatasource {
     findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryHWParams) => Promise<PageOffers>

@@ -1,23 +1,23 @@
-import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
-import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "../cities/getOneCity.usecase"
 import {
+    FindAllByQueryHWParams,
     PageOffersHWDatasource,
     PageOffersHWDatasourceImpl,
-    FindAllByQueryHWParams,
-} from "@App/infrastructure/remote/helloWork/datasources/jobOfferHW.datasource"
+} from "@App/infrastructure/remote/helloWork/jobOfferHW.datasource"
+import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
+import { GetOneCityByCodeUsecase, GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
 import { FilterPageOffersUsecase, FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import logger from "@App/core/tools/logger"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 
 export interface GetPageOffersHWUsecase extends Usecase<PageOffers, Params> {
     pageOffersHWDatasource: PageOffersHWDatasource
-    getOneCityUsecase: GetOneCityUsecase
+    getOneCityByCodeUsecase: GetOneCityByCodeUsecase
     filterJobOfferUsecase: FilterPageOffersUsecase
 }
 
 export const GetPageOffersHWUsecaseImpl: GetPageOffersHWUsecase = {
     pageOffersHWDatasource: PageOffersHWDatasourceImpl,
-    getOneCityUsecase: GetOneCityUsecaseImpl,
+    getOneCityByCodeUsecase: GetOneCityByCodeUsecaseImpl,
     filterJobOfferUsecase: FilterPageOffersUsecaseImpl,
 
     perform: async function (params: Params): Promise<Result<PageOffers>> {
@@ -31,7 +31,7 @@ export const GetPageOffersHWUsecaseImpl: GetPageOffersHWUsecase = {
             }
 
             if (params.cityCode) {
-                const cityResult = await this.getOneCityUsecase.perform({ code: params.cityCode })
+                const cityResult = await this.getOneCityByCodeUsecase.perform({ code: params.cityCode })
                 if (cityResult instanceof Failure) {
                     return cityResult
                 }

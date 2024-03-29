@@ -1,7 +1,7 @@
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
-import indeedConst from "../configs/indeed.configs"
-import { scrapIndeedPage } from "../scrappers/scrapIndeedPage"
 import PageOffers from "@App/domain/entities/pageResult.entity"
+import indeedConst from "./configs/indeed.configs"
+import { scrapIndeedPage } from "./scrappers/scrapIndeedPage"
 
 export interface PageOffersIndeedDatasource {
     findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryIndeedParams) => Promise<PageOffers>

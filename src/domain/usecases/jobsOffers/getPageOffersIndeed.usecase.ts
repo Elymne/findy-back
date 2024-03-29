@@ -1,23 +1,23 @@
-import {
-    PageOffersIndeedDatasource,
-    PageOffersIndeedDatasourceImpl,
-    FindAllByQueryIndeedParams,
-} from "@App/infrastructure/remote/indeed/datasources/jobOffersIndeed.datasource"
-import { GetOneCityUsecase, GetOneCityUsecaseImpl } from "../cities/getOneCity.usecase"
 import { FilterPageOffersUsecase, FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import logger from "@App/core/tools/logger"
 import PageOffers from "@App/domain/entities/pageResult.entity"
+import {
+    PageOffersIndeedDatasource,
+    PageOffersIndeedDatasourceImpl,
+    FindAllByQueryIndeedParams,
+} from "@App/infrastructure/remote/indeed/jobOffersIndeed.datasource"
+import { GetOneCityByCodeUsecase, GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
 
 export interface GetPageOffersIndeedUsecase extends Usecase<PageOffers, Params> {
     pageOffersIndeedDatasource: PageOffersIndeedDatasource
-    getOneCityUsecase: GetOneCityUsecase
+    getOneCityByCodeUsecase: GetOneCityByCodeUsecase
     filterPageOffersUsecase: FilterPageOffersUsecase
 }
 
 export const GetPageOffersIndeedUsecaseImpl: GetPageOffersIndeedUsecase = {
     pageOffersIndeedDatasource: PageOffersIndeedDatasourceImpl,
-    getOneCityUsecase: GetOneCityUsecaseImpl,
+    getOneCityByCodeUsecase: GetOneCityByCodeUsecaseImpl,
     filterPageOffersUsecase: FilterPageOffersUsecaseImpl,
 
     perform: async function (params: Params): Promise<Result<PageOffers>> {
@@ -31,7 +31,7 @@ export const GetPageOffersIndeedUsecaseImpl: GetPageOffersIndeedUsecase = {
             }
 
             if (params.cityCode) {
-                const cityResult = await this.getOneCityUsecase.perform({ code: params.cityCode })
+                const cityResult = await this.getOneCityByCodeUsecase.perform({ code: params.cityCode })
                 if (cityResult instanceof Failure) {
                     return cityResult
                 }
