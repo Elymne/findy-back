@@ -50,7 +50,7 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
             }
 
             const pageOffers: PageOffers = {
-                totalPagesNb: 1,
+                totalPagesNb: (pageOffersIndeedResult as Success<PageOffers>).data.totalPagesNb,
                 jobOffers: mergedJobOffers,
             }
 
