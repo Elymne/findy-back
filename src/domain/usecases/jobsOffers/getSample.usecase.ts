@@ -1,14 +1,16 @@
 import logger from "@App/core/tools/logger"
 import SamplejobOffers from "../../entities/sampleJobOffer"
 import { Failure, Result, Success, UsecaseNoParams } from "../../../core/interfaces/abstract.usecase"
-import { GetPageOffersWTTJUsecase, GetPageOffersWTTJUSecaseImpl } from "./getPageOffersWTTJ.usecase"
+import PageOffersWTTJDatasource, {
+    PageOffersWTTJDatasourceImpl,
+} from "@App/infrastructure/remote/welcomeToTheJungle/jobOfferWTTJ.datasource"
 
-export interface GetSampleUsecase extends UsecaseNoParams<SamplejobOffers> {
-    getJobOffersWTTJUsecase: GetPageOffersWTTJUsecase
+export default interface GetSampleUsecase extends UsecaseNoParams<SamplejobOffers> {
+    pageOffersWTTJDatasource: PageOffersWTTJDatasource
 }
 
 export const GetSampleUsecaseImpl: GetSampleUsecase = {
-    getJobOffersWTTJUsecase: GetPageOffersWTTJUSecaseImpl,
+    pageOffersWTTJDatasource: PageOffersWTTJDatasourceImpl,
 
     perform: async function (): Promise<Result<SamplejobOffers>> {
         try {
@@ -16,20 +18,19 @@ export const GetSampleUsecaseImpl: GetSampleUsecase = {
 
             const buffer = await Promise.all(
                 fetchers.map((fetcher) => {
-                    return this.getJobOffersWTTJUsecase.perform({
+                    return this.pageOffersWTTJDatasource.findSample({
                         keyWords: fetcher,
-                        nbElements: 8,
                     })
                 })
             )
 
             const sampleJobOffers: SamplejobOffers = {
-                marketing: buffer[0].data.jobOffers.slice(0, 4),
-                communication: buffer[1].data.jobOffers.slice(0, 4),
-                comptability: buffer[2].data.jobOffers.slice(0, 4),
-                webDev: buffer[3].data.jobOffers.slice(0, 4),
-                humanResources: buffer[4].data.jobOffers.slice(0, 4),
-                commercial: buffer[5].data.jobOffers.slice(0, 4),
+                marketing: buffer[0].jobOffers.slice(0, 4),
+                communication: buffer[1].jobOffers.slice(0, 4),
+                comptability: buffer[2].jobOffers.slice(0, 4),
+                webDev: buffer[3].jobOffers.slice(0, 4),
+                humanResources: buffer[4].jobOffers.slice(0, 4),
+                commercial: buffer[5].jobOffers.slice(0, 4),
             }
 
             return new Success({

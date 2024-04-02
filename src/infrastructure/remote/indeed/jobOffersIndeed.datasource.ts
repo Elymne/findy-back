@@ -1,13 +1,16 @@
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import indeedConst from "./configs/indeed.configs"
-import { scrapIndeedPage } from "./scrappers/scrapIndeedPage"
+import ScapperIndeed, { ScapperIndeedImpl } from "./scrappers/scrapperIndeed"
 
-export interface PageOffersIndeedDatasource {
+export default interface PageOffersIndeedDatasource {
+    scapperIndeed: ScapperIndeed
     findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryIndeedParams) => Promise<PageOffers>
 }
 
 export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
+    scapperIndeed: ScapperIndeedImpl,
+
     findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryIndeedParams): Promise<PageOffers> {
         const url = "".concat(
             indeedConst.baseUrl,
@@ -21,10 +24,18 @@ export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
 
         const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.indeed)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
-        const result = await scrapIndeedPage(newPage)
+
+        const [jobOffers, maxPage] = await Promise.all([
+            this.scapperIndeed.getJobOffers({ page: newPage }),
+            this.scapperIndeed.getMaxPage({ page: newPage }),
+        ])
+
         newPage.close()
 
-        return result
+        return {
+            jobOffers: jobOffers,
+            totalPagesNb: maxPage,
+        }
     },
 }
 

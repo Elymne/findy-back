@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
-import { GetOneCityByNameUsecase, GetOneCityByNameUsecaseImpl } from "@App/domain/usecases/cities/getOneCityByName.usecase"
+import GetOneCityByNameUsecase, { GetOneCityByNameUsecaseImpl } from "@App/domain/usecases/cities/getOneCityByName.usecase"
 
 const getOneCityUsecase: GetOneCityByNameUsecase = GetOneCityByNameUsecaseImpl
 

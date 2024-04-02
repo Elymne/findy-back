@@ -1,9 +1,9 @@
 import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import logger from "@App/core/tools/logger"
 import { CityWithCoordinates } from "@App/domain/entities/city.entity"
-import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/geoapiDatasource"
+import GeoapiDatasource, { GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/geoapiDatasource"
 
-export interface GetOneCityByCodeUsecase extends Usecase<CityWithCoordinates, Params> {
+export default interface GetOneCityByCodeUsecase extends Usecase<CityWithCoordinates, Params> {
     geoapiDatasource: GeoapiDatasource
 }
 

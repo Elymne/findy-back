@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express"
-import { GetCitiesUsecase, GetCitiesUsecaseImpl } from "@App/domain/usecases/cities/getCities.usecase"
+import GetCitiesUsecase, { GetCitiesUsecaseImpl } from "@App/domain/usecases/cities/getCities.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
 

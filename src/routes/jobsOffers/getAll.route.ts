@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { GetPageOffersUsecase, GetPageOffersUsecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffers.usecase"
+import GetPageOffersUsecase, { GetPageOffersUsecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffers.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
 

@@ -2,9 +2,9 @@ import axios from "axios"
 import geoApiConst from "./configs/geoapi.const"
 import GeoCity, { GeoCityCoordinated } from "./models/geoCity"
 import City, { CityWithCoordinates } from "@App/domain/entities/city.entity"
-import { GeoApiParser, GeoApiParserImpl } from "./parsers/geoApi.parser"
+import GeoApiParser, { GeoApiParserImpl } from "./parsers/geoApi.parser"
 
-export interface GeoapiDatasource {
+export default interface GeoapiDatasource {
     geoApiParser: GeoApiParser
     findAll: () => Promise<City[]>
     findOneByCode: (code: string) => Promise<CityWithCoordinates>

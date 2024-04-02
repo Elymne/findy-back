@@ -1,13 +1,15 @@
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import hwConst from "./configs/hw.const"
-import { scrapHWPage } from "./scrappers/scrapHWPage"
+import ScrapperHW, { ScrapperHWImpl } from "./scrappers/scrapperHW"
 
-export interface PageOffersHWDatasource {
+export default interface PageOffersHWDatasource {
+    scrapperHW: ScrapperHW
     findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryHWParams) => Promise<PageOffers>
 }
 
 export const PageOffersHWDatasourceImpl: PageOffersHWDatasource = {
+    scrapperHW: ScrapperHWImpl,
     findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryHWParams): Promise<PageOffers> {
         const url = "".concat(
             hwConst.baseUrl,
@@ -21,10 +23,18 @@ export const PageOffersHWDatasourceImpl: PageOffersHWDatasource = {
 
         const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.hw)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
-        const result = await scrapHWPage(newPage)
+
+        const [jobOffers, maxPage] = await Promise.all([
+            this.scrapperHW.getJobOffers({ page: newPage }),
+            this.scrapperHW.getMaxPage({ page: newPage }),
+        ])
+
         newPage.close()
 
-        return result
+        return {
+            jobOffers: jobOffers,
+            totalPagesNb: maxPage,
+        }
     },
 }
 

@@ -1,15 +1,14 @@
-import { FilterPageOffersUsecase, FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
+import FilterPageOffersUsecase, { FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import logger from "@App/core/tools/logger"
 import PageOffers from "@App/domain/entities/pageResult.entity"
-import {
-    PageOffersIndeedDatasource,
+import PageOffersIndeedDatasource, {
     PageOffersIndeedDatasourceImpl,
     FindAllByQueryIndeedParams,
 } from "@App/infrastructure/remote/indeed/jobOffersIndeed.datasource"
-import { GetOneCityByCodeUsecase, GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
+import GetOneCityByCodeUsecase, { GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
 
-export interface GetPageOffersIndeedUsecase extends Usecase<PageOffers, Params> {
+export default interface GetPageOffersIndeedUsecase extends Usecase<PageOffers, Params> {
     pageOffersIndeedDatasource: PageOffersIndeedDatasource
     getOneCityByCodeUsecase: GetOneCityByCodeUsecase
     filterPageOffersUsecase: FilterPageOffersUsecase

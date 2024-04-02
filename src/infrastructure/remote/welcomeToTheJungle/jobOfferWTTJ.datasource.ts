@@ -1,14 +1,18 @@
 import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import wttjConst from "./configs/wttj.const"
-import { scrapWTTJPage } from "./scrappers/scrapWTTJPage"
+import ScrapperWTTJ, { ScrapperWTTJImpl } from "./scrappers/scrapperWTTJ"
 
-export interface PageOffersWTTJDatasource {
-    findAllByQuery: ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams) => Promise<PageOffers>
+export default interface PageOffersWTTJDatasource {
+    scrapperWTTJ: ScrapperWTTJ
+    findAllByQuery: ({ keyWords, lat, lng, page, radius }: FindAllByQueryWTTJParams) => Promise<PageOffers>
+    findSample: ({ keyWords }: FindSampleWTTJParams) => Promise<PageOffers>
 }
 
 export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
-    findAllByQuery: async function ({ keyWords, lat, lng, page, radius, nbElement }: FindAllByQueryWTTJParams): Promise<PageOffers> {
+    scrapperWTTJ: ScrapperWTTJImpl,
+
+    findAllByQuery: async function ({ keyWords, lat, lng, radius, page }: FindAllByQueryWTTJParams): Promise<PageOffers> {
         const url: string = "".concat(
             wttjConst.basurl,
             `/${wttjConst.jobPath}`,
@@ -22,10 +26,44 @@ export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
 
         const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.wttj)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
-        const result = await scrapWTTJPage(newPage, nbElement)
+
+        const [jobOffers, maxPage] = await Promise.all([
+            this.scrapperWTTJ.getJobOffers({ page: newPage }),
+            this.scrapperWTTJ.getMaxPage({ page: newPage }),
+        ])
+
         newPage.close()
 
-        return result
+        return {
+            jobOffers: jobOffers,
+            totalPagesNb: maxPage,
+        }
+    },
+
+    findSample: async function ({ keyWords }: FindSampleWTTJParams): Promise<PageOffers> {
+        const url: string = "".concat(
+            wttjConst.basurl,
+            `/${wttjConst.jobPath}`,
+            `?${wttjConst.country}=FR`,
+            `&${wttjConst.contractType}=apprenticeship`,
+            `&${wttjConst.keywords}=${keyWords}`,
+            `&${wttjConst.page}=${1}`
+        )
+
+        const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.wttj)
+        await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
+
+        const [jobOffers, maxPage] = await Promise.all([
+            this.scrapperWTTJ.getJobOffersByRange({ page: newPage, range: "1-6" }),
+            this.scrapperWTTJ.getMaxPage({ page: newPage }),
+        ])
+
+        newPage.close()
+
+        return {
+            jobOffers: jobOffers,
+            totalPagesNb: maxPage,
+        }
     },
 }
 
@@ -33,7 +71,11 @@ export type FindAllByQueryWTTJParams = {
     keyWords: string
     lat?: number
     lng?: number
-    page?: number
     radius?: number
-    nbElement?: number
+
+    page?: number
+}
+
+export type FindSampleWTTJParams = {
+    keyWords: string
 }

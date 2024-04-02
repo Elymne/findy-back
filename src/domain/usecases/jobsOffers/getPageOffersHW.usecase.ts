@@ -1,15 +1,14 @@
-import {
+import PageOffersHWDatasource, {
     FindAllByQueryHWParams,
-    PageOffersHWDatasource,
     PageOffersHWDatasourceImpl,
 } from "@App/infrastructure/remote/helloWork/jobOfferHW.datasource"
 import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
-import { GetOneCityByCodeUsecase, GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
-import { FilterPageOffersUsecase, FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
+import GetOneCityByCodeUsecase, { GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
+import FilterPageOffersUsecase, { FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import logger from "@App/core/tools/logger"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 
-export interface GetPageOffersHWUsecase extends Usecase<PageOffers, Params> {
+export default interface GetPageOffersHWUsecase extends Usecase<PageOffers, Params> {
     pageOffersHWDatasource: PageOffersHWDatasource
     getOneCityByCodeUsecase: GetOneCityByCodeUsecase
     filterJobOfferUsecase: FilterPageOffersUsecase

@@ -1,12 +1,12 @@
 import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
-import { GetPageOffersWTTJUsecase, GetPageOffersWTTJUSecaseImpl } from "./getPageOffersWTTJ.usecase"
+import GetPageOffersWTTJUsecase, { GetPageOffersWTTJUSecaseImpl } from "./getPageOffersWTTJ.usecase"
 import JobOffer from "../../entities/jobOffer.entity"
 import logger from "@App/core/tools/logger"
-import { GetPageOffersHWUsecase, GetPageOffersHWUsecaseImpl } from "./getPageOffersHW.usecase"
-import { GetPageOffersIndeedUsecase, GetPageOffersIndeedUsecaseImpl } from "./getPageOffersIndeed.usecase"
+import GetPageOffersHWUsecase, { GetPageOffersHWUsecaseImpl } from "./getPageOffersHW.usecase"
+import GetPageOffersIndeedUsecase, { GetPageOffersIndeedUsecaseImpl } from "./getPageOffersIndeed.usecase"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 
-export interface GetPageOffersUsecase extends Usecase<PageOffers, Params> {
+export default interface GetPageOffersUsecase extends Usecase<PageOffers, Params> {
     getPageOffersWTTJUsecase: GetPageOffersWTTJUsecase
     getPageOffersHWUsecase: GetPageOffersHWUsecase
     getPageOffersIndeedUsecase: GetPageOffersIndeedUsecase

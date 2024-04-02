@@ -8,7 +8,7 @@ import logger from "@App/core/tools/logger"
 import uuid from "@App/core/tools/uuid"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 
-export interface FilterPageOffersUsecase extends Usecase<PageOffers, Params> {
+export default interface FilterPageOffersUsecase extends Usecase<PageOffers, Params> {
     textFilterDatasource: TextFilterDatasource
     knownJobOfferDatasource: KnownJobOfferDatasource
 }

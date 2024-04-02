@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
-import { GetSampleUsecase, GetSampleUsecaseImpl } from "@App/domain/usecases/jobsOffers/getSample.usecase"
+import GetSampleUsecase, { GetSampleUsecaseImpl } from "@App/domain/usecases/jobsOffers/getSample.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
 
 const getSampleUsecase: GetSampleUsecase = GetSampleUsecaseImpl

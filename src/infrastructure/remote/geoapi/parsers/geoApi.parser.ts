@@ -1,7 +1,7 @@
 import City, { CityWithCoordinates } from "@App/domain/entities/city.entity"
 import GeoCity, { GeoCityCoordinated } from "../models/geoCity"
 
-export interface GeoApiParser {
+export default interface GeoApiParser {
     parse: (sources: GeoCity[]) => Promise<City[]>
     parseOne: (source: GeoCityCoordinated) => Promise<CityWithCoordinates>
 }

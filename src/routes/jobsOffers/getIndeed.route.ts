@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
-import { GetPageOffersIndeedUsecase, GetPageOffersIndeedUsecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffersIndeed.usecase"
+import GetPageOffersIndeedUsecase, { GetPageOffersIndeedUsecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffersIndeed.usecase"
 
 const getJobOffersIndeedUsecase: GetPageOffersIndeedUsecase = GetPageOffersIndeedUsecaseImpl
 

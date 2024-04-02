@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import { GetPageOffersWTTJUsecase, GetPageOffersWTTJUSecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffersWTTJ.usecase"
+import GetPageOffersWTTJUsecase, { GetPageOffersWTTJUSecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffersWTTJ.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
 import { cache24Successes } from "@App/core/tools/cache"
 
@@ -25,8 +25,8 @@ const getWttjJobOffersRoute = express
             const result = await getJobOffersWTTJUsecase.perform({
                 keyWords: req.query.keywords as string,
                 cityCode: req.query.cityCode as string,
-                page: parseInt((req.query.page ?? 1) as string),
                 radius: parseInt((req.query.radius ?? 20) as string),
+                page: parseInt((req.query.page ?? 1) as string),
             })
 
             if (result instanceof Failure) {

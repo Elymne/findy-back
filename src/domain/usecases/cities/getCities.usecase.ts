@@ -1,9 +1,9 @@
 import { Failure, Result, Success, UsecaseNoParams } from "@App/core/interfaces/abstract.usecase"
 import logger from "@App/core/tools/logger"
 import City from "@App/domain/entities/city.entity"
-import { GeoapiDatasource, GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/geoapiDatasource"
+import GeoapiDatasource, { GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/geoapiDatasource"
 
-export interface GetCitiesUsecase extends UsecaseNoParams<City[]> {
+export default interface GetCitiesUsecase extends UsecaseNoParams<City[]> {
     geoapiDatasource: GeoapiDatasource
 }
 
