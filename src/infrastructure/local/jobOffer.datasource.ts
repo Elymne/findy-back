@@ -2,7 +2,7 @@ import { PgClient } from "@App/core/clients/pg.client"
 import { DatabaseDatasource } from "@App/core/interfaces/Database.datasource"
 import JobOffer from "@App/domain/entities/jobOffer.entity"
 
-export interface JobOfferDatasource extends DatabaseDatasource<JobOffer> {}
+export default interface JobOfferDatasource extends DatabaseDatasource<JobOffer> {}
 
 export const JobOfferDatasourceImpl: JobOfferDatasource = {
     tableName: "job_offer",

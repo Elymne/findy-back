@@ -3,7 +3,7 @@ import { DatabaseDatasource } from "@App/core/interfaces/Database.datasource"
 import KnownJobOffer from "@App/domain/entities/knownJobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 
-export interface KnownJobOfferDatasource extends DatabaseDatasource<KnownJobOffer> {
+export default interface KnownJobOfferDatasource extends DatabaseDatasource<KnownJobOffer> {
     findAllBySource: (source: SourceSite) => Promise<KnownJobOffer[]>
 }
 

@@ -1,12 +1,12 @@
 import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
-import { KnownJobOfferDatasource, KnownJobOfferDatasourceImpl } from "@App/infrastructure/native/datasources/knownJobOffer.datasource"
-import { TextFilterDatasource, TextFilterDatasourceImpl } from "@App/infrastructure/native/datasources/textFilter.datasource"
 import JobOffer from "../../entities/jobOffer.entity"
 import TextFilter from "../../entities/textFilter.entity"
 import KnownJobOffer from "../../entities/knownJobOffer.entity"
 import logger from "@App/core/tools/logger"
 import uuid from "@App/core/tools/uuid"
 import PageOffers from "@App/domain/entities/pageResult.entity"
+import KnownJobOfferDatasource, { KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/knownJobOffer.datasource"
+import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/textFilter.datasource"
 
 export default interface FilterPageOffersUsecase extends Usecase<PageOffers, Params> {
     textFilterDatasource: TextFilterDatasource

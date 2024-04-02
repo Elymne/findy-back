@@ -2,7 +2,7 @@ import { PgClient } from "@App/core/clients/pg.client"
 import { DatabaseDatasource } from "@App/core/interfaces/Database.datasource"
 import TextFilter from "@App/domain/entities/textFilter.entity"
 
-export interface TextFilterDatasource extends DatabaseDatasource<TextFilter> {
+export default interface TextFilterDatasource extends DatabaseDatasource<TextFilter> {
     findAll(): any
 }
 
