@@ -22,6 +22,8 @@ export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
             cityName ? `&${indeedConst.cityName}=${cityName}` : ""
         )
 
+        console.log(url)
+
         const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.indeed)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
