@@ -5,11 +5,13 @@ import ScapperIndeed, { ScapperIndeedImpl } from "./scrappers/scrapperIndeed"
 
 export default interface PageOffersIndeedDatasource {
     scapperIndeed: ScapperIndeed
+    pupetteerClient: PupetteerClient
     findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryIndeedParams) => Promise<PageOffers>
 }
 
 export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
     scapperIndeed: ScapperIndeedImpl,
+    pupetteerClient: PupetteerClient.getInstance(),
 
     findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryIndeedParams): Promise<PageOffers> {
         const url = "".concat(
@@ -24,7 +26,7 @@ export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
 
         console.log(url)
 
-        const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.indeed)
+        const newPage = await this.pupetteerClient.createPage(TypeWebSiteStacker.indeed)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
         const [jobOffers, maxPage] = await Promise.all([

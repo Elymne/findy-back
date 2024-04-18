@@ -1,4 +1,3 @@
-import { getRandomInt, wait } from "../tools/utils"
 import logger from "../tools/logger"
 import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer"
 
@@ -6,18 +5,12 @@ export class PupetteerClient {
     private static instance: PupetteerClient
 
     private browser: Browser | null
-    private browserWithGUI: Browser | null
+    //private browserWithGUI: Browser | null
 
     private options: PuppeteerLaunchOptions
-    private optionsWithGUI: PuppeteerLaunchOptions
-    private buffer: TypeWebSiteStacker[]
-    private bufferLimit: number
 
-    private constructor(options: PuppeteerLaunchOptions, optionsWithGUI: PuppeteerLaunchOptions) {
+    private constructor(options: PuppeteerLaunchOptions) {
         this.options = options
-        this.optionsWithGUI = optionsWithGUI
-        this.bufferLimit = 20
-        this.buffer = new Array<TypeWebSiteStacker>()
     }
 
     /**
@@ -26,16 +19,10 @@ export class PupetteerClient {
      */
     public static getInstance(): PupetteerClient {
         if (!PupetteerClient.instance) {
-            PupetteerClient.instance = new PupetteerClient(
-                {
-                    headless: true,
-                    defaultViewport: null,
-                },
-                {
-                    headless: false,
-                    defaultViewport: { height: 0, width: 0 },
-                }
-            )
+            PupetteerClient.instance = new PupetteerClient({
+                headless: true,
+                defaultViewport: null,
+            })
         }
         return PupetteerClient.instance
     }
@@ -46,7 +33,7 @@ export class PupetteerClient {
      * A utiliser préférablement à l'initialisation de l'app.
      */
     public async init(): Promise<void> {
-        await Promise.all([this.resetBrowser(), this.resetGUIBrowser()])
+        await Promise.all([this.resetBrowser()])
     }
 
     /**
@@ -59,25 +46,9 @@ export class PupetteerClient {
      * @returns {Page} Une page manipulable pour effectuer nos recherches.
      */
     public async createPage(webSite: TypeWebSiteStacker): Promise<Page> {
-        if (!this.browser || !this.browserWithGUI) {
+        if (!this.browser) {
             throw new Error("No browsers has been init. Page cannot be created.")
         }
-
-        let iterationTimeout = 0
-        while (this.buffer.length > this.bufferLimit && iterationTimeout < 10_000) {
-            await wait(1000)
-            iterationTimeout += 1000
-        }
-
-        if (iterationTimeout >= 10_000) {
-            throw Error("Timeout while waiting for a new page to be created.")
-        }
-
-        if (this.buffer.lastIndexOf(webSite) !== -1) {
-            await wait(getRandomInt(3) * 1000)
-        }
-
-        this.buffer.push(webSite)
 
         let newPage: Page
         switch (webSite) {
@@ -88,7 +59,7 @@ export class PupetteerClient {
                 newPage = await this.browser.newPage()
                 break
             case TypeWebSiteStacker.indeed:
-                newPage = await this.browserWithGUI.newPage()
+                newPage = await this.browser.newPage()
                 break
         }
 
@@ -101,14 +72,9 @@ export class PupetteerClient {
             request.continue()
         })
 
-        newPage.on("disconnected", () => {
-            this.buffer.splice(this.buffer.lastIndexOf(webSite), 1)
-        })
-
         setTimeout(() => {
             if (!newPage.isClosed()) {
                 newPage.close()
-                this.buffer.splice(this.buffer.lastIndexOf(webSite), 1)
             }
         }, 10_000)
 
@@ -121,15 +87,6 @@ export class PupetteerClient {
         this.browser.on("disconnected", async () => {
             logger.warn("[PupetteerClient]", ["The headless Browser has been disconnected", "A new one will be initialized"])
             this.resetBrowser()
-        })
-    }
-
-    private async resetGUIBrowser(): Promise<void> {
-        this.browserWithGUI = null
-        this.browserWithGUI = await puppeteer.launch(this.optionsWithGUI)
-        this.browserWithGUI.on("disconnected", async () => {
-            logger.warn("[PupetteerClient]", ["Browser GUI has been disconnected", "A new one will be initialized"])
-            this.resetGUIBrowser()
         })
     }
 }

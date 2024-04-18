@@ -5,11 +5,14 @@ import ScrapperHW, { ScrapperHWImpl } from "./scrappers/scrapperHW"
 
 export default interface PageOffersHWDatasource {
     scrapperHW: ScrapperHW
+    pupetteerClient: PupetteerClient
     findAllByQuery: ({ keyWords, cityName, page, nbElement, radius }: FindAllByQueryHWParams) => Promise<PageOffers>
 }
 
 export const PageOffersHWDatasourceImpl: PageOffersHWDatasource = {
     scrapperHW: ScrapperHWImpl,
+    pupetteerClient: PupetteerClient.getInstance(),
+
     findAllByQuery: async function ({ keyWords, cityName, page, radius }: FindAllByQueryHWParams): Promise<PageOffers> {
         const url = "".concat(
             hwConst.baseUrl,
@@ -21,7 +24,7 @@ export const PageOffersHWDatasourceImpl: PageOffersHWDatasource = {
             cityName ? `&${hwConst.cityName}=${cityName}` : ""
         )
 
-        const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.hw)
+        const newPage = await this.pupetteerClient.createPage(TypeWebSiteStacker.hw)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
         const [jobOffers, maxPage] = await Promise.all([

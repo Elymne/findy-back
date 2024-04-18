@@ -3,7 +3,7 @@ import { DatabaseDatasource } from "@App/core/interfaces/Database.datasource"
 import TextFilter from "@App/domain/entities/textFilter.entity"
 
 export default interface TextFilterDatasource extends DatabaseDatasource<TextFilter> {
-    findAll(): any
+    findAll(): Promise<TextFilter[]>
 }
 
 export const TextFilterDatasourceImpl: TextFilterDatasource = {

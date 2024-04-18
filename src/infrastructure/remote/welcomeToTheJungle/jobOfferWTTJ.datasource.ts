@@ -5,12 +5,14 @@ import ScrapperWTTJ, { ScrapperWTTJImpl } from "./scrappers/scrapperWTTJ"
 
 export default interface PageOffersWTTJDatasource {
     scrapperWTTJ: ScrapperWTTJ
+    pupetteerClient: PupetteerClient
     findAllByQuery: ({ keyWords, lat, lng, page, radius }: FindAllByQueryWTTJParams) => Promise<PageOffers>
     findSample: ({ keyWords }: FindSampleWTTJParams) => Promise<PageOffers>
 }
 
 export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
     scrapperWTTJ: ScrapperWTTJImpl,
+    pupetteerClient: PupetteerClient.getInstance(),
 
     findAllByQuery: async function ({ keyWords, lat, lng, radius, page }: FindAllByQueryWTTJParams): Promise<PageOffers> {
         const url: string = "".concat(
@@ -50,7 +52,7 @@ export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
             `&${wttjConst.page}=${1}`
         )
 
-        const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.wttj)
+        const newPage = await this.pupetteerClient.createPage(TypeWebSiteStacker.wttj)
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
         const [jobOffers, maxPage] = await Promise.all([

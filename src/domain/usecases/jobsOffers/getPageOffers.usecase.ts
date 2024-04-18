@@ -25,8 +25,8 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
             ])
 
             if (
-                pageOffersWTTJResult instanceof Failure ||
-                pageOffersHWResult instanceof Failure ||
+                pageOffersWTTJResult instanceof Failure &&
+                pageOffersHWResult instanceof Failure &&
                 pageOffersIndeedResult instanceof Failure
             ) {
                 return new Failure({
@@ -50,7 +50,7 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
             }
 
             const pageOffers: PageOffers = {
-                totalPagesNb: (pageOffersIndeedResult as Success<PageOffers>).data.totalPagesNb,
+                totalPagesNb: (pageOffersWTTJResult as Success<PageOffers>).data.totalPagesNb,
                 jobOffers: mergedJobOffers,
             }
 
