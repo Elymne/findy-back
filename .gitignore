@@ -45,5 +45,5 @@ dist/**/*
 # ignore yarn.lock
 yarn.lock
 
-# ignore vscodode mongo client.
-mongoplayground
+# useful files.
+mongodb
