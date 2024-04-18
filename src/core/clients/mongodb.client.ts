@@ -1,6 +1,6 @@
 import { Collection, Db, MongoClient } from "mongodb"
 
-export class MongodbClient {
+export default class MongodbClient {
     private static instance: MongodbClient
     private client: MongoClient
     private db: Db

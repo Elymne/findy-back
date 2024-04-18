@@ -1,6 +1,6 @@
 import { Client, Configuration } from "ts-postgres"
 
-export class PgClient {
+export default class PgClient {
     private static instance: PgClient
     private pgClient: Client
 
