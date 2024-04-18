@@ -1,12 +1,12 @@
 import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
 import JobOffer from "../../entities/jobOffer.entity"
 import TextFilter from "../../entities/textFilter.entity"
-import KnownJobOffer from "../../entities/knownJobOffer.entity"
+import JobOfferHistory from "../../entities/jobOfferHistory"
 import logger from "@App/core/tools/logger"
 import uuid from "@App/core/tools/uuid"
 import PageOffers from "@App/domain/entities/pageResult.entity"
-import KnownJobOfferDatasource, { KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/knownJobOffer.datasource"
-import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/textFilter.datasource"
+import KnownJobOfferDatasource, { KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/postgresql/knownJobOfferPG.datasource"
+import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/postgresql/textFilterPG.datasource"
 
 export default interface FilterPageOffersUsecase extends Usecase<PageOffers, Params> {
     textFilterDatasource: TextFilterDatasource
@@ -25,7 +25,7 @@ export const FilterPageOffersUsecaseImpl: FilterPageOffersUsecase = {
             ])
 
             const jobOffersFiltered = new Array<JobOffer>()
-            const newKnownJobOffers = new Array<KnownJobOffer>()
+            const newKnownJobOffers = new Array<JobOfferHistory>()
 
             for (const key in params.sources.jobOffers) {
                 const checkResult = checkSource(params.sources.jobOffers[key], textFilters, kownJobOffers)
@@ -72,7 +72,7 @@ type CheckSourceResult = {
     isKnown: boolean
     isBanned: boolean
 }
-function checkSource(source: JobOffer, textFilters: TextFilter[], kownJobOffers: KnownJobOffer[]): CheckSourceResult {
+function checkSource(source: JobOffer, textFilters: TextFilter[], kownJobOffers: JobOfferHistory[]): CheckSourceResult {
     for (const key in kownJobOffers) {
         if (source.id && source.id === kownJobOffers[key].source_id) {
             return {
