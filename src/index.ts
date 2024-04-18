@@ -1,5 +1,5 @@
-import { MongodbClient } from "./core/clients/mongodb.client"
-import { PupetteerClient } from "./core/clients/pupetteer.client"
+import MongodbClient from "./core/clients/mongodb.client"
+import PupetteerClient from "./core/clients/pupetteer.client"
 import MongoDBExceptions from "./core/exceptions/mongodbException"
 import logger from "./core/tools/logger"
 import app from "./server"

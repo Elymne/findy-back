@@ -7,6 +7,15 @@ import PageOffersIndeedDatasource, {
     FindAllByQueryIndeedParams,
 } from "@App/infrastructure/remote/indeed/jobOffersIndeed.datasource"
 import GetOneCityByCodeUsecase, { GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
+import SourceSite from "@App/domain/enums/sourceData.enum"
+
+type Params = {
+    keyWords: string
+    cityCode?: string
+    page?: number
+    radius?: number
+    nbElements?: number
+}
 
 export default interface GetPageOffersIndeedUsecase extends Usecase<PageOffers, Params> {
     pageOffersIndeedDatasource: PageOffersIndeedDatasource
@@ -41,6 +50,7 @@ export const GetPageOffersIndeedUsecaseImpl: GetPageOffersIndeedUsecase = {
 
             const pageOffersFilteredResult = await this.filterPageOffersUsecase.perform({
                 sources: pageOffersResult,
+                sourceSite: SourceSite.indeed,
             })
 
             if (pageOffersFilteredResult instanceof Failure) {
@@ -59,12 +69,4 @@ export const GetPageOffersIndeedUsecaseImpl: GetPageOffersIndeedUsecase = {
             })
         }
     },
-}
-
-type Params = {
-    keyWords: string
-    cityCode?: string
-    page?: number
-    radius?: number
-    nbElements?: number
 }

@@ -1,4 +1,4 @@
-import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
+import PupetteerClient from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import indeedConst from "./configs/indeed.configs"
 import ScapperIndeed, { ScapperIndeedImpl } from "./scrappers/scrapperIndeed"
@@ -24,9 +24,7 @@ export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
             cityName ? `&${indeedConst.cityName}=${cityName}` : ""
         )
 
-        console.log(url)
-
-        const newPage = await this.pupetteerClient.createPage(TypeWebSiteStacker.indeed)
+        const newPage = await this.pupetteerClient.createPage()
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
         const [jobOffers, maxPage] = await Promise.all([

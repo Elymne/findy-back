@@ -41,7 +41,7 @@ export const ScrapperHWImpl: ScrapperHW = {
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
-                    sourceData: SourceSite.hw,
+                    sourceSite: SourceSite.hw,
                     sourceUrl: indeedConst.baseUrl + sourceUrl,
                     title: title,
                     companyName: companyName,

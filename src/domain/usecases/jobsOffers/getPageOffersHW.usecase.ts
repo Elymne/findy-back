@@ -7,6 +7,15 @@ import GetOneCityByCodeUsecase, { GetOneCityByCodeUsecaseImpl } from "../cities/
 import FilterPageOffersUsecase, { FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import logger from "@App/core/tools/logger"
 import PageOffers from "@App/domain/entities/pageResult.entity"
+import SourceSite from "@App/domain/enums/sourceData.enum"
+
+type Params = {
+    keyWords: string
+    cityCode?: string
+    page?: number
+    radius?: number
+    nbElements?: number
+}
 
 export default interface GetPageOffersHWUsecase extends Usecase<PageOffers, Params> {
     pageOffersHWDatasource: PageOffersHWDatasource
@@ -41,6 +50,7 @@ export const GetPageOffersHWUsecaseImpl: GetPageOffersHWUsecase = {
 
             const pageOffersFilteredResult = await this.filterJobOfferUsecase.perform({
                 sources: pageOffersResult,
+                sourceSite: SourceSite.hw,
             })
 
             if (pageOffersFilteredResult instanceof Failure) {
@@ -59,12 +69,4 @@ export const GetPageOffersHWUsecaseImpl: GetPageOffersHWUsecase = {
             })
         }
     },
-}
-
-type Params = {
-    keyWords: string
-    cityCode?: string
-    page?: number
-    radius?: number
-    nbElements?: number
 }

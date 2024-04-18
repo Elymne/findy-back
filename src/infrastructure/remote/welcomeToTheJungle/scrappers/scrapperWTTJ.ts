@@ -35,7 +35,7 @@ export const ScrapperWTTJImpl: ScrapperWTTJ = {
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
-                    sourceData: SourceSite.wttj,
+                    sourceSite: SourceSite.wttj,
                     sourceUrl: wttjConst.basurl + sourceUrl,
                     title: title,
                     companyName: companyName,
@@ -99,7 +99,7 @@ export const ScrapperWTTJImpl: ScrapperWTTJ = {
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
-                    sourceData: SourceSite.wttj,
+                    sourceSite: SourceSite.wttj,
                     sourceUrl: wttjConst.basurl + sourceUrl,
                     title: title,
                     companyName: companyName,

@@ -3,6 +3,10 @@ import logger from "@App/core/tools/logger"
 import { CityWithCoordinates } from "@App/domain/entities/city.entity"
 import GeoapiDatasource, { GeoapiDatasourceImpl } from "@App/infrastructure/remote/geoapi/geoapiDatasource"
 
+type Params = {
+    name: string
+}
+
 export default interface GetOneCityByNameUsecase extends Usecase<CityWithCoordinates, Params> {
     geoapiDatasource: GeoapiDatasource
 }
@@ -26,8 +30,4 @@ export const GetOneCityByNameUsecaseImpl: GetOneCityByNameUsecase = {
             })
         }
     },
-}
-
-type Params = {
-    name: string
 }

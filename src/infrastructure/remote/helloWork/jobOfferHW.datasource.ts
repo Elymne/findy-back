@@ -1,4 +1,4 @@
-import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
+import PupetteerClient from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import hwConst from "./configs/hw.const"
 import ScrapperHW, { ScrapperHWImpl } from "./scrappers/scrapperHW"
@@ -24,7 +24,7 @@ export const PageOffersHWDatasourceImpl: PageOffersHWDatasource = {
             cityName ? `&${hwConst.cityName}=${cityName}` : ""
         )
 
-        const newPage = await this.pupetteerClient.createPage(TypeWebSiteStacker.hw)
+        const newPage = await this.pupetteerClient.createPage()
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
         const [jobOffers, maxPage] = await Promise.all([

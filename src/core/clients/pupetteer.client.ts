@@ -1,7 +1,7 @@
 import logger from "../tools/logger"
 import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer"
 
-export class PupetteerClient {
+export default class PupetteerClient {
     private static instance: PupetteerClient
     private browser: Browser | null
     private options: PuppeteerLaunchOptions

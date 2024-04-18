@@ -5,54 +5,61 @@ import JobOfferHistory from "../../entities/jobOfferHistory"
 import logger from "@App/core/tools/logger"
 import uuid from "@App/core/tools/uuid"
 import PageOffers from "@App/domain/entities/pageResult.entity"
-import KnownJobOfferDatasource, { KnownJobOfferDatasourceImpl } from "@App/infrastructure/local/postgresql/knownJobOfferPG.datasource"
-import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/postgresql/textFilterPG.datasource"
+import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/mongoDb/textFilter.datasource"
+import JobOfferHistoryDatasource, { JobOfferHistoryDatasourceImpl } from "@App/infrastructure/local/mongoDb/jobOfferHistory.datasource"
+import JobOfferHistoryModel from "@App/infrastructure/local/mongoDb/models/JobOfferHistory.model"
+import SourceSite from "@App/domain/enums/sourceData.enum"
+
+type Params = {
+    sources: PageOffers
+    sourceSite: SourceSite
+}
 
 export default interface FilterPageOffersUsecase extends Usecase<PageOffers, Params> {
     textFilterDatasource: TextFilterDatasource
-    knownJobOfferDatasource: KnownJobOfferDatasource
+    jobOfferHistoryDatasource: JobOfferHistoryDatasource
 }
 
 export const FilterPageOffersUsecaseImpl: FilterPageOffersUsecase = {
     textFilterDatasource: TextFilterDatasourceImpl,
-    knownJobOfferDatasource: KnownJobOfferDatasourceImpl,
+    jobOfferHistoryDatasource: JobOfferHistoryDatasourceImpl,
 
     perform: async function (params: Params): Promise<Result<PageOffers>> {
         try {
             const [textFilters, kownJobOffers] = await Promise.all([
                 this.textFilterDatasource.findAll(),
-                this.knownJobOfferDatasource.findAll(),
+                this.jobOfferHistoryDatasource.findManyBySourceType(params.sourceSite),
             ])
 
             const jobOffersFiltered = new Array<JobOffer>()
-            const newKnownJobOffers = new Array<JobOfferHistory>()
+            const newJobOfferHistories = new Array<JobOfferHistory>()
 
             for (const key in params.sources.jobOffers) {
-                const checkResult = checkSource(params.sources.jobOffers[key], textFilters, kownJobOffers)
+                const jobOffer = params.sources.jobOffers[key]
+
+                const checkResult = checkJobOffer(jobOffer, textFilters, kownJobOffers)
                 if (!checkResult.isBanned) {
-                    jobOffersFiltered.push(params.sources.jobOffers[key])
+                    jobOffersFiltered.push(jobOffer)
                 }
 
                 if (!checkResult.isKnown) {
-                    newKnownJobOffers.push({
+                    newJobOfferHistories.push({
                         id: uuid(),
-                        source_url: params.sources.jobOffers[key].sourceUrl,
-                        source: params.sources.jobOffers[key].sourceData,
-                        is_banned: checkResult.isBanned,
+                        source: jobOffer.sourceUrl,
+                        sourceSite: jobOffer.sourceSite,
+                        isBanned: checkResult.isBanned,
                     })
                 }
             }
 
-            await this.knownJobOfferDatasource.addMany(newKnownJobOffers)
-
-            const pageOffersFiltered: PageOffers = {
-                totalPagesNb: params.sources.totalPagesNb,
-                jobOffers: jobOffersFiltered,
-            }
+            await this.jobOfferHistoryDatasource.addMany(newJobOfferHistories as JobOfferHistoryModel[])
 
             return new Success({
                 message: "Job offers from page filtered successfully !",
-                data: pageOffersFiltered,
+                data: {
+                    totalPagesNb: params.sources.totalPagesNb,
+                    jobOffers: jobOffersFiltered,
+                },
             })
         } catch (error) {
             logger.error("[FilterPageOffersUsecase]", error)
@@ -64,49 +71,54 @@ export const FilterPageOffersUsecaseImpl: FilterPageOffersUsecase = {
     },
 }
 
-type Params = {
-    sources: PageOffers
-}
+function checkJobOffer(
+    jobOffer: JobOffer,
+    textFilters: TextFilter[],
+    jobOfferHistories: JobOfferHistory[]
+): { isKnown: boolean; isBanned: boolean } {
+    const response = doesExists(jobOffer, jobOfferHistories)
 
-type CheckSourceResult = {
-    isKnown: boolean
-    isBanned: boolean
-}
-function checkSource(source: JobOffer, textFilters: TextFilter[], kownJobOffers: JobOfferHistory[]): CheckSourceResult {
-    for (const key in kownJobOffers) {
-        if (source.id && source.id === kownJobOffers[key].source_id) {
-            return {
-                isKnown: true,
-                isBanned: kownJobOffers[key].is_banned,
-            }
-        }
-
-        if (source.sourceUrl === kownJobOffers[key].source_url) {
-            return {
-                isKnown: true,
-                isBanned: kownJobOffers[key].is_banned,
-            }
-        }
+    if (response.isKnown) {
+        return response as { isKnown: boolean; isBanned: boolean }
     }
 
-    if (!source.sourceUrl || !source.title || !source.companyName) {
-        return {
-            isKnown: false,
-            isBanned: true,
-        }
-    }
-
-    for (const key in textFilters) {
-        if (source.title.includes(textFilters[key].value) || source.companyName.includes(textFilters[key].value)) {
-            return {
-                isKnown: false,
-                isBanned: true,
-            }
-        }
+    if (haveInvalidData(jobOffer) == true || containBannedText(jobOffer, textFilters) == true) {
+        return { isKnown: false, isBanned: true }
     }
 
     return {
         isKnown: false,
         isBanned: false,
     }
+}
+
+function doesExists(jobOffer: JobOffer, jobOfferHistories: JobOfferHistory[]): { isKnown: boolean; isBanned: boolean | undefined } {
+    for (const key in jobOfferHistories) {
+        const jobOfferHistory = jobOfferHistories[key]
+        if (jobOffer.sourceUrl === jobOfferHistory.source) {
+            return {
+                isKnown: true,
+                isBanned: jobOfferHistory.isBanned,
+            }
+        }
+    }
+
+    return {
+        isKnown: false,
+        isBanned: undefined,
+    }
+}
+
+function haveInvalidData(jobOffer: JobOffer): boolean {
+    return jobOffer.sourceUrl == null || jobOffer.title == null || jobOffer.companyName == null
+}
+
+function containBannedText(jobOffer: JobOffer, textFilters: TextFilter[]): boolean {
+    for (const key in textFilters) {
+        const textFilter = textFilters[key]
+        if (jobOffer.title.includes(textFilter.value) || jobOffer.companyName.includes(textFilter.value)) {
+            return true
+        }
+    }
+    return false
 }

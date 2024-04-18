@@ -41,7 +41,7 @@ export const JobOfferDatasourceImpl: JobOfferDatasource = {
             jobOffer.companyLogoUrl,
             jobOffer.cityName,
             jobOffer.sourceUrl,
-            jobOffer.sourceData,
+            jobOffer.sourceSite,
             jobOffer.createdAt,
             jobOffer.updatedAt,
             jobOffer.createdWhile,
@@ -89,7 +89,7 @@ export const JobOfferDatasourceImpl: JobOfferDatasource = {
 
             query += `,$${index}`
             index++
-            values.push(jobOffer.sourceData)
+            values.push(jobOffer.sourceSite)
 
             query += `,$${index}`
             index++

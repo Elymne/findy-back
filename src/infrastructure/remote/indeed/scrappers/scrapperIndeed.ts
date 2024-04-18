@@ -32,7 +32,7 @@ export const ScapperIndeedImpl: ScapperIndeed = {
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
-                    sourceData: SourceSite.indeed,
+                    sourceSite: SourceSite.indeed,
                     sourceUrl: indeedConst.baseUrl + sourceUrl,
                     title: title,
                     companyName: companyName,

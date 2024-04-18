@@ -7,6 +7,14 @@ import GetOneCityByCodeUsecase, { GetOneCityByCodeUsecaseImpl } from "../cities/
 import FilterPageOffersUsecase, { FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import logger from "@App/core/tools/logger"
+import SourceSite from "@App/domain/enums/sourceData.enum"
+
+type Params = {
+    keyWords: string
+    cityCode?: string
+    page?: number
+    radius?: number
+}
 
 export default interface GetPageOffersWTTJUsecase extends Usecase<PageOffers, Params> {
     pageOffersWTTJDatasource: PageOffersWTTJDatasource
@@ -40,7 +48,10 @@ export const GetPageOffersWTTJUSecaseImpl: GetPageOffersWTTJUsecase = {
 
             const pageOffersResult = await this.pageOffersWTTJDatasource.findAllByQuery(findAllByQueryWTTJParams)
 
-            const pageOffersFilteredResult = await this.filterPageOffersUsecase.perform({ sources: pageOffersResult })
+            const pageOffersFilteredResult = await this.filterPageOffersUsecase.perform({
+                sources: pageOffersResult,
+                sourceSite: SourceSite.wttj,
+            })
 
             if (pageOffersFilteredResult instanceof Failure) {
                 return pageOffersFilteredResult
@@ -58,11 +69,4 @@ export const GetPageOffersWTTJUSecaseImpl: GetPageOffersWTTJUsecase = {
             })
         }
     },
-}
-
-type Params = {
-    keyWords: string
-    cityCode?: string
-    page?: number
-    radius?: number
 }

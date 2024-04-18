@@ -6,6 +6,13 @@ import GetPageOffersHWUsecase, { GetPageOffersHWUsecaseImpl } from "./getPageOff
 import GetPageOffersIndeedUsecase, { GetPageOffersIndeedUsecaseImpl } from "./getPageOffersIndeed.usecase"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 
+type Params = {
+    keyWords: string
+    cityCode: string
+    page: number
+    radius: number
+}
+
 export default interface GetPageOffersUsecase extends Usecase<PageOffers, Params> {
     getPageOffersWTTJUsecase: GetPageOffersWTTJUsecase
     getPageOffersHWUsecase: GetPageOffersHWUsecase
@@ -66,11 +73,4 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
             })
         }
     },
-}
-
-interface Params {
-    keyWords: string
-    cityCode: string
-    page: number
-    radius: number
 }

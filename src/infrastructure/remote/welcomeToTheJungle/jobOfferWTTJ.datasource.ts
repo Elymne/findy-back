@@ -1,4 +1,4 @@
-import { PupetteerClient, TypeWebSiteStacker } from "@App/core/clients/pupetteer.client"
+import PupetteerClient from "@App/core/clients/pupetteer.client"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import wttjConst from "./configs/wttj.const"
 import ScrapperWTTJ, { ScrapperWTTJImpl } from "./scrappers/scrapperWTTJ"
@@ -26,7 +26,7 @@ export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
             lat && lng ? `&${wttjConst.aroundLatLng}=${lat},${lng}` : ""
         )
 
-        const newPage = await PupetteerClient.getInstance().createPage(TypeWebSiteStacker.wttj)
+        const newPage = await PupetteerClient.getInstance().createPage()
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
         const [jobOffers, maxPage] = await Promise.all([
@@ -52,7 +52,7 @@ export const PageOffersWTTJDatasourceImpl: PageOffersWTTJDatasource = {
             `&${wttjConst.page}=${1}`
         )
 
-        const newPage = await this.pupetteerClient.createPage(TypeWebSiteStacker.wttj)
+        const newPage = await this.pupetteerClient.createPage()
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
         const [jobOffers, maxPage] = await Promise.all([
@@ -74,7 +74,6 @@ export type FindAllByQueryWTTJParams = {
     lat?: number
     lng?: number
     radius?: number
-
     page?: number
 }
 

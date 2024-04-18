@@ -7,7 +7,7 @@ export default interface JobOffer {
     companyName: string
     cityName: string
     sourceUrl: string
-    sourceData: SourceSite
+    sourceSite: SourceSite
 
     companyLogoUrl: string
     imageUrl: string
