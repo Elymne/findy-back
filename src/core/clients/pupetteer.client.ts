@@ -1,5 +1,5 @@
 import logger from "../tools/logger"
-import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer"
+import puppeteer, { Browser, BrowserEvent, Page, PuppeteerLaunchOptions } from "puppeteer"
 
 export default class PupetteerClient {
     private static instance: PupetteerClient
@@ -21,7 +21,7 @@ export default class PupetteerClient {
     }
 
     public async init(): Promise<void> {
-        await Promise.all([this.resetBrowser()])
+        await Promise.all([this.initBrowser()])
     }
 
     public async createPage(): Promise<Page> {
@@ -50,12 +50,12 @@ export default class PupetteerClient {
         return newPage
     }
 
-    private async resetBrowser(): Promise<void> {
+    private async initBrowser(): Promise<void> {
         this.browser = null
         this.browser = await puppeteer.launch(this.options)
-        this.browser.on("disconnected", async () => {
+        this.browser.on(BrowserEvent.Disconnected, async () => {
             logger.warn("[PupetteerClient]", ["The headless Browser has been disconnected", "A new one will be initialized"])
-            this.resetBrowser()
+            this.initBrowser()
         })
     }
 }

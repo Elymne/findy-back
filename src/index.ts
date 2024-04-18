@@ -1,6 +1,6 @@
 import MongodbClient from "./core/clients/mongodb.client"
 import PupetteerClient from "./core/clients/pupetteer.client"
-import MongoDBExceptions from "./core/exceptions/mongodbException"
+import MongoDBExceptions from "./core/errors/mongodbErrors"
 import logger from "./core/tools/logger"
 import app from "./server"
 
@@ -11,7 +11,7 @@ app.listen(port, async () => {
         throw Error(MongoDBExceptions.envVariableNotDefined)
     }
 
-    Promise.all([
+    await Promise.all([
         PupetteerClient.getInstance().init(),
         MongodbClient.getInstance().init({
             connectString: process.env.MONGODB_CONNEC_STRING,
