@@ -1,19 +1,54 @@
-name: Main
+name: MainCI
 on:
   push:
     branches: [ main ]
+  pull_request:
+      branches: [ main ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Run starting deployment
+        run: echo Starting Deployment…
+
       - name: Use Node.js
         uses: actions/setup-node@v2
         with: 
           node-version: "21.x"
+
       - name: Install dependencies
         run: npm install
+
+      - name: Run linter
+        run: npm run lint
+
       - name: Run test
-        run: npm test
+        run: npm run test
+
+      - name: Run Build
+        run: npm run build
+
+  deploy:
+    runs-on: unbuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "findy-alternance-back"
+          heroku_email: "findy.alternance@outlook.fr"
+        env:
+          PORT: ${{secrets.PORT}}
+          CORS_ORIGIN: ${{secrets.CORS_ORIGIN}}
+          PG_HOST: ${{secrets.PG_HOST}}
+          PG_PORT: ${{secrets.PG_PORT}}
+          PG_USER: ${{secrets.PG_USER}}
+          PG_PASSWORD: ${{secrets.PG_PASSWORD}}
+          PG_PG_DATABASEUSER: ${{secrets.PG_PG_DATABASEUSER}}
+          
+
+

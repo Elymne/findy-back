@@ -6,7 +6,7 @@
         "dev": "cross-env NODE_ENV=development nodemon --watch src/ -e ts --exec \"ts-node src/index.ts\"",
         "lint": "eslint . --ext .ts",
         "prebuild": "rimraf dist",
-        "build": "npm run lint && tsc --build && tsc-alias && rimraf dist/__tests__",
+        "build": "tsc --build && tsc-alias && rimraf dist/__tests__",
         "test": "jest __tests_ --coverage=true --coverageDirectory=coverage",
         "start": "cross-env NODE_ENV=production node dist/src/index.js"
     },
