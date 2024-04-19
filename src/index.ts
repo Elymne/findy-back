@@ -19,5 +19,5 @@ app.listen(port, async () => {
         }),
     ])
 
-    logger.info(`Server is running at http://localhost:${port}`)
+    console.log(`Server is running at http://localhost:${port}`)
 })

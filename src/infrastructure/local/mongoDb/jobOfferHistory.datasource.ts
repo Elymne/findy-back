@@ -1,6 +1,6 @@
-import MongodbClient from "@App/core/clients/mongodb.client"
-import JobOfferHistoryModel from "./models/jobOfferHistory.model"
 import JobOfferHistory from "@App/domain/entities/jobOfferHistory"
+import MongodbClient from "@App/core/clients/mongodb.client"
+import JobOfferHistoryModel from "./models/JobOfferHistory.model"
 
 export default interface JobOfferHistoryDatasource {
     findOne: (id: string) => Promise<JobOfferHistory | null>

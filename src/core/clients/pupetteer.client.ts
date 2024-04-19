@@ -15,8 +15,8 @@ export default class PupetteerClient {
     public static getInstance(): PupetteerClient {
         if (!PupetteerClient.instance) {
             PupetteerClient.instance = new PupetteerClient({
+                args: ["--no-sandbox", "--disable-setuid-sandbox"],
                 headless: true,
-                defaultViewport: null,
             })
         }
         return PupetteerClient.instance
@@ -31,8 +31,7 @@ export default class PupetteerClient {
             throw new Error("No browsers has been init. Page cannot be created.")
         }
 
-        let newPage: Page
-        newPage = await this.browser.newPage()
+        const newPage: Page = await this.browser.newPage()
 
         await newPage.setRequestInterception(true)
         newPage.on("request", (request) => {

@@ -45,5 +45,6 @@ dist/**/*
 # ignore yarn.lock
 yarn.lock
 
-# useful files.
-mongodb
+# ignore puppeteer cache.
+.cache
+

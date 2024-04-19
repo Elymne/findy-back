@@ -1,21 +1,25 @@
 name: MainCI
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-      branches: [ main ]
+      branches: [ master ]
   workflow_dispatch:
 
 jobs:
-  build:
+  # Check that tests pass and tat the project is buildable.
+  test-build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Run starting deployment
         run: echo Starting Deployment…
+      
+      - name: Check the current Repo
+        uses: actions/checkout@v2
 
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with: 
           node-version: "21.x"
 
@@ -31,21 +35,17 @@ jobs:
       - name: Run Build
         run: npm run build
 
+  # Simple deployment.
   deploy:
-    runs-on: unbuntu-latest
-    needs: [build]
+    runs-on: ubuntu-latest
+    needs: [test-build]
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12 
+      - uses: actions/checkout@v4
+      - uses: akhileshns/heroku-deploy@v3.13.15
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "findy-alternance-back"
-          heroku_email: "findy.alternance@outlook.fr"
-        env:
-          PORT: ${{secrets.PORT}}
-          CORS_ORIGIN: ${{secrets.CORS_ORIGIN}}
-          MONGODB_CONNEC_STRING:  ${{secrets.MONGODB_CONNEC_STRING}}
-          MONGODB_NAME:  ${{secrets.MONGODB_NAME}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
           
 
 
