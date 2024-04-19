@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import GetPageOffersUsecase, { GetPageOffersUsecaseImpl } from "@App/domain/usecases/jobsOffers/getPageOffers.usecase"
 import { Failure } from "@App/core/interfaces/abstract.usecase"
-import { cache24Successes } from "@App/core/tools/cache"
+import { cache24hours } from "@App/core/tools/cache"
 
 const getJobOffersUsecase: GetPageOffersUsecase = GetPageOffersUsecaseImpl
 
@@ -14,7 +14,7 @@ const getAllJobOffersRoute = express
         query("cityCode").isString().notEmpty().escape(),
         query("page").isInt().optional({ values: "null" }),
         query("radius").isInt().optional({ values: "null" }),
-        cache24Successes,
+        cache24hours,
         async (req: Request, res: Response) => {
             const validator = validationResult(req)
             if (!validator.isEmpty()) {

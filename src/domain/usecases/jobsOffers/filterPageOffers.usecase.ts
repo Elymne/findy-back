@@ -7,7 +7,7 @@ import uuid from "@App/core/tools/uuid"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/mongoDb/textFilter.datasource"
 import JobOfferHistoryDatasource, { JobOfferHistoryDatasourceImpl } from "@App/infrastructure/local/mongoDb/jobOfferHistory.datasource"
-import JobOfferHistoryModel from "@App/infrastructure/local/mongoDb/models/JobOfferHistory.model"
+import JobOfferHistoryModel from "@App/infrastructure/local/mongoDb/models/jobOfferHistory.model"
 import SourceSite from "@App/domain/enums/sourceData.enum"
 
 type Params = {

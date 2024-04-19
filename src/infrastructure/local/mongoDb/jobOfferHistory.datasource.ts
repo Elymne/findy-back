@@ -1,5 +1,5 @@
 import MongodbClient from "@App/core/clients/mongodb.client"
-import JobOfferHistoryModel from "./models/JobOfferHistory.model"
+import JobOfferHistoryModel from "./models/jobOfferHistory.model"
 import JobOfferHistory from "@App/domain/entities/jobOfferHistory"
 
 export default interface JobOfferHistoryDatasource {
