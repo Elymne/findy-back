@@ -1,16 +1,18 @@
-import { SourceSite } from "./enums/sourceData.enum"
+import SourceSite from "../enums/sourceData.enum"
 
-export interface JobOffer {
+export default interface JobOffer {
     id?: string
-    title: string
-    image_url: string
-    company_name: string
-    company_logo_url: string
-    city_name: string
-    source_url: string
-    source_data: SourceSite
 
-    created_at?: number
-    updated_at?: number
-    created_while?: string
+    title: string
+    companyName: string
+    cityName: string
+    sourceUrl: string
+    sourceSite: SourceSite
+
+    companyLogoUrl: string
+    imageUrl: string
+
+    createdAt?: number
+    updatedAt?: number
+    createdWhile?: string
 }

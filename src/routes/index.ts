@@ -1,12 +1,13 @@
 import { Router } from "express"
-import jobsRoutes from "./jobs.routes"
-import municipalitiesRoutes from "./city.routes"
-import testRoute from "./test.routes"
+
+import jobOfferRouter from "./jobsOffers"
+import cityRouter from "./cities"
+import textFilterRouter from "./textFilters"
 
 const router = Router()
 
-router.use("/jobs", jobsRoutes)
-router.use("/cities", municipalitiesRoutes)
-router.use("/test", testRoute)
+router.use("/jobs", jobOfferRouter)
+router.use("/cities", cityRouter)
+router.use("/text-filters", textFilterRouter)
 
 export default router
