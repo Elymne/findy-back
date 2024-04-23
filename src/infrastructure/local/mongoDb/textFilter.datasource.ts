@@ -1,16 +1,17 @@
+import TextFilter from "@App/domain/entities/textFilter.entity"
 import TextFilterModel from "./models/textFilter.model"
 import MongodbClient from "@App/core/clients/mongodb.client"
 
 export default interface TextFilterDatasource {
-    findAll: () => Promise<TextFilterModel[]>
+    findAll: () => Promise<TextFilter[]>
     addOne: (value: TextFilterModel) => Promise<void>
     addAll: (values: TextFilterModel[]) => Promise<void>
 }
 
 export const TextFilterDatasourceImpl: TextFilterDatasource = {
-    findAll: async function (): Promise<TextFilterModel[]> {
+    findAll: async function (): Promise<TextFilter[]> {
         const collection = MongodbClient.getInstance().getCollection<TextFilterModel>("text_filter")
-        return await collection.find().toArray()
+        return (await collection.find().toArray()) as TextFilter[]
     },
 
     addOne: async function (value: TextFilterModel): Promise<void> {

@@ -1,6 +1,5 @@
 import { Failure, Result, Success, Usecase } from "@App/core/interfaces/abstract.usecase"
 import logger from "@App/core/tools/logger"
-import uuid from "@App/core/tools/uuid"
 import TextFilter from "@App/domain/entities/textFilter.entity"
 import TextFilterModel from "@App/infrastructure/local/mongoDb/models/textFilter.model"
 import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/mongoDb/textFilter.datasource"
@@ -20,7 +19,7 @@ export const AddManyTextFilterUsecaseimpl: AddManyTextFilterUsecase = {
         try {
             const textFilters = params.values.map((value) => {
                 return {
-                    id: uuid(),
+                    id: crypto.randomUUID(),
                     value: value,
                 }
             })
