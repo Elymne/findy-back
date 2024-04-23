@@ -1,5 +1,5 @@
 import logger from "../tools/logger"
-import puppeteer, { Browser, BrowserEvent, Page, PageEvent, PuppeteerLaunchOptions } from "puppeteer"
+import puppeteer, { Browser, BrowserEvent, Page, PuppeteerLaunchOptions } from "puppeteer"
 
 export default class PupetteerClient {
     private static instance: PupetteerClient

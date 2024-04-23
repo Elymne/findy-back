@@ -122,7 +122,7 @@ describe("Testing filterPageOffersUsecase perform function.", () => {
         )
 
         findManyJobOfferHistories.mockReturnValue(
-            new Promise((resolve, _) => {
+            new Promise((resolve) => {
                 resolve([])
             })
         )
