@@ -30,7 +30,18 @@ class CustomLogger implements Logger {
         this.append("ERROR", this.buildMessage(message, optionalParams))
     }
 
+    private append(type: string, message: string): void {
+        if (process.env.NODE_ENV == "test") {
+            return
+        }
+        fs.writeSync(this.fd, `${new Date().toISOString()} ${type} ${message}\n`)
+    }
+
     private updateFileDate(): void {
+        if (process.env.NODE_ENV == "test") {
+            return
+        }
+
         const today = new Date(Date.now())
         const folderName = "logs"
         const filename = `${folderName}/${today.getFullYear()}-${today.getMonth()}-${today.getDate()}.log`
@@ -48,10 +59,6 @@ class CustomLogger implements Logger {
             console.log(optionalParams)
         }
         return `${message.toString()} ${JSON.stringify(optionalParams)}`
-    }
-
-    private append(type: string, message: string): void {
-        fs.writeSync(this.fd, `${new Date().toISOString()} ${type} ${message}\n`)
     }
 }
 
