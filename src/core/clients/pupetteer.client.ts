@@ -5,7 +5,9 @@ export default class PupetteerClient {
     private static instance: PupetteerClient
     private browser: Browser | null
     private options: PuppeteerLaunchOptions
+
     private crashBuffer: number
+    private pageFailedBuffer: number
 
     private constructor(options: PuppeteerLaunchOptions) {
         this.options = options
@@ -45,6 +47,21 @@ export default class PupetteerClient {
         setTimeout(() => {
             if (!newPage.isClosed()) {
                 newPage.close()
+
+                if (this.pageFailedBuffer == 0) {
+                    setTimeout(() => (this.pageFailedBuffer = 0), 120_000)
+                }
+
+                this.pageFailedBuffer++
+                logger.warn("[PupetteerClient]", ["A page couldn't fetch data", `Page error buffer number : ${this.pageFailedBuffer}`])
+
+                if (this.pageFailedBuffer > 5) {
+                    logger.warn("[PupetteerClient]", [
+                        "The pages created from current browser keeps getting no response",
+                        "A new one will be initialized",
+                    ])
+                    this.initBrowser()
+                }
             }
         }, 10_000)
 

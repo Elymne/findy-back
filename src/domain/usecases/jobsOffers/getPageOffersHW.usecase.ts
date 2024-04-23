@@ -3,11 +3,11 @@ import PageOffersHWDatasource, {
     PageOffersHWDatasourceImpl,
 } from "@App/infrastructure/remote/helloWork/jobOfferHW.datasource"
 import { Failure, Result, Success, Usecase } from "../../../core/interfaces/abstract.usecase"
-import GetOneCityByCodeUsecase, { GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
 import FilterPageOffersUsecase, { FilterPageOffersUsecaseImpl } from "./filterPageOffers.usecase"
 import logger from "@App/core/tools/logger"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
+import GetOneCityByCodeUsecase, { GetOneCityByCodeUsecaseImpl } from "../cities/getOneCityByCode.usecase"
 
 type Params = {
     keyWords: string

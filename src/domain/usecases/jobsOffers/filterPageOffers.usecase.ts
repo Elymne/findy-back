@@ -3,7 +3,6 @@ import JobOffer from "../../entities/jobOffer.entity"
 import TextFilter from "../../entities/textFilter.entity"
 import JobOfferHistory from "../../entities/jobOfferHistory"
 import logger from "@App/core/tools/logger"
-import uuid from "@App/core/tools/uuid"
 import PageOffers from "@App/domain/entities/pageResult.entity"
 import TextFilterDatasource, { TextFilterDatasourceImpl } from "@App/infrastructure/local/mongoDb/textFilter.datasource"
 import JobOfferHistoryDatasource, { JobOfferHistoryDatasourceImpl } from "@App/infrastructure/local/mongoDb/jobOfferHistory.datasource"
@@ -44,7 +43,7 @@ export const FilterPageOffersUsecaseImpl: FilterPageOffersUsecase = {
 
                 if (!checkResult.isKnown) {
                     newJobOfferHistories.push({
-                        id: uuid(),
+                        id: crypto.randomUUID(),
                         source: jobOffer.sourceUrl,
                         sourceSite: jobOffer.sourceSite,
                         isBanned: checkResult.isBanned,

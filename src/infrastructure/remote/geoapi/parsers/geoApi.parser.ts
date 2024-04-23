@@ -6,6 +6,7 @@ export default interface GeoApiParser {
     parseOne: (source: GeoCityCoordinated) => Promise<CityWithCoordinates>
 }
 
+// todo remove this
 export const GeoApiParserImpl: GeoApiParser = {
     parse: async function (sources: GeoCity[]): Promise<City[]> {
         const parsedSource = new Array<City>()
