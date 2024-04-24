@@ -7,78 +7,70 @@ import GeoApiParser, { GeoApiParserImpl } from "./parsers/geoApi.parser"
 export default interface GeoapiDatasource {
     geoApiParser: GeoApiParser
     findAll: () => Promise<City[]>
+    findManyByName: (name: string) => Promise<CityWithCoordinates[]>
     findOneByCode: (code: string) => Promise<CityWithCoordinates>
-    findOneByName: (name: string) => Promise<CityWithCoordinates>
 }
 
 export const GeoapiDatasourceImpl: GeoapiDatasource = {
     geoApiParser: GeoApiParserImpl,
 
     findAll: async function (): Promise<City[]> {
-        const url = "".concat(`${geoApiConst.url}`, `/${geoApiConst.cityParam}`, `?${geoApiConst.boostQuery}=population`)
-
+        const url = `${geoApiConst.url}/communes`
         const geoCitiesResponse = await axios.get<GeoCity[]>(url, {
             headers: {
                 Accept: "application/json",
             },
+            params: {
+                boost: "population",
+            },
         })
 
-        const cities = await this.geoApiParser.parse(geoCitiesResponse.data)
-
-        return cities
+        return await this.geoApiParser.parseMany(geoCitiesResponse.data)
     },
 
     findOneByCode: async function (code: string): Promise<CityWithCoordinates> {
-        const url = "".concat(
-            `${geoApiConst.url}`,
-            `/${geoApiConst.cityParam}`,
-            `/${code}`,
-            `?${geoApiConst.fieldsQuery}=centre`,
-            `&${geoApiConst.formatQuery}=json`,
-            `&${geoApiConst.geometryQuery}=centre`,
-            `&${geoApiConst.boostQuery}=population`,
-            `&${geoApiConst.limitQuery}=1`
-        )
-
+        const url = `${geoApiConst.url}/communes/${code}`
         const geoCityResponse = await axios.get<GeoCityCoordinated | undefined>(url, {
             headers: {
                 Accept: "application/json",
             },
+            params: {
+                fields: "centre",
+                format: "json",
+                geometry: "centre",
+                boost: "population",
+                limitQuery: "1",
+            },
         })
 
-        if (!geoCityResponse.data) {
+        if (geoCityResponse.data == null) {
             throw Error(`No city found with code : ${code}`)
         }
 
-        const city = this.geoApiParser.parseOne(geoCityResponse.data)
-
-        return city
+        return this.geoApiParser.parseOneWithCoordinates(geoCityResponse.data)
     },
 
-    findOneByName: async function (name: string): Promise<CityWithCoordinates> {
-        const url = "".concat(
-            `${geoApiConst.url}`,
-            `/${geoApiConst.cityParam}`,
-            `?${geoApiConst.fieldsQuery}=centre`,
-            `&${geoApiConst.formatQuery}=json`,
-            `&${geoApiConst.geometryQuery}=centre`,
-            `&${geoApiConst.nameQuery}=${name}`,
-            `&${geoApiConst.boostQuery}=population`,
-            `&${geoApiConst.limitQuery}=1`
-        )
+    findManyByName: async function (name: string): Promise<CityWithCoordinates[]> {
+        const url = `${geoApiConst.url}/communes`
 
         const geoCitiesResponse = await axios.get<GeoCityCoordinated[]>(url, {
             headers: {
                 Accept: "application/json",
             },
+            params: {
+                fields: "centre",
+                format: "json",
+                geometry: "centre",
+                boost: "population",
+                limitQuery: "10",
+                nom: name,
+            },
         })
 
         if (geoCitiesResponse.data.length === 0) {
-            throw Error(`No city found with name : ${name}`)
+            throw Error(`No cities found with name : ${name}`)
         }
 
-        const city = this.geoApiParser.parseOne(geoCitiesResponse.data[0])
-
-        return city
+        return this.geoApiParser.parseManyWithCoordinates(geoCitiesResponse.data)
     },
 }
