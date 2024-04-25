@@ -7,16 +7,16 @@ type Params = {
     name: string
 }
 
-export default interface GetOneCityByNameUsecase extends Usecase<CityWithCoordinates, Params> {
+export default interface GetOneCityByNameUsecase extends Usecase<CityWithCoordinates[], Params> {
     geoapiDatasource: GeoapiDatasource
 }
 
 export const GetOneCityByNameUsecaseImpl: GetOneCityByNameUsecase = {
     geoapiDatasource: GeoapiDatasourceImpl,
 
-    perform: async function (params: Params): Promise<Result<CityWithCoordinates>> {
+    perform: async function (params: Params): Promise<Result<CityWithCoordinates[]>> {
         try {
-            const city = await this.geoapiDatasource.findOneByName(params.name)
+            const city = await this.geoapiDatasource.findManyByName(params.name)
 
             return new Success({
                 message: `The city with code ${params.name} does exists in geo.api.`,
