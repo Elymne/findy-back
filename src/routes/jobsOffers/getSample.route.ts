@@ -16,7 +16,7 @@ const getSampleJobOffersRoute = express
         }
 
         const result = await getSampleUsecase.perform({
-            categ: req.query.keywords as string,
+            categ: req.query.categ as string,
         })
 
         if (result instanceof Failure) {
