@@ -1,8 +1,8 @@
 import JobOffer from "@App/domain/entities/jobOffer.entity"
 import SourceSite from "@App/domain/enums/sourceData.enum"
-import indeedConst from "../../indeed/configs/indeed.configs"
 import { Page } from "puppeteer"
 import logger from "@App/core/tools/logger"
+import hwConst from "../configs/hw.const"
 
 export default interface ScrapperHW {
     getJobOffers: ({ page }: GetJobOffers) => Promise<JobOffer[]>
@@ -42,7 +42,7 @@ export const ScrapperHWImpl: ScrapperHW = {
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
                     sourceSite: SourceSite.hw,
-                    sourceUrl: indeedConst.baseUrl + sourceUrl,
+                    sourceUrl: hwConst.baseUrl + sourceUrl,
                     title: title,
                     companyName: companyName,
                     cityName: cityName,
