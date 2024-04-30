@@ -23,12 +23,22 @@ export const ScapperIndeedImpl: ScapperIndeed = {
                 rows[i].$('[data-testid="myJobsStateDate"]'),
             ])
 
-            const companyLogoUrl = await imagesSelector?.evaluate((img) => img.getAttribute("src"))
-            const sourceUrl = await hrefSelector?.evaluate((a) => a.getAttribute("href"))
-            const title = await hrefSelector?.evaluate((a) => a.textContent)
-            const companyName = await companySelector?.evaluate((span) => span.textContent)
-            const cityName = await citySelector?.evaluate((div) => div.textContent)
-            const createdWhile = await createdWhileSelector?.evaluate((span) => span.textContent)
+            const [companyLogoUrl, sourceUrl, title, companyName, cityName, createdWhileRaw] = await Promise.all([
+                imagesSelector?.evaluate((img) => img.getAttribute("src")),
+                hrefSelector?.evaluate((a) => a.getAttribute("href")),
+                hrefSelector?.evaluate((a) => a.textContent),
+                companySelector?.evaluate((span) => span.textContent),
+                citySelector?.evaluate((div) => div.textContent),
+                createdWhileSelector?.evaluate((span) => span.textContent),
+            ])
+
+            let createdWhile = createdWhileRaw
+
+            for (let y = 0; y < indeedConst.createdWhilePrefixes.length; y++) {
+                if (createdWhileRaw?.includes(indeedConst.createdWhilePrefixes[y])) {
+                    createdWhile = createdWhileRaw.slice(indeedConst.createdWhilePrefixes[y].length + 1)
+                }
+            }
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
@@ -39,8 +49,8 @@ export const ScapperIndeedImpl: ScapperIndeed = {
                     cityName: cityName,
                     createdWhile: createdWhile,
 
-                    companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
-                    imageUrl: "http://localhost:3000/static/images/placeholder.jpg",
+                    companyLogoUrl: companyLogoUrl ?? null,
+                    imageUrl: null,
 
                     id: undefined,
                     createdAt: undefined,

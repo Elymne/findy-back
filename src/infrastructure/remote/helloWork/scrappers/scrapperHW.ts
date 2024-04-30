@@ -48,10 +48,8 @@ export const ScrapperHWImpl: ScrapperHW = {
                     cityName: cityName,
                     createdWhile: createdWhile,
 
-                    companyLogoUrl: image2 ?? image1 ?? "http://localhost:3000/static/images/logo_placeholder.png",
-                    imageUrl: image2
-                        ? image1 ?? "http://localhost:3000/static/images/placeholder.jpg"
-                        : "http://localhost:3000/static/images/placeholder.jpg",
+                    companyLogoUrl: image2 ?? image1 ?? null,
+                    imageUrl: image2 ? image1 ?? null : null,
 
                     id: undefined,
                     createdAt: undefined,

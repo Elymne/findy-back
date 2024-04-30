@@ -9,10 +9,10 @@ export default interface JobOffer {
     sourceUrl: string
     sourceSite: SourceSite
 
-    companyLogoUrl: string
-    imageUrl: string
+    companyLogoUrl: string | null
+    imageUrl: string | null
+    createdWhile?: string
 
     createdAt?: number
     updatedAt?: number
-    createdWhile?: string
 }
