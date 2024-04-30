@@ -34,9 +34,9 @@ export const ScapperIndeedImpl: ScapperIndeed = {
 
             let createdWhile = createdWhileRaw
 
-            for (let i = 0; i < indeedConst.createdWhilePrefixes.length; i++) {
-                if (createdWhileRaw?.includes(indeedConst.createdWhilePrefixes[i])) {
-                    createdWhile = createdWhileRaw.slice(indeedConst.createdWhilePrefixes[i].length + 1)
+            for (let y = 0; y < indeedConst.createdWhilePrefixes.length; y++) {
+                if (createdWhileRaw?.includes(indeedConst.createdWhilePrefixes[y])) {
+                    createdWhile = createdWhileRaw.slice(indeedConst.createdWhilePrefixes[y].length + 1)
                 }
             }
 

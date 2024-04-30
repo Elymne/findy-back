@@ -33,7 +33,7 @@ export const ScrapperWTTJImpl: ScrapperWTTJ = {
                 spanSelectors[spanSelectors.length - 1]?.evaluate((span) => span.textContent),
             ])
 
-            if (title && companyName && cityName && sourceUrl && createdWhile) {
+            if (title && companyName && cityName && sourceUrl && createdWhile && !createdWhile.includes("Sponsorisé")) {
                 const jobOffer: JobOffer = {
                     sourceSite: SourceSite.wttj,
                     sourceUrl: wttjConst.basurl + sourceUrl,
