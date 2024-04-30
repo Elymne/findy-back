@@ -42,8 +42,8 @@ export const ScrapperWTTJImpl: ScrapperWTTJ = {
                     cityName: cityName,
                     createdWhile: createdWhile,
 
-                    companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
-                    imageUrl: imageUrl ?? "http://localhost:3000/static/images/placeholder.jpg",
+                    companyLogoUrl: companyLogoUrl,
+                    imageUrl: imageUrl,
 
                     id: undefined,
                     createdAt: undefined,

@@ -39,8 +39,8 @@ export const ScapperIndeedImpl: ScapperIndeed = {
                     cityName: cityName,
                     createdWhile: createdWhile,
 
-                    companyLogoUrl: companyLogoUrl ?? "http://localhost:3000/static/images/logo_placeholder.png",
-                    imageUrl: "http://localhost:3000/static/images/placeholder.jpg",
+                    companyLogoUrl: companyLogoUrl ?? null,
+                    imageUrl: null,
 
                     id: undefined,
                     createdAt: undefined,
