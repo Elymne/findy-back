@@ -56,8 +56,11 @@ export const GetPageOffersUsecaseImpl: GetPageOffersUsecase = {
                 mergedJobOffers.push(...pageOffersIndeedResult.data.jobOffers)
             }
 
+            const totalPageNumberHW = (pageOffersHWResult as Success<PageOffers>).data.totalPagesNb
+            const totalPagesNb = totalPageNumberHW > 8 ? 8 : totalPageNumberHW
+
             const pageOffers: PageOffers = {
-                totalPagesNb: (pageOffersWTTJResult as Success<PageOffers>).data.totalPagesNb,
+                totalPagesNb: totalPagesNb,
                 jobOffers: mergedJobOffers,
             }
 

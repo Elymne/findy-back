@@ -24,6 +24,8 @@ export const PageOffersIndeedDatasourceImpl: PageOffersIndeedDatasource = {
             cityName ? `&${indeedConst.cityName}=${cityName}` : ""
         )
 
+        console.log(url)
+
         const newPage = await this.pupetteerClient.createPage()
         await newPage.goto(url, { timeout: 10000, waitUntil: "networkidle0" })
 
