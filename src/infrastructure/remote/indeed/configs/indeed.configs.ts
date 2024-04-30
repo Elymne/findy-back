@@ -7,6 +7,8 @@ const indeedConst = {
     page: "start",
     contractType: "sc",
     radius: "radius",
+
+    createdWhilePrefixes: ["EmployerEmployeur", "PostedOffre"],
 }
 
 export default indeedConst

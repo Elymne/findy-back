@@ -23,12 +23,22 @@ export const ScapperIndeedImpl: ScapperIndeed = {
                 rows[i].$('[data-testid="myJobsStateDate"]'),
             ])
 
-            const companyLogoUrl = await imagesSelector?.evaluate((img) => img.getAttribute("src"))
-            const sourceUrl = await hrefSelector?.evaluate((a) => a.getAttribute("href"))
-            const title = await hrefSelector?.evaluate((a) => a.textContent)
-            const companyName = await companySelector?.evaluate((span) => span.textContent)
-            const cityName = await citySelector?.evaluate((div) => div.textContent)
-            const createdWhile = await createdWhileSelector?.evaluate((span) => span.textContent)
+            const [companyLogoUrl, sourceUrl, title, companyName, cityName, createdWhileRaw] = await Promise.all([
+                imagesSelector?.evaluate((img) => img.getAttribute("src")),
+                hrefSelector?.evaluate((a) => a.getAttribute("href")),
+                hrefSelector?.evaluate((a) => a.textContent),
+                companySelector?.evaluate((span) => span.textContent),
+                citySelector?.evaluate((div) => div.textContent),
+                createdWhileSelector?.evaluate((span) => span.textContent),
+            ])
+
+            let createdWhile = createdWhileRaw
+
+            for (let i = 0; i < indeedConst.createdWhilePrefixes.length; i++) {
+                if (createdWhileRaw?.includes(indeedConst.createdWhilePrefixes[i])) {
+                    createdWhile = createdWhileRaw.slice(indeedConst.createdWhilePrefixes[i].length + 1)
+                }
+            }
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
