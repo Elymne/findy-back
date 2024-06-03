@@ -32,7 +32,7 @@ export const ScrapperHWImpl: ScrapperHW = {
             const title = await hrefSelector[0]?.evaluate((a) => a.textContent?.trim())
             const sourceUrl = await hrefSelector[0]?.evaluate((a) => a.getAttribute("href"))
             const createdWhile = await createdSelector[0]?.evaluate((span) => span.textContent?.trim())
-            let cityName = await citySelector[0]?.evaluate((div) => div.textContent?.trim())
+            const cityName = await citySelector[0]?.evaluate((div) => div.textContent?.trim())
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
