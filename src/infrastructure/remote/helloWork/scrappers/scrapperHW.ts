@@ -13,15 +13,17 @@ export const ScrapperHWImpl: ScrapperHW = {
     getJobOffers: async function ({ page }: GetJobOffers): Promise<JobOffer[]> {
         const jobOffers = new Array<JobOffer>()
 
-        const jobRows = await page.$$("section.serp > div > section > ul.crushed > li")
+        const jobRows = await page.$$("section > div > section > ul > li > div > div")
+
+        console.clear()
 
         for (let i = 0; i < jobRows.length; i++) {
-            const [imagesSelector, companySelector, hrefSelector, tagsSelector, createdSelector] = await Promise.all([
+            const [imagesSelector, companySelector, hrefSelector, citySelector, createdSelector] = await Promise.all([
                 jobRows[i].$$("img"),
-                jobRows[i].$$('[data-cy="companyName"] > span'),
+                jobRows[i].$$("div > header > div > p"),
                 jobRows[i].$$("a"),
-                jobRows[i].$$("#infos"),
-                jobRows[i].$$('[data-cy="publishDate"]'),
+                jobRows[i].$$('[data-cy="localisationCard"]'),
+                jobRows[i].$$("div > div > div.tw-text-grey"),
             ])
 
             const image1 = await imagesSelector[0]?.evaluate((img) => img.getAttribute("src"))
@@ -30,14 +32,7 @@ export const ScrapperHWImpl: ScrapperHW = {
             const title = await hrefSelector[0]?.evaluate((a) => a.textContent?.trim())
             const sourceUrl = await hrefSelector[0]?.evaluate((a) => a.getAttribute("href"))
             const createdWhile = await createdSelector[0]?.evaluate((span) => span.textContent?.trim())
-
-            let cityName: string | null | undefined = undefined
-            for (let j = 0; j < tagsSelector.length; j++) {
-                const spanSelector = await tagsSelector[j].$("span > span")
-                if (spanSelector) {
-                    cityName = await spanSelector.evaluate((span) => span.textContent)
-                }
-            }
+            let cityName = await citySelector[0]?.evaluate((div) => div.textContent?.trim())
 
             if (title && companyName && cityName && sourceUrl && createdWhile) {
                 const jobOffer: JobOffer = {
