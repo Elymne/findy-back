@@ -15,8 +15,6 @@ export const ScrapperHWImpl: ScrapperHW = {
 
         const jobRows = await page.$$("section > div > section > ul > li > div > div")
 
-        console.clear()
-
         for (let i = 0; i < jobRows.length; i++) {
             const [imagesSelector, companySelector, hrefSelector, citySelector, createdSelector] = await Promise.all([
                 jobRows[i].$$("img"),
