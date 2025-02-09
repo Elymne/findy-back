@@ -28,11 +28,11 @@ const GetOffersFromSearchRoute = express
             });
 
             if (result.type == ResultType.FAILURE) {
-                res.status(500).send(result);
+                res.status(result.code).send(result);
                 return;
             }
 
-            res.status(200).send(result);
+            res.status(result.code).send(result);
         }
     );
 

@@ -91,8 +91,6 @@ export const FranceTravailDatasource: OfferRepository = {
 
         const response = await axios.request<FranceTravailResultModel>(options);
 
-        console.log(response);
-
         return response.data.resultats.map((data) => {
             return {
                 id: data.id,
