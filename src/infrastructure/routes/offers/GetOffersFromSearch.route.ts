@@ -22,7 +22,7 @@ const GetOffersFromSearchRoute = express
 
             const result = await GetOffersFromSearch.perform({
                 keywords: req.query.keywords as string,
-                codeZone: req.query.cityCode as string,
+                codeZone: req.query.codezone as string,
                 distance: parseInt((req.query.radius ?? 20) as string),
                 page: parseInt((req.query.page ?? 1) as string),
             });

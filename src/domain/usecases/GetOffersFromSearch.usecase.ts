@@ -1,4 +1,4 @@
-import { Result, ResultType } from "@App/core/usecase";
+import { Result, ResultType, Usecase } from "@App/core/usecase";
 import Offers from "../models/Offers.model";
 import { FranceTravailDatasource } from "@App/infrastructure/datasources/FranceTravailDatasource";
 
@@ -11,49 +11,35 @@ interface GetOffersFromSearchParams {
     page: number;
 }
 
-export const GetOffersFromSearch = {
+export const GetOffersFromSearch: Usecase<Offers, GetOffersFromSearchParams> = {
     perform: async function (params: GetOffersFromSearchParams): Promise<Result<Offers>> {
         try {
             const offers = await FranceTravailDatasource.findManyBySearch(params.keywords, params.codeZone, params.distance);
             if (offers.length == 0) {
-                return {
-                    type: ResultType.SUCCESS,
-                    logMessage: "[GetOffersFromSearch] No offers found.",
-                    data: null,
-                    exception: null,
-                };
+                return new Result<Offers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null);
             }
 
             const indexStart = elementByPage * params.page;
             if (offers.length < indexStart) {
-                return {
-                    type: ResultType.FAILURE,
-                    logMessage: "[GetOffersFromSearch] The page requested doesn't exists.",
-                    exception: null,
-                    data: null,
-                };
+                return new Result<Offers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] The page requested doesn't exists.", null, null);
             }
 
             const indexEnd = elementByPage * (params.page + 1);
             const resultByPage = offers.slice(indexStart, indexEnd);
             const maxPage = offers.length % elementByPage;
-            return {
-                type: ResultType.SUCCESS,
-                logMessage: "[GetOffersFromSearch] Offers founded successfully.",
-                data: {
+            return new Result<Offers>(
+                ResultType.SUCCESS,
+                200,
+                "[GetOffersFromSearch] Offers founded successfully.",
+                {
                     jobs: resultByPage,
                     currentPage: params.page,
                     maxPage: maxPage,
                 },
-                exception: null,
-            };
+                null
+            );
         } catch (err) {
-            return {
-                type: ResultType.FAILURE,
-                logMessage: "[GetOffersFromSearch] An exception has been throw. Check logs.",
-                exception: err,
-                data: null,
-            };
+            return new Result<Offers>(ResultType.FAILURE, 500, "[GetOffersFromSearch] An exception has been throw. Check logs.", null, err);
         }
     },
 };

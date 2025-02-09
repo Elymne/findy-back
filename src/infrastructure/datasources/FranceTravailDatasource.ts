@@ -3,8 +3,20 @@ import Offer from "@App/domain/models/Offer.model";
 import OfferRepository from "@App/domain/repositories/Offer.repository";
 import type { AxiosRequestConfig } from "axios";
 import axios from "axios";
+import qs from "querystring";
 
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi";
+
+interface TokenModel {
+    scope: string;
+    expires_in: number;
+    token_type: string;
+    access_token: string;
+}
+
+interface FranceTravailResultModel {
+    resultats: FranceTravailModel[];
+}
 
 interface FranceTravailModel {
     id: string;
@@ -38,51 +50,50 @@ interface FranceTravailDetailedModel {
     dateActualisation: string;
 }
 
-interface SearchParams {
-    motsCles: string;
-    commune: string;
-    distance: number | null;
-}
-
 async function generateToken(): Promise<string> {
-    const url = "https://entreprise.francetravail.fr/connexion/oauth2/access_token";
     const options: AxiosRequestConfig = {
+        method: "POST",
+        url: "https://entreprise.francetravail.fr/connexion/oauth2/access_token",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
         },
         params: {
             realm: "/partenaire",
         },
-        data: {
+        data: qs.stringify({
             grant_type: "client_credentials",
-            client_id: `${process.env.VUE_APP_FRANCE_TRAVAIL_API_KEY}`,
-            client_secret: `${process.env.VUE_APP_FRANCE_TRAVAIL_API_KEY}`,
-            scope: "o2dsoffre api_offresdemploiv2",
-        },
+            client_id: process.env.VUE_APP_FRANCE_TRAVAIL_API_ID,
+            client_secret: process.env.VUE_APP_FRANCE_TRAVAIL_API_KEY,
+            scope: "api_offresdemploiv2 o2dsoffre",
+        }),
     };
-    const result = await axios.post(url, options);
 
-    return result.data.access_token as string;
+    const result = await axios.request<TokenModel>(options);
+
+    return result.data.access_token;
 }
 
 export const FranceTravailDatasource: OfferRepository = {
     findManyBySearch: async function (keyWords: string, codeZone: string, distance: number | null): Promise<Offer[]> {
-        const url = `${baseUrl}/v2/offres/search`;
         const options: AxiosRequestConfig = {
+            method: "GET",
+            url: `${baseUrl}/v2/offres/search`,
             headers: {
-                Accept: "application/json",
                 Authorization: `Bearer ${await generateToken()}`,
+                Accept: "application/json",
             },
             params: {
                 motsCles: keyWords,
                 commune: codeZone,
                 distance: distance,
-            } as SearchParams,
+            },
         };
 
-        const response = await axios.get<FranceTravailModel[]>(url, options);
+        const response = await axios.request<FranceTravailResultModel>(options);
 
-        return response.data.map((data) => {
+        console.log(response);
+
+        return response.data.resultats.map((data) => {
             return {
                 id: data.id,
                 title: data.intitule,
@@ -108,7 +119,6 @@ export const FranceTravailDatasource: OfferRepository = {
                 Accept: "application/json",
             },
         };
-
         const response = await axios.get<FranceTravailDetailedModel>(url, options);
 
         if (response.status == 204) {
