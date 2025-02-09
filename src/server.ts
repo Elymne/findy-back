@@ -5,7 +5,6 @@ import apiRoute from "./infrastructure/routes";
 import cors from "cors";
 
 dotenv.config();
-
 const app: Application = express();
 app.use(helmet());
 app.use(express.json());

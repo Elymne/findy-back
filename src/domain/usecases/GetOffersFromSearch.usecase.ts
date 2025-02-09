@@ -1,9 +1,8 @@
-import { Result, ResultType, Usecase } from "@App/core/usecase";
+import { Result, ResultType } from "@App/core/usecase";
 import Offers from "../models/Offers.model";
-import OfferRepository from "../repositories/Offer.repository";
-import ZoneRepository from "../repositories/Zone.repository";
-import { Container } from "../di/Container";
-import { Respositories } from "../di/Injectable";
+import { FranceTravailDatasource } from "@App/infrastructure/datasources/FranceTravailDatasource";
+
+const elementByPage: number = 20;
 
 interface GetOffersFromSearchParams {
     keywords: string;
@@ -12,20 +11,10 @@ interface GetOffersFromSearchParams {
     page: number;
 }
 
-const elementByPage: number = 20;
-
-export default interface GetOffersFromSearch extends Usecase<Offers, GetOffersFromSearchParams> {
-    offerRepository: OfferRepository;
-    zoneRepository: ZoneRepository;
-}
-
-export const GetOffersFromSearchImpl: GetOffersFromSearch = {
-    offerRepository: Container.get<OfferRepository>(Respositories.OfferRepository),
-    zoneRepository: Container.get<ZoneRepository>(Respositories.ZoneRepository),
-
+export const GetOffersFromSearch = {
     perform: async function (params: GetOffersFromSearchParams): Promise<Result<Offers>> {
         try {
-            const offers = await this.offerRepository.findManyBySearch(params.keywords, params.codeZone, params.distance);
+            const offers = await FranceTravailDatasource.findManyBySearch(params.keywords, params.codeZone, params.distance);
             if (offers.length == 0) {
                 return {
                     type: ResultType.SUCCESS,

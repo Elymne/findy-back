@@ -1,10 +1,5 @@
-import { Router } from "express"
-import addManyTextFiltersRoute from "./addMany.route"
-import getAllTextFiltersRoute from "./getAll.route"
+import { Router } from "express";
 
-const textFilterRouter = Router()
+const textFilterRouter = Router();
 
-textFilterRouter.use(addManyTextFiltersRoute)
-textFilterRouter.use(getAllTextFiltersRoute)
-
-export default textFilterRouter
+export default textFilterRouter;

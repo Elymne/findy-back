@@ -1,17 +1,13 @@
 import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
 import { offersSearchCache } from "@App/core/cache";
-import { Container } from "@App/domain/di/Container";
-import GetOffersFromSearch from "@App/domain/usecases/GetOffersFromSearch.usecase";
-import { Usecases } from "@App/domain/di/Injectable";
 import { ResultType } from "@App/core/usecase";
+import { GetOffersFromSearch } from "@App/domain/usecases/GetOffersFromSearch.usecase";
 
-const getOffersFromSearch = Container.get<GetOffersFromSearch>(Usecases.GetOffersFromSearch);
-
-const GetOffersFromSearch = express
+const GetOffersFromSearchRoute = express
     .Router()
     .get(
-        "/offers",
+        "/",
         query("keywords").isString().notEmpty().escape(),
         query("codezone").isString().notEmpty().escape(),
         query("distance").isInt().optional({ values: "null" }),
@@ -24,7 +20,7 @@ const GetOffersFromSearch = express
                 return;
             }
 
-            const result = await getOffersFromSearch.perform({
+            const result = await GetOffersFromSearch.perform({
                 keywords: req.query.keywords as string,
                 codeZone: req.query.cityCode as string,
                 distance: parseInt((req.query.radius ?? 20) as string),
@@ -40,4 +36,4 @@ const GetOffersFromSearch = express
         }
     );
 
-export default GetOffersFromSearch;
+export default GetOffersFromSearchRoute;
