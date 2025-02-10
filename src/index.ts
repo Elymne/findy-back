@@ -1,6 +1,5 @@
-import app from "./server";
+import RunServer from "./domain/usecases/RunServer.usecase";
+import ExpressServer from "./infrastructure/express/ExpressServer";
 
-const port = process.env.PORT ?? "3000";
-app.listen(port, async () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+const runServer: RunServer = new RunServer(new ExpressServer());
+runServer.perform();

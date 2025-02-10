@@ -1,4 +1,4 @@
-import { Failure, Success } from "@App/core/usecase";
+import { Failure, Success } from "@App/core/usecaseupdate";
 import JobOffer from "@App/domain/models/jobOffer.entity";
 import JobOfferHistory from "@App/domain/models/jobOfferHistory";
 import TextFilter from "@App/domain/models/textFilter.entity";

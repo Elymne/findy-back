@@ -2,19 +2,8 @@ import Zone from "@App/domain/models/Zone.model";
 import ZoneRepository from "@App/domain/repositories/Zone.repository";
 import axios, { type AxiosRequestConfig } from "axios";
 
-const baseUrl = "https://geo.api.gouv.fr";
-
-interface GeoApiModel {
-    nom: string;
-    code: string;
-    centre: {
-        type: string;
-        coordinates: number[];
-    };
-}
-
-export const GeoApiDatasource: ZoneRepository = {
-    findManyByName: async function (name: string): Promise<Zone[]> {
+export default class ZoneDatasource implements ZoneRepository {
+    public async findManyByName(name: string): Promise<Zone[]> {
         const url = `${baseUrl}/communes`;
         const options: AxiosRequestConfig = {
             headers: {
@@ -40,9 +29,9 @@ export const GeoApiDatasource: ZoneRepository = {
                 lat: data.centre.coordinates[1],
             };
         });
-    },
+    }
 
-    findOneByCode: async function (code: string): Promise<Zone | null> {
+    public async findOneByCode(code: string): Promise<Zone | null> {
         const url = `${baseUrl}/communes/${code}`;
         const options: AxiosRequestConfig = {
             headers: {
@@ -69,5 +58,16 @@ export const GeoApiDatasource: ZoneRepository = {
             lng: response.data.centre.coordinates[0],
             lat: response.data.centre.coordinates[1],
         };
-    },
-};
+    }
+}
+
+const baseUrl = "https://geo.api.gouv.fr";
+
+interface GeoApiModel {
+    nom: string;
+    code: string;
+    centre: {
+        type: string;
+        coordinates: number[];
+    };
+}

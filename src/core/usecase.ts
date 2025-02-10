@@ -1,11 +1,13 @@
-import logger from "./logger";
+import { Logger } from "./Logger";
 
-export interface Usecase<D, P> {
-    perform(params: P): Promise<Result<D>>;
+export interface Params {}
+
+export abstract class Usecase<D, P extends Params> {
+    public abstract perform(params: P): Promise<Result<D>>;
 }
 
-export interface UsecaseNoParams<D> {
-    perform(): Promise<Result<D>>;
+export abstract class UsecaseNoParams<D> {
+    public abstract perform(): Promise<Result<D>>;
 }
 
 export class Result<D> {
@@ -23,11 +25,10 @@ export class Result<D> {
         this.exception = exception;
 
         if (this.type == ResultType.FAILURE) {
-            logger.error(this.logMessage, this.exception);
+            Logger.getInstance().error(this.logMessage, this.exception);
             return;
         }
-
-        logger.info(this.logMessage, this.data);
+        Logger.getInstance().info(this.logMessage, this.data);
     }
 }
 

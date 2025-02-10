@@ -1,13 +1,24 @@
-import { Result, ResultType, Usecase } from "@App/core/usecase";
+import { Usecase, Result, ResultType } from "@App/core/Usecase";
 import Offer from "../models/Offer.model";
-import { FranceTravailDatasource } from "@App/infrastructure/datasources/FranceTravailDatasource";
+import OfferRepository from "../repositories/Offer.repository";
 
-export const GetOffersSample: Usecase<Offer[], number> = {
-    perform: async function (params: number): Promise<Result<Offer[]>> {
+export interface GetOffersSampleParams {
+    code: number;
+}
+
+export default class GetOffersSample extends Usecase<Offer[], GetOffersSampleParams> {
+    private offerRepository: OfferRepository;
+
+    public constructor(offerRepository: OfferRepository) {
+        super();
+        this.offerRepository = offerRepository;
+    }
+
+    public async perform(params: GetOffersSampleParams): Promise<Result<Offer[]>> {
         try {
             let keywords: string | null = null;
 
-            switch (params) {
+            switch (params.code) {
                 case 1:
                     keywords = "Développeur";
                     break;
@@ -16,7 +27,7 @@ export const GetOffersSample: Usecase<Offer[], number> = {
                 return new Result<Offer[]>(ResultType.SUCCESS, 204, "[GetOffersSample] This sample code doesn't exists.", null, null);
             }
 
-            const offers = await FranceTravailDatasource.findManyBySearch("", "44120", null);
+            const offers = await this.offerRepository.findManyBySearch("", "44120", null);
             if (offers.length == 0) {
                 return new Result<Offer[]>(ResultType.SUCCESS, 204, "[GetOffersSample] No offer founded for this sample.", null, null);
             }
@@ -25,5 +36,5 @@ export const GetOffersSample: Usecase<Offer[], number> = {
         } catch (err) {
             return new Result<Offer[]>(ResultType.FAILURE, 500, "[GetOffersSample] An exception has been throw. Check logs.", null, err);
         }
-    },
-};
+    }
+}

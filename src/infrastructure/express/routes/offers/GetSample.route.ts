@@ -1,8 +1,11 @@
 import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
-import { sampleCache } from "@App/core/cache";
-import { ResultType } from "@App/core/usecase";
-import { GetOffersSample } from "@App/domain/usecases/GetOffersSample.usecase";
+import { sampleCache } from "@App/infrastructure/express/middlewares/cache";
+import { ResultType } from "@App/core/Usecase";
+import GetOffersSample from "@App/domain/usecases/GetOffersSample.usecase";
+import OfferDatasource from "@App/infrastructure/datasources/OfferDatasource";
+
+const getOfferSample: GetOffersSample = new GetOffersSample(new OfferDatasource());
 
 const GetSampleRoute = express.Router().get("/sample", query("code").isString().notEmpty().escape(), sampleCache, async (req: Request, res: Response) => {
     const validator = validationResult(req);
@@ -11,7 +14,9 @@ const GetSampleRoute = express.Router().get("/sample", query("code").isString().
         return;
     }
 
-    const result = await GetOffersSample.perform(+req.query.code!);
+    const result = await getOfferSample.perform({
+        code: +req.query.code!,
+    });
 
     if (result.type == ResultType.FAILURE) {
         res.status(result.code).send(result);

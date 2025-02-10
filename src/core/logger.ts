@@ -1,31 +1,40 @@
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-import { Logger } from "ts-log";
 import * as fs from "fs";
 
-class CustomLogger implements Logger {
+export class Logger {
     private fd: number;
 
-    public trace(message?: any, ...optionalParams: any[]): void {
+    private static instance: Logger;
+
+    private constructor() {}
+
+    public static getInstance(): Logger {
+        if (this.instance == undefined) {
+            this.instance = new Logger();
+        }
+        return this.instance;
+    }
+
+    public trace(message: string, ...optionalParams: unknown[]): void {
         this.updateFileDate();
         this.append("TRACE", this.buildMessage(message, optionalParams));
     }
 
-    public debug(message?: any, ...optionalParams: any[]): void {
+    public debug(message: string, ...optionalParams: unknown[]): void {
         this.updateFileDate();
         this.append("DEBUG", this.buildMessage(message, optionalParams));
     }
 
-    public info(message?: any, ...optionalParams: any[]): void {
+    public info(message: string, ...optionalParams: unknown[]): void {
         this.updateFileDate();
         this.append("INFO ", this.buildMessage(message, optionalParams));
     }
 
-    public warn(message?: any, ...optionalParams: any[]): void {
+    public warn(message: string, ...optionalParams: unknown[]): void {
         this.updateFileDate();
         this.append("WARN ", this.buildMessage(message, optionalParams));
     }
 
-    public error(message?: any, ...optionalParams: any[]): void {
+    public error(message: string, ...optionalParams: unknown[]): void {
         this.updateFileDate();
         this.append("ERROR", this.buildMessage(message, optionalParams));
     }
@@ -53,15 +62,12 @@ class CustomLogger implements Logger {
         this.fd = fs.openSync(filename, "a");
     }
 
-    private buildMessage(message?: any, optionalParams?: any[]): string {
+    private buildMessage(message: string, optionalParams?: unknown[]): string {
         if (process.env.NODE_ENV == "development") {
             console.log(message);
             console.log(optionalParams);
         }
+
         return `${message.toString()} ${JSON.stringify(optionalParams)}`;
     }
 }
-
-const logger: CustomLogger = new CustomLogger();
-
-export default logger;
