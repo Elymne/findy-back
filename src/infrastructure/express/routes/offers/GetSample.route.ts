@@ -19,11 +19,11 @@ const GetSampleRoute = express.Router().get("/sample", query("code").isString().
     });
 
     if (result.type == ResultType.FAILURE) {
-        res.status(result.code).send(result);
+        res.status(result.code).send(result.data);
         return;
     }
 
-    res.status(result.code).send(result);
+    res.status(result.code).send(result.data);
 });
 
 export default GetSampleRoute;
