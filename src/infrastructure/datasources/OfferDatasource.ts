@@ -6,7 +6,7 @@ import axios from "axios";
 import qs from "querystring";
 
 export default class OfferDatasource implements OfferRepository {
-    public async findManyBySearch(keyWords: string, codeZone: string, distance: number | null): Promise<Offer[]> {
+    public async findManyBySearch(keyWords: string | null, codeZone: string | null, distance: number | null): Promise<Offer[]> {
         const options: AxiosRequestConfig = {
             method: "GET",
             url: `${baseUrl}/v2/offres/search`,
@@ -22,6 +22,10 @@ export default class OfferDatasource implements OfferRepository {
         };
 
         const response = await axios.request<FranceTravailResultModel>(options);
+
+        if (response.status != 206 && response.status != 200) {
+            return [];
+        }
 
         return response.data.resultats.map((data) => {
             return {
