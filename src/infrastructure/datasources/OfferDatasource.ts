@@ -3,7 +3,7 @@ import Offer from "@App/domain/models/Offer.model";
 import OfferRepository from "@App/domain/repositories/Offer.repository";
 import type { AxiosRequestConfig } from "axios";
 import axios from "axios";
-import qs from "querystring";
+import generateToken from "./FranceTravailDatasource";
 
 export default class OfferDatasource implements OfferRepository {
     public async findManyBySearch(keyWords: string | null, codeZone: string | null, distance: number | null): Promise<Offer[]> {
@@ -11,7 +11,7 @@ export default class OfferDatasource implements OfferRepository {
             method: "GET",
             url: `${baseUrl}/v2/offres/search`,
             headers: {
-                Authorization: `Bearer ${await this.generateToken()}`,
+                Authorization: `Bearer ${await generateToken()}`,
                 Accept: "application/json",
             },
             params: {
@@ -21,7 +21,7 @@ export default class OfferDatasource implements OfferRepository {
             },
         };
 
-        const response = await axios.request<FranceTravailResultModel>(options);
+        const response = await axios.request<OfferResultModelFT>(options);
 
         if (response.status != 206 && response.status != 200) {
             return [];
@@ -49,11 +49,11 @@ export default class OfferDatasource implements OfferRepository {
         const url = `${baseUrl}/v2/offres/${id}`;
         const options: AxiosRequestConfig = {
             headers: {
-                Authorization: `Bearer ${await this.generateToken()}`,
+                Authorization: `Bearer ${await generateToken()}`,
                 Accept: "application/json",
             },
         };
-        const response = await axios.get<FranceTravailDetailedModel>(url, options);
+        const response = await axios.get<OfferDetailedModelFT>(url, options);
 
         if (response.status == 204) {
             return null;
@@ -61,45 +61,15 @@ export default class OfferDatasource implements OfferRepository {
 
         return null;
     }
-
-    private async generateToken(): Promise<string> {
-        const options: AxiosRequestConfig = {
-            method: "POST",
-            url: "https://entreprise.francetravail.fr/connexion/oauth2/access_token",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            params: {
-                realm: "/partenaire",
-            },
-            data: qs.stringify({
-                grant_type: "client_credentials",
-                client_id: process.env.VUE_APP_FRANCE_TRAVAIL_API_ID,
-                client_secret: process.env.VUE_APP_FRANCE_TRAVAIL_API_KEY,
-                scope: "api_offresdemploiv2 o2dsoffre",
-            }),
-        };
-
-        const result = await axios.request<TokenModel>(options);
-
-        return result.data.access_token;
-    }
 }
 
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi";
 
-interface TokenModel {
-    scope: string;
-    expires_in: number;
-    token_type: string;
-    access_token: string;
+interface OfferResultModelFT {
+    resultats: OfferModelFT[];
 }
 
-interface FranceTravailResultModel {
-    resultats: FranceTravailModel[];
-}
-
-interface FranceTravailModel {
+interface OfferModelFT {
     id: string;
     intitule: string;
     description: string;
@@ -115,7 +85,7 @@ interface FranceTravailModel {
     dateActualisation: string;
 }
 
-interface FranceTravailDetailedModel {
+interface OfferDetailedModelFT {
     id: string;
     intitule: string;
     description: string;

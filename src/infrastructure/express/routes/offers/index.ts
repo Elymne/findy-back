@@ -1,8 +1,8 @@
 import { Router } from "express";
-import GetSampleRoute from "./GetSample.route";
-import getOffersFromSearchRoute from "./GetOffersFromSearch.route";
+import getOffersFromSearchRoute from "./getOffersFromSearch.route";
+import getSampleRoute from "./GetSample.route";
 
-const offersRouter = Router();
-offersRouter.use(getOffersFromSearchRoute);
-offersRouter.use(GetSampleRoute);
-export default offersRouter;
+const offerRouter = Router();
+offerRouter.use(getOffersFromSearchRoute);
+offerRouter.use(getSampleRoute);
+export default offerRouter;

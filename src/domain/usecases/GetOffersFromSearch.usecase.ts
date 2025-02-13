@@ -1,8 +1,8 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
-import Offers from "../models/Offers.model";
+import PageOffers from "../models/PageOffers.model";
 import OfferDatasource from "@App/infrastructure/datasources/OfferDatasource";
 
-export default class GetOffersFromSearch extends Usecase<Offers, GetOffersFromSearchParams> {
+export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFromSearchParams> {
     private offerDatasource: OfferDatasource;
 
     public constructor(offerDatasource: OfferDatasource) {
@@ -10,15 +10,15 @@ export default class GetOffersFromSearch extends Usecase<Offers, GetOffersFromSe
         this.offerDatasource = offerDatasource;
     }
 
-    public async perform(params: GetOffersFromSearchParams): Promise<Result<Offers>> {
+    public async perform(params: GetOffersFromSearchParams): Promise<Result<PageOffers>> {
         try {
             const offers = await this.offerDatasource.findManyBySearch(`Alternant Alternante Alternance ${params.keywords}`, params.codeZone, params.distance);
             if (offers.length == 0) {
-                return new Result<Offers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null);
+                return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null);
             }
 
             if (!params.page) {
-                return new Result<Offers>(
+                return new Result<PageOffers>(
                     ResultType.SUCCESS,
                     200,
                     "[GetOffersFromSearch] Offers founded successfully.",
@@ -33,13 +33,13 @@ export default class GetOffersFromSearch extends Usecase<Offers, GetOffersFromSe
 
             const indexStart = elementByPage * params.page;
             if (offers.length < indexStart) {
-                return new Result<Offers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] The page requested doesn't exists.", null, null);
+                return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] The page requested doesn't exists.", null, null);
             }
 
             const indexEnd = elementByPage * (params.page + 1);
             const resultByPage = offers.slice(indexStart, indexEnd);
             const maxPage = offers.length % elementByPage;
-            return new Result<Offers>(
+            return new Result<PageOffers>(
                 ResultType.SUCCESS,
                 200,
                 "[GetOffersFromSearch] Offers founded successfully.",
@@ -51,7 +51,7 @@ export default class GetOffersFromSearch extends Usecase<Offers, GetOffersFromSe
                 null
             );
         } catch (err) {
-            return new Result<Offers>(ResultType.FAILURE, 500, "[GetOffersFromSearch] An exception has been throw. Check logs.", null, err);
+            return new Result<PageOffers>(ResultType.FAILURE, 500, "[GetOffersFromSearch] An exception has been throw. Check logs.", null, err);
         }
     }
 }

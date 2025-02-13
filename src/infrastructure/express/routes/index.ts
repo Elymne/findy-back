@@ -1,11 +1,13 @@
 import { Router } from "express";
 
 import textFilterRouter from "./blacklist";
-import offersRouter from "./offers";
+import offerRouter from "./offers";
+import jobRouter from "./jobs";
 
 const router = Router();
 
-router.use("/offers", offersRouter);
+router.use("/jobs", jobRouter);
+router.use("/offers", offerRouter);
 router.use("/blacklist", textFilterRouter);
 
 export default router;

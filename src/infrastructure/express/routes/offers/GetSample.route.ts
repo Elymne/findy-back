@@ -7,7 +7,7 @@ import OfferDatasource from "@App/infrastructure/datasources/OfferDatasource";
 
 const getOfferSample: GetOffersSample = new GetOffersSample(new OfferDatasource());
 
-const GetSampleRoute = express.Router().get("/sample", query("code").isString().notEmpty().escape(), sampleCache, async (req: Request, res: Response) => {
+const getSampleRoute = express.Router().get("/sample", query("code").isString().notEmpty().escape(), sampleCache, async (req: Request, res: Response) => {
     const validator = validationResult(req);
     if (!validator.isEmpty()) {
         res.status(404).send(validator);
@@ -26,4 +26,4 @@ const GetSampleRoute = express.Router().get("/sample", query("code").isString().
     res.status(result.code).send(result.data);
 });
 
-export default GetSampleRoute;
+export default getSampleRoute;
