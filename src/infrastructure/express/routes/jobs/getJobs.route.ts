@@ -10,7 +10,7 @@ const getJobs: GetJobs = new GetJobs(new JobDatasource());
 const getJobsRouter = express.Router().get("/", cache24hours, async (req: Request, res: Response) => {
     const validator = validationResult(req);
     if (!validator.isEmpty()) {
-        res.status(404).send(validator);
+        res.status(400).send(validator);
         return;
     }
 

@@ -19,7 +19,7 @@ const getOffersFromSearchRoute = express
         async (req: Request, res: Response) => {
             const validator = validationResult(req);
             if (!validator.isEmpty()) {
-                res.status(404).send(validator);
+                res.status(400).send(validator);
                 return;
             }
 

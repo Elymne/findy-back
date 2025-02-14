@@ -10,7 +10,7 @@ const getZones: GetZones = new GetZones(new ZoneDatasource());
 const getZonesRoute = express.Router().get("/", query("text").isString().notEmpty().escape(), cache24hours, async (req: Request, res: Response) => {
     const validator = validationResult(req);
     if (!validator.isEmpty()) {
-        res.status(404).send(validator);
+        res.status(400).send(validator);
         return;
     }
 
