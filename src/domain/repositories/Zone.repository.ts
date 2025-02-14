@@ -1,6 +1,6 @@
 import Zone from "../models/Zone.model";
 
 export default interface ZoneRepository {
-    findManyByName(name: string): Promise<Zone[]>;
-    findOneByCode(code: string): Promise<Zone | null>;
+    findAll(text: string): Promise<Zone[]>;
+    findOne(code: string): Promise<Zone | null>;
 }

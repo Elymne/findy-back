@@ -25,7 +25,7 @@ export default async function generateToken(): Promise<string> {
 }
 
 const baseUrl = "https://entreprise.francetravail.fr/connexion/oauth2/access_token";
-const scope = "api_rome-metiersv1 nomenclatureRome api_offresdemploiv2 o2dsoffre";
+const scope = "api_rome-metiersv1 nomenclatureRome api_offresdemploiv2 o2dsoffre api_eterritoirev1";
 
 interface TokenModel {
     scope: string;

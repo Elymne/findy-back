@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
-import { offersSearchCache } from "@App/infrastructure/express/middlewares/cache";
+import { cache10mins } from "@App/infrastructure/express/middlewares/cache";
 import GetOffersFromSearch from "@App/domain/usecases/GetOffersFromSearch.usecase";
 import OfferDatasource from "@App/infrastructure/datasources/OfferDatasource";
 import { ResultType } from "@App/core/Usecase";
@@ -15,7 +15,7 @@ const getOffersFromSearchRoute = express
         query("codezone").isString().notEmpty().escape(),
         query("distance").isInt().optional({ values: "null" }),
         query("page").isInt().optional({ values: "null" }),
-        offersSearchCache,
+        cache10mins,
         async (req: Request, res: Response) => {
             const validator = validationResult(req);
             if (!validator.isEmpty()) {

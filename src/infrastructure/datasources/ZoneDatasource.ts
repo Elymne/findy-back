@@ -3,9 +3,10 @@ import ZoneRepository from "@App/domain/repositories/Zone.repository";
 import axios, { type AxiosRequestConfig } from "axios";
 
 export default class ZoneDatasource implements ZoneRepository {
-    public async findManyByName(name: string): Promise<Zone[]> {
-        const url = `${baseUrl}/communes`;
+    public async findAll(text: string): Promise<Zone[]> {
         const options: AxiosRequestConfig = {
+            method: "GET",
+            url: `${baseUrl}/communes`,
             headers: {
                 Accept: "application/json",
             },
@@ -15,11 +16,11 @@ export default class ZoneDatasource implements ZoneRepository {
                 geometry: "centre",
                 boost: "population",
                 limitQuery: "10",
-                nom: name,
+                nom: text,
             },
         };
 
-        const response = await axios.get<GeoApiModel[]>(url, options);
+        const response = await axios.request<GeoApiModel[]>(options);
 
         return response.data.map((data) => {
             return {
@@ -31,9 +32,10 @@ export default class ZoneDatasource implements ZoneRepository {
         });
     }
 
-    public async findOneByCode(code: string): Promise<Zone | null> {
-        const url = `${baseUrl}/communes/${code}`;
+    public async findOne(code: string): Promise<Zone | null> {
         const options: AxiosRequestConfig = {
+            url: `${baseUrl}/communes/${code}`,
+            method: "GET",
             headers: {
                 Accept: "application/json",
             },
@@ -46,7 +48,7 @@ export default class ZoneDatasource implements ZoneRepository {
             },
         };
 
-        const response = await axios.get<GeoApiModel | undefined>(url, options);
+        const response = await axios.request<GeoApiModel | undefined>(options);
 
         if (response.data == undefined) {
             return null;

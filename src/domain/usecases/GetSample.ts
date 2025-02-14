@@ -2,11 +2,11 @@ import { Usecase, Result, ResultType } from "@App/core/Usecase";
 import Offer from "../models/Offer.model";
 import OfferRepository from "../repositories/Offer.repository";
 
-export interface GetOffersSampleParams {
+export interface GetSampleParams {
     code: number;
 }
 
-export default class GetOffersSample extends Usecase<Offer[], GetOffersSampleParams> {
+export default class GetSample extends Usecase<Offer[], GetSampleParams> {
     private offerRepository: OfferRepository;
 
     public constructor(offerRepository: OfferRepository) {
@@ -14,7 +14,7 @@ export default class GetOffersSample extends Usecase<Offer[], GetOffersSamplePar
         this.offerRepository = offerRepository;
     }
 
-    public async perform(params: GetOffersSampleParams): Promise<Result<Offer[]>> {
+    public async perform(params: GetSampleParams): Promise<Result<Offer[]>> {
         try {
             let keywords: string | null = null;
             switch (params.code) {

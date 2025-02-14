@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
-import { sampleCache } from "@App/infrastructure/express/middlewares/cache";
+import { cache24hours } from "@App/infrastructure/express/middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
-import GetOffersSample from "@App/domain/usecases/GetOffersSample.usecase";
+import GetSample from "@App/domain/usecases/GetSample";
 import OfferDatasource from "@App/infrastructure/datasources/OfferDatasource";
 
-const getOfferSample: GetOffersSample = new GetOffersSample(new OfferDatasource());
+const getOfferSample: GetSample = new GetSample(new OfferDatasource());
 
-const getSampleRoute = express.Router().get("/sample", query("code").isString().notEmpty().escape(), sampleCache, async (req: Request, res: Response) => {
+const getSampleRoute = express.Router().get("/sample", query("code").isString().notEmpty().escape(), cache24hours, async (req: Request, res: Response) => {
     const validator = validationResult(req);
     if (!validator.isEmpty()) {
         res.status(404).send(validator);
