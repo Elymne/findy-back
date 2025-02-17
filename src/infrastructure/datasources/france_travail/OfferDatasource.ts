@@ -7,6 +7,14 @@ import generateToken from "./FranceTravailDatasource";
 
 export default class OfferDatasource implements OfferRepository {
     public async findManyBySearch(keyWords: string | null, codeZone: string | null, distance: number | null): Promise<Offer[]> {
+        console.log(distance);
+
+        // ? Paris fix. Cannot get data from FranceTravail APi with Paris insee code.
+        let departmentCode = null;
+        if (codeZone && codeZone == "75056") {
+            departmentCode = "75";
+        }
+
         const options: AxiosRequestConfig = {
             method: "GET",
             url: `${baseUrl}/v2/offres/search`,
@@ -15,9 +23,12 @@ export default class OfferDatasource implements OfferRepository {
                 Accept: "application/json",
             },
             params: {
-                motsCles: `Alternance ${keyWords}`,
-                commune: codeZone,
-                distance: distance,
+                motsCles: keyWords,
+                commune: departmentCode ? null : codeZone,
+                departement: departmentCode ? departmentCode : null,
+                distance: distance ?? 30,
+                natureContrat: "E2",
+                modeSelectionPartenaires: "INCLUS",
             },
         };
 

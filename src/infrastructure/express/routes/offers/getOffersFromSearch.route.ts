@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
 import { cache10mins } from "@App/infrastructure/express/middlewares/cache";
 import GetOffersFromSearch from "@App/domain/usecases/GetOffersFromSearch.usecase";
-import OfferDatasource from "@App/infrastructure/datasources/OfferDatasource";
+import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
 import { ResultType } from "@App/core/Usecase";
 
 const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferDatasource());
@@ -24,7 +24,7 @@ const getOffersFromSearchRoute = express
             }
 
             const keywords = req.query.keywords ? (req.query.keywords as string) : null;
-            const codeZone = req.query.codeZone ? (req.query.codeZone as string) : null;
+            const codeZone = req.query.codezone ? (req.query.codezone as string) : null;
             const distance = req.query.distance ? parseInt(req.query.distance as string) : null;
             const page = req.query.page ? parseInt(req.query.page as string) : null;
 

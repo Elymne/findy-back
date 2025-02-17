@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { cache24hours } from "../../middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
-import ZoneDatasource from "@App/infrastructure/datasources/ZoneDatasource";
+import ZoneDatasource from "@App/infrastructure/datasources/france_travail/ZoneDatasource";
 import GetZoneByCode from "@App/domain/usecases/GetZoneByCode.usecase";
 
 const getZoneByCode: GetZoneByCode = new GetZoneByCode(new ZoneDatasource());

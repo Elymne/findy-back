@@ -1,6 +1,6 @@
 import { Usecase, Result, ResultType } from "@App/core/Usecase";
-import Offer from "../models/Offer.model";
-import OfferRepository from "../repositories/Offer.repository";
+import Offer from "@App/domain/models/Offer.model";
+import OfferRepository from "@App/domain/repositories/Offer.repository";
 
 export interface GetSampleParams {
     code: number;

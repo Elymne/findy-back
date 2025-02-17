@@ -1,18 +1,20 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
 import PageOffers from "../models/PageOffers.model";
-import OfferDatasource from "@App/infrastructure/datasources/OfferDatasource";
+import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
+import OfferRepository from "../repositories/Offer.repository";
 
 export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFromSearchParams> {
-    private offerDatasource: OfferDatasource;
+    private offerRepository: OfferRepository;
 
     public constructor(offerDatasource: OfferDatasource) {
         super();
-        this.offerDatasource = offerDatasource;
+        this.offerRepository = offerDatasource;
     }
 
     public async perform(params: GetOffersFromSearchParams): Promise<Result<PageOffers>> {
         try {
-            const offers = await this.offerDatasource.findManyBySearch(params.keywords, params.codeZone, params.distance);
+            console.log(params);
+            const offers = await this.offerRepository.findManyBySearch(params.keywords, params.codeZone, params.distance);
             if (offers.length == 0) {
                 return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null);
             }

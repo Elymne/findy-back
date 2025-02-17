@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
 import GetJobs from "@App/domain/usecases/GetJobs.usecase";
-import JobDatasource from "@App/infrastructure/datasources/JobCodeDatasource";
+import JobDatasource from "@App/infrastructure/datasources/france_travail/JobCodeDatasource";
 
 const getJobs: GetJobs = new GetJobs(new JobDatasource());
 

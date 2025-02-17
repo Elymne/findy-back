@@ -25,7 +25,7 @@ export default class ZoneDatasource implements ZoneRepository {
         return response.data.map((data) => {
             return {
                 name: data.nom,
-                postalCode: data.code,
+                code: data.code,
                 lng: data.centre.coordinates[0],
                 lat: data.centre.coordinates[1],
             };
@@ -56,7 +56,7 @@ export default class ZoneDatasource implements ZoneRepository {
 
         return {
             name: response.data.nom,
-            postalCode: response.data.code,
+            code: response.data.code,
             lng: response.data.centre.coordinates[0],
             lat: response.data.centre.coordinates[1],
         };
