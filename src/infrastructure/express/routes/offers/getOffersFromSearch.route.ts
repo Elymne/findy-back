@@ -11,8 +11,8 @@ const getOffersFromSearchRoute = express
     .Router()
     .get(
         "/",
-        query("keywords").isString().notEmpty().escape(),
-        query("codezone").isString().notEmpty().escape(),
+        query("keywords").isString().optional().escape(),
+        query("codezone").isString().optional().escape(),
         query("distance").isInt().optional({ values: "null" }),
         query("page").isInt().optional({ values: "null" }),
         cache10mins,
@@ -23,11 +23,16 @@ const getOffersFromSearchRoute = express
                 return;
             }
 
+            const keywords = req.query.keywords ? (req.query.keywords as string) : null;
+            const codeZone = req.query.codeZone ? (req.query.codeZone as string) : null;
+            const distance = req.query.distance ? parseInt(req.query.distance as string) : null;
+            const page = req.query.page ? parseInt(req.query.page as string) : null;
+
             const result = await getOffer.perform({
-                keywords: req.query.keywords as string,
-                codeZone: req.query.codezone as string,
-                distance: parseInt((req.query.radius ?? 20) as string),
-                page: parseInt((req.query.page ?? 1) as string),
+                keywords: keywords,
+                codeZone: codeZone,
+                distance: distance,
+                page: page,
             });
 
             if (result.type == ResultType.FAILURE) {

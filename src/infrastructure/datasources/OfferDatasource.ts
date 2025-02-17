@@ -15,7 +15,7 @@ export default class OfferDatasource implements OfferRepository {
                 Accept: "application/json",
             },
             params: {
-                motsCles: keyWords,
+                motsCles: `Alternance ${keyWords}`,
                 commune: codeZone,
                 distance: distance,
             },

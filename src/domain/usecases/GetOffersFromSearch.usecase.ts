@@ -12,40 +12,27 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
 
     public async perform(params: GetOffersFromSearchParams): Promise<Result<PageOffers>> {
         try {
-            const offers = await this.offerDatasource.findManyBySearch(`Alternant Alternante Alternance ${params.keywords}`, params.codeZone, params.distance);
+            const offers = await this.offerDatasource.findManyBySearch(params.keywords, params.codeZone, params.distance);
             if (offers.length == 0) {
                 return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null);
             }
 
-            if (!params.page) {
-                return new Result<PageOffers>(
-                    ResultType.SUCCESS,
-                    200,
-                    "[GetOffersFromSearch] Offers founded successfully.",
-                    {
-                        jobs: offers,
-                        currentPage: 0,
-                        maxPage: 0,
-                    },
-                    null
-                );
-            }
+            const indexStart = elementByPage * (params.page ? params.page - 1 : 0);
+            const indexEnd = elementByPage * (params.page ? params.page : 1);
 
-            const indexStart = elementByPage * params.page;
             if (offers.length < indexStart) {
                 return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] The page requested doesn't exists.", null, null);
             }
 
-            const indexEnd = elementByPage * (params.page + 1);
             const resultByPage = offers.slice(indexStart, indexEnd);
-            const maxPage = offers.length % elementByPage;
+            const maxPage = Math.floor(offers.length / elementByPage);
             return new Result<PageOffers>(
                 ResultType.SUCCESS,
                 200,
                 "[GetOffersFromSearch] Offers founded successfully.",
                 {
                     jobs: resultByPage,
-                    currentPage: params.page,
+                    currentPage: params.page ?? 1,
                     maxPage: maxPage,
                 },
                 null
