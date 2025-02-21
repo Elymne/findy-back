@@ -13,8 +13,8 @@ const getOffersFromSearchRoute = express
         "/",
         query("keywords").isString().optional().escape(),
         query("codezone").isString().optional().escape(),
-        query("distance").isInt().optional({ values: "null" }),
-        query("page").isInt().optional({ values: "null" }),
+        query("distance").isString().optional({ values: "null" }),
+        query("page").isString().optional({ values: "null" }),
         cache10mins,
         async (req: Request, res: Response) => {
             const validator = validationResult(req);

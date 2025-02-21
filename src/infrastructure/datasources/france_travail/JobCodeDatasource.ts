@@ -1,6 +1,6 @@
 import Job from "@App/domain/models/Job.model";
 import JobCodeRepository from "@App/domain/repositories/Job.repository";
-import generateToken from "./FranceTravailDatasource";
+import generateToken from "./TokenDatasource";
 import axios, { AxiosRequestConfig } from "axios";
 
 export default class JobDatasource implements JobCodeRepository {

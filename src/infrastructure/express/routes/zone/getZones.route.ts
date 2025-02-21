@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
 import { cache24hours } from "../../middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
-import ZoneDatasource from "@App/infrastructure/datasources/france_travail/ZoneDatasource";
+import ZoneDatasource from "@App/infrastructure/datasources/geoapi/ZoneDatasource";
 
 const getZones: GetZones = new GetZones(new ZoneDatasource());
 

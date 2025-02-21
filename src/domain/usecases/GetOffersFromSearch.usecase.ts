@@ -13,7 +13,6 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
 
     public async perform(params: GetOffersFromSearchParams): Promise<Result<PageOffers>> {
         try {
-            console.log(params);
             const offers = await this.offerRepository.findManyBySearch(params.keywords, params.codeZone, params.distance);
             if (offers.length == 0) {
                 return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null);
