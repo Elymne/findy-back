@@ -7,7 +7,7 @@ import OfferDatasource from "@App/infrastructure/datasources/france_travail/Offe
 
 const getOfferSample: GetSample = new GetSample(new OfferDatasource());
 
-const getSampleRoute = express.Router().get("/sample", query("code").isString().notEmpty().escape(), cache24hours, async (req: Request, res: Response) => {
+const getSampleRoute = express.Router().get("/", query("code").isString().notEmpty().escape(), cache24hours, async (req: Request, res: Response) => {
     const validator = validationResult(req);
     if (!validator.isEmpty()) {
         res.status(400).send(validator);
