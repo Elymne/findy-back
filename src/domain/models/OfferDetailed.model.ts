@@ -27,12 +27,12 @@ export default interface OfferDetailed {
     };
 
     contact?: {
-        name: string;
-        coords: string;
-        phone: string;
-        mail: string;
-        com: string;
-        url: string;
+        name?: string;
+        coords?: string;
+        phone?: string;
+        mail?: string;
+        com?: string;
+        url?: string;
     };
 
     skills: string[];

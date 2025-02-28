@@ -13,7 +13,12 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
 
     public async perform(params: GetOffersFromSearchParams): Promise<Result<PageOffers>> {
         try {
-            const offers = await this.offerRepository.findManyBySearch(params.keywords, params.codeZone, params.distance);
+            const offers = await this.offerRepository.findManyBySearch({
+                keyWords: params.keywords,
+                codeZone: params.codeZone,
+                codeJob: params.codeJob,
+                distance: params.distance,
+            });
             if (offers.length == 0) {
                 return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null);
             }
@@ -46,8 +51,9 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
 
 const elementByPage: number = 20;
 interface GetOffersFromSearchParams {
-    keywords: string | null;
-    codeZone: string | null;
-    distance: number | null;
-    page: number | null;
+    keywords?: string;
+    codeZone?: string;
+    codeJob?: string;
+    distance?: number;
+    page?: number;
 }

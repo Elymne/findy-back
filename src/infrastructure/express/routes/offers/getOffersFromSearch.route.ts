@@ -11,8 +11,9 @@ const getOffersFromSearchRoute = express
     .Router()
     .get(
         "/",
-        query("keywords").isString().optional().escape(),
-        query("codezone").isString().optional().escape(),
+        query("keywords").isString().optional({ values: "null" }).escape(),
+        query("codezone").isString().optional({ values: "null" }).escape(),
+        query("codejob").isString().optional({ values: "null" }).escape(),
         query("distance").isString().optional({ values: "null" }),
         query("page").isString().optional({ values: "null" }),
         cache10mins,
@@ -23,14 +24,16 @@ const getOffersFromSearchRoute = express
                 return;
             }
 
-            const keywords = req.query.keywords ? (req.query.keywords as string) : null;
-            const codeZone = req.query.codezone ? (req.query.codezone as string) : null;
-            const distance = req.query.distance ? parseInt(req.query.distance as string) : null;
-            const page = req.query.page ? parseInt(req.query.page as string) : null;
+            const keywords = req.query.keywords ? (req.query.keywords as string) : undefined;
+            const codeZone = req.query.codezone ? (req.query.codezone as string) : undefined;
+            const codeJob = req.query.codejob ? (req.query.codejob as string) : undefined;
+            const distance = req.query.distance ? parseInt(req.query.distance as string) : undefined;
+            const page = req.query.page ? parseInt(req.query.page as string) : undefined;
 
             const result = await getOffer.perform({
                 keywords: keywords,
                 codeZone: codeZone,
+                codeJob: codeJob,
                 distance: distance,
                 page: page,
             });

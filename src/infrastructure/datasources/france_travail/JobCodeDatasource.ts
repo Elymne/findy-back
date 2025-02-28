@@ -7,7 +7,7 @@ export default class JobDatasource implements JobCodeRepository {
     async findAll(): Promise<Job[]> {
         const options: AxiosRequestConfig = {
             method: "GET",
-            url: `${baseUrl}/v1/metiers/secteur-activite`,
+            url: `${baseUrl}/v2/referentiel/secteursActivites`,
             headers: {
                 Authorization: `Bearer ${await generateToken()}`,
                 Accept: "application/json",
@@ -47,7 +47,7 @@ export default class JobDatasource implements JobCodeRepository {
     }
 }
 
-const baseUrl = "https://api.francetravail.io/partenaire/rome-metiers";
+const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi";
 
 interface JobModelFT {
     code: string;

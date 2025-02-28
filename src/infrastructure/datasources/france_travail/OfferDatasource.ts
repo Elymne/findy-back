@@ -10,11 +10,10 @@ import { OfferResultModelFT, parseOffers } from "./parsers/offers.parser";
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi";
 
 export default class OfferDatasource implements OfferRepository {
-    // TODO : Lyon need to get fixed too. Check documentation from ft api.
-    public async findManyBySearch(keyWords: string | null, codeZone: string | null, distance: number | null): Promise<Offer[]> {
+    async findManyBySearch(params: { keyWords?: string; codeZone?: string; codeJob?: string; distance?: number }): Promise<Offer[]> {
         // ! Paris update. Cannot get data from FranceTravail APi with Paris insee code.
         let departmentCode = null;
-        if (codeZone && codeZone == "75056") {
+        if (params.codeZone && params.codeZone == "75056") {
             departmentCode = "75";
         }
 
@@ -26,10 +25,11 @@ export default class OfferDatasource implements OfferRepository {
                 Accept: "application/json",
             },
             params: {
-                motsCles: keyWords,
-                commune: departmentCode ? null : codeZone,
+                motsCles: params.keyWords,
+                commune: departmentCode ? null : params.codeZone,
                 departement: departmentCode ? departmentCode : null,
-                distance: distance ?? 30,
+                distance: params.distance ?? 30,
+                secteurActivite: params.codeJob,
                 natureContrat: "E2",
                 modeSelectionPartenaires: "INCLUS",
             },

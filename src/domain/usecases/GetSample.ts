@@ -26,7 +26,9 @@ export default class GetSample extends Usecase<Offer[], GetSampleParams> {
                 return new Result<Offer[]>(ResultType.SUCCESS, 204, "[GetOffersSample] This sample code doesn't exists.", null, null);
             }
 
-            const offers = await this.offerRepository.findManyBySearch(keywords, null, null);
+            const offers = await this.offerRepository.findManyBySearch({
+                keyWords: keywords,
+            });
             if (offers.length == 0) {
                 return new Result<Offer[]>(ResultType.SUCCESS, 204, "[GetOffersSample] No offer founded for this sample.", null, null);
             }
