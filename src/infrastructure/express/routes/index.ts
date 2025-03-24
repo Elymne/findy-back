@@ -5,6 +5,7 @@ import offerRouter from "./offers";
 import jobRouter from "./jobs";
 import zoneRouter from "./zone";
 import sampleRouter from "./samples";
+import scrapperRouter from "./scrappers";
 
 const router = Router();
 
@@ -13,5 +14,6 @@ router.use("/offers", offerRouter);
 router.use("/zones", zoneRouter);
 router.use("/schools", schoolRouter);
 router.use("/sample", sampleRouter);
+router.use("/scrappers", scrapperRouter);
 
 export default router;

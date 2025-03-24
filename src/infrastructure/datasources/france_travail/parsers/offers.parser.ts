@@ -17,8 +17,9 @@ export function parseOffers(data: OfferResultModelFT): Offer[] {
             jobTitle: data.appellationlibelle,
             createdAt: new Date(data.dateCreation),
             updateAt: new Date(data.dateActualisation),
-            imgUrl: null,
             tags: tags,
+            imgUrl: undefined,
+            origin: undefined,
         };
 
         return offer;

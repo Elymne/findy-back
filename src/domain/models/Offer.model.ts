@@ -4,11 +4,25 @@ export default interface Offer {
     company: string;
     companyLogo: string;
     zone: string;
-    jobTitle: string;
+    jobTitle: string | undefined;
 
     tags: string[];
 
     createdAt: Date;
-    updateAt: Date | null;
-    imgUrl: string | null;
+    updateAt: Date | undefined;
+    imgUrl: string | undefined;
+
+    origin: OfferOrigin | undefined;
+}
+
+export enum OfferOrigin {
+    HELLOWORK,
+    INDEED,
+    FRANCE_TRAVAIL,
+    // GOOGLE,
+    // LINKEDIN,
+    // MONSTER,
+    // APEC,
+    // CADREMPLOI,
+    // JOBIJOBA
 }
