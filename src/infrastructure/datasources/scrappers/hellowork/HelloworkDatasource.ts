@@ -1,70 +1,107 @@
-import Job from "@App/domain/models/Job.model";
+import Offer, { OfferOrigin } from "@App/domain/models/Offer.model";
 import JobScrapperRepository from "@App/domain/repositories/JobScrapper.repository";
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { load } from "cheerio";
+import { v4 as uuidv4 } from "uuid";
 
+/**
+ * This scrapper will scrap job offers from Hellowork website.
+ */
 export class HelloworkDatasource implements JobScrapperRepository {
-    async getOnePage(pageIndex: number): Promise<Job[]> {
-        const options: AxiosRequestConfig = {
+    /**
+     * Scrap one page of job offers from Hellowork website.
+     * If title, company and zone are not found, the offer is not added to the list.
+     *
+     * @param pageIndex The current page to scrap from Hellowork student job offers.
+     * @returns {Job[]} The list of job offers scrapped from Hellowork website.
+     */
+    async getOnePage(pageIndex: number): Promise<Offer[]> {
+        const offers: Offer[] = [];
+
+        const response = await axios.request<string>({
             method: "GET",
             url: `${baseUrl}`,
             params: {
                 p: pageIndex,
             },
-        };
-
-        const response = await axios.request<string>(options);
+        });
         const $ = load(response.data);
-
-        const titles = [];
-        const companies = [];
-        const zones = [];
-        const backgroundImages = [];
-        const logoImages = [];
 
         const cards = $("div > section > ul.tw-grid > li");
         for (let i = 0; i < cards.length; i++) {
-            const titles = $(cards[i]).find(`div > header > div > a > h3 > p`);
-            titles.push(titles[0]);
-            companies.push(titles[1]);
+            let title: string | undefined = undefined;
+            let company: string | undefined = undefined;
+            let zone: string | undefined = undefined;
+            let companyLogoUrl: string | undefined = undefined;
+            let imgUrl: string | undefined = undefined;
+            let createdAt: Date | undefined = undefined;
+
+            // Find text for title and company.
+            const textElement = $(cards[i]).find(`div > header > div > a > h3 > p`);
+            title = $(textElement[0]).text();
+            company = $(textElement[1]).text();
+
+            // Tags.
+            const tagsElement = $(cards[i]).find(`div.tw-tag-secondary-s`);
+            for (let i = 0; i < tagsElement.length; i++) {
+                const tag = $(tagsElement[i]).text().trim();
+                if (tag != "Alternance") {
+                    zone = tag;
+                }
+            }
+
+            // Images urls.
+            const headerImageElement = $(cards[i]).find(`div > div > header`)[0];
+            const imageElements = $(headerImageElement).find("img");
+            if (imageElements.length == 1) {
+                companyLogoUrl = imageElements.first().attr("src");
+            } else {
+                companyLogoUrl = $(imageElements[1]).attr("src");
+                imgUrl = $(imageElements[0]).attr("src");
+            }
+
+            // Parse date.
+            // TODO : Ugly as fuck. Maybe change this.
+            const dateElement = $(cards[i]).find(`div.tw-text-grey`).first().text();
+            const splicedDate = dateElement.split("il y a ")[1];
+            const units = splicedDate.split(" ");
+            switch (units[1]) {
+                case "jours":
+                    createdAt = new Date(Date.now() - 86_400_000 * parseInt(units[0]));
+                    break;
+                case "jour":
+                    createdAt = new Date(Date.now() - 86_400_000 * parseInt(units[0]));
+                    break;
+                case "heures":
+                    createdAt = new Date(Date.now() - 3_600_000 * parseInt(units[0]));
+                    break;
+                case "heure":
+                    createdAt = new Date(Date.now() - 3_600_000 * parseInt(units[0]));
+                    break;
+            }
+
+            if (title && company && zone && createdAt) {
+                offers.push({
+                    id: uuidv4(),
+                    title: title,
+                    company: company,
+                    zone: zone,
+                    jobTitle: undefined, // Information not given by Hellowork.
+
+                    tags: [],
+
+                    companyLogoUrl: companyLogoUrl,
+                    imgUrl: imgUrl,
+
+                    createdAt: createdAt,
+                    updateAt: undefined,
+
+                    origin: OfferOrigin.HELLOWORK,
+                });
+            }
         }
 
-        // const tagsElement = $(`div.tw-tag-secondary-s`);
-        // for (let i = 0; i < tagsElement.length; i++) {
-        //     const tag = $(tagsElement[i]).text().trim();
-        //     if (tag != "Alternance") {
-        //         zones.push(tag);
-        //     }
-        // }
-
-        // // ! Can't do that Rework this shit.
-        // // const backgroundImagesElement = $(`li > div > div > header > img`);
-        // // const logoImagesElement = $(`li > div > div > header > img`);
-        // // for (let i = 0; i < backgroundImagesElement.length; i++) {
-        // //     backgroundImages.push($(backgroundImagesElement[i]).attr("src"));
-        // //     logoImages.push($(logoImagesElement[i]).attr("src"));
-        // // }
-
-        // const imageBlocksElement = $("li > div > div > header");
-
-        // for (let i = 0; i < imageBlocksElement.length; i++) {
-        //     const test = $(imageBlocksElement[i]).find("div");
-        //     console.log(test.length);
-
-        //     if (test.length == 1) {
-        //     }
-        //     // :/
-        //     else {
-        //     }
-        // }
-
-        // // console.log(titles.length);
-        // // console.log(companies.length);
-        // // console.log(zones.length);
-        // // console.log(backgroundImages.length);
-        // // console.log(logoImages.length);
-
-        return [];
+        return offers;
     }
 }
 

@@ -12,7 +12,7 @@ export function parseOffers(data: OfferResultModelFT): Offer[] {
             id: data.id,
             title: data.intitule,
             company: data.entreprise.nom,
-            companyLogo: data.entreprise.logo,
+            companyLogoUrl: data.entreprise.logo,
             zone: data.lieuTravail.libelle,
             jobTitle: data.appellationlibelle,
             createdAt: new Date(data.dateCreation),
