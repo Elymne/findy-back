@@ -1,7 +1,7 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
-import PageOffers from "../models/PageOffers.model";
+import PageOffers from "@App/domain/models/PageOffers.model";
+import OfferRepository from "@App/domain/repositories/Offer.repository";
 import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
-import OfferRepository from "../repositories/Offer.repository";
 
 export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFromSearchParams> {
     private offerRepository: OfferRepository;

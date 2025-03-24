@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
-import GetSample from "@App/domain/usecases/GetSample";
 import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
+import GetSample from "@App/domain/usecases/fetching/GetSample";
 
 const getOfferSample: GetSample = new GetSample(new OfferDatasource());
 

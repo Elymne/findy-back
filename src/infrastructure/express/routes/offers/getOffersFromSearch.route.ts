@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
 import { cache10mins } from "@App/infrastructure/express/middlewares/cache";
-import GetOffersFromSearch from "@App/domain/usecases/GetOffersFromSearch.usecase";
 import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
 import { ResultType } from "@App/core/Usecase";
+import GetOffersFromSearch from "@App/domain/usecases/fetching/GetOffersFromSearch.usecase";
 
 const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferDatasource());
 

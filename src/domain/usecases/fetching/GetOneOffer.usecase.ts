@@ -1,6 +1,6 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
-import OfferDetailed from "../models/OfferDetailed.model";
-import OfferRepository from "../repositories/Offer.repository";
+import OfferDetailed from "@App/domain/models/OfferDetailed.model";
+import OfferRepository from "@App/domain/repositories/Offer.repository";
 
 export default class GetOneOffer extends Usecase<OfferDetailed, GetOneOfferParams> {
     private offerRepository: OfferRepository;

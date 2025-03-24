@@ -1,5 +1,5 @@
 import { UsecaseNoParams, Result, ResultType } from "@App/core/Usecase";
-import Server from "../gateways/Server.gateways";
+import Server from "@App/domain/gateways/Server.gateways";
 
 export default class RunServer extends UsecaseNoParams<null> {
     private server: Server;

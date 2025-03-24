@@ -1,9 +1,9 @@
-import GetZones from "@App/domain/usecases/GetZones.usecase";
 import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
 import { cache24hours } from "../../middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
 import ZoneDatasource from "@App/infrastructure/datasources/geoapi/ZoneDatasource";
+import GetZones from "@App/domain/usecases/fetching/GetZones.usecase";
 
 const getZones: GetZones = new GetZones(new ZoneDatasource());
 

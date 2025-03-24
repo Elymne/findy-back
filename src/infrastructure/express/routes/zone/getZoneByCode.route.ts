@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { cache24hours } from "../../middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
 import ZoneDatasource from "@App/infrastructure/datasources/geoapi/ZoneDatasource";
-import GetZoneByCode from "@App/domain/usecases/GetZoneByCode.usecase";
+import GetZoneByCode from "@App/domain/usecases/fetching/GetZoneByCode.usecase";
 
 const getZoneByCode: GetZoneByCode = new GetZoneByCode(new ZoneDatasource());
 

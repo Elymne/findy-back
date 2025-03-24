@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache";
 import { ResultType } from "@App/core/Usecase";
 import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
-import GetOneOffer from "@App/domain/usecases/GetOneOffer.usecase";
+import GetOneOffer from "@App/domain/usecases/fetching/GetOneOffer.usecase";
 
 const getOneOffer = new GetOneOffer(new OfferDatasource());
 

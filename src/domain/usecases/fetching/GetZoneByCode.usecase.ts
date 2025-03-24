@@ -1,6 +1,6 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
-import Zone from "../models/Zone.model";
-import ZoneRepository from "../repositories/Zone.repository";
+import Zone from "@App/domain/models/Zone.model";
+import ZoneRepository from "@App/domain/repositories/Zone.repository";
 
 export interface GetZoneByCodeParams {
     code: string;
