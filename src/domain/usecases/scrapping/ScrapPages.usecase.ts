@@ -38,7 +38,7 @@ export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
                     return new Result(ResultType.SUCCESS, 204, "[ScrapPages] No offers have been found. Check the website or the scrapper as it's not normal.", [], null);
                 }
 
-                return new Result(ResultType.SUCCESS, 400, "[ScrapPages] The pages have been scraped without any problems.", result, null);
+                return new Result(ResultType.SUCCESS, 200, "[ScrapPages] The pages have been scraped without any problems.", result, null);
             }
 
             // When params.maxDay is define.

@@ -24,7 +24,7 @@ export const scrapHelloworkPages = express
             maxDay: maxDay,
         });
 
-        res.status(200).send(jobs.data);
+        res.status(jobs.code).send(jobs.data);
     });
 
 export const scrapHelloworkPage = express.Router().get("/hellowork/:index", async (req: Request, res: Response) => {
@@ -38,5 +38,5 @@ export const scrapHelloworkPage = express.Router().get("/hellowork/:index", asyn
     }
 
     const jobs = await scrapOnePage.perform({ pageIndex: index });
-    res.status(200).send(jobs.data);
+    res.status(jobs.code).send(jobs.data);
 });
