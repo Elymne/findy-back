@@ -1,5 +1,5 @@
 import Offer, { OfferOrigin } from "@App/domain/models/Offer.model";
-import JobScrapperRepository from "@App/domain/repositories/JobScrapper.repository";
+import JobScrapperRepository from "@App/domain/repositories/OfferScrapper.repository";
 import axios from "axios";
 import { load } from "cheerio";
 import { v4 as uuidv4 } from "uuid";
@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 /**
  * This scrapper will scrap job offers from Hellowork website.
  */
-export class HelloworkDatasource implements JobScrapperRepository {
+export default class HelloworkDatasource implements JobScrapperRepository {
     /**
      * Scrap one page of job offers from Hellowork website.
      * If title, company and zone are not found, the offer is not added to the list.
@@ -18,13 +18,15 @@ export class HelloworkDatasource implements JobScrapperRepository {
     async getOnePage(pageIndex: number): Promise<Offer[]> {
         const offers: Offer[] = [];
 
-        const response = await axios.request<string>({
+        const options = {
             method: "GET",
             url: `${baseUrl}`,
             params: {
                 p: pageIndex,
             },
-        });
+        };
+
+        const response = await axios.request<string>(options);
         const $ = load(response.data);
 
         const cards = $("div > section > ul.tw-grid > li");

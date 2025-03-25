@@ -1,15 +1,15 @@
 import type { AxiosRequestConfig } from "axios";
 import axios from "axios";
-import generateToken from "./TokenDatasource";
+import generateToken from "./generateToken";
 import Offer from "@App/domain/models/Offer.model";
-import OfferRepository from "@App/domain/repositories/Offer.repository";
+import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository";
 import OfferDetailed from "@App/domain/models/OfferDetailed.model";
 import { OfferDetailedModelFT, parseOfferDetailed } from "./parsers/offerDetailed.parser";
 import { OfferResultModelFT, parseOffers } from "./parsers/offers.parser";
 
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi";
 
-export default class OfferDatasource implements OfferRepository {
+export default class OfferRemoteDatasource implements OfferRemoteRepository {
     async findManyBySearch(params: { keyWords?: string; codeZone?: string; codeJob?: string; distance?: number }): Promise<Offer[]> {
         // ! Paris update. Cannot get data from FranceTravail APi with Paris insee code.
         let departmentCode = null;

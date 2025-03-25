@@ -1,9 +1,9 @@
 import Job from "@App/domain/models/Job.model";
-import JobCodeRepository from "@App/domain/repositories/Job.repository";
-import generateToken from "./TokenDatasource";
+import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository";
+import generateToken from "./generateToken";
 import axios, { AxiosRequestConfig } from "axios";
 
-export default class JobDatasource implements JobCodeRepository {
+export default class JobRemoteDatasource implements JobRemoteRepository {
     async findAll(): Promise<Job[]> {
         const options: AxiosRequestConfig = {
             method: "GET",

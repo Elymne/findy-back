@@ -1,15 +1,15 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
 import Zone from "@App/domain/models/Zone.model";
-import ZoneRepository from "@App/domain/repositories/Zone.repository";
+import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository";
 
 export interface GetZonesParams {
     text: string;
 }
 
 export default class GetZones extends Usecase<Zone[], GetZonesParams> {
-    private zoneRepository: ZoneRepository;
+    private zoneRepository: ZoneRemoteRepository;
 
-    public constructor(zoneRepository: ZoneRepository) {
+    public constructor(zoneRepository: ZoneRemoteRepository) {
         super();
         this.zoneRepository = zoneRepository;
     }

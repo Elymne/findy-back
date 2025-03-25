@@ -1,19 +1,19 @@
 import { Router } from "express";
 
-import schoolRouter from "./schools";
-import offerRouter from "./offers";
 import jobRouter from "./jobs";
-import zoneRouter from "./zone";
+import offerRouter from "./offers";
 import sampleRouter from "./samples";
+import schoolRouter from "./schools";
 import scrapperRouter from "./scrappers";
+import zoneRouter from "./zone";
 
 const router = Router();
 
 router.use("/jobs", jobRouter);
 router.use("/offers", offerRouter);
-router.use("/zones", zoneRouter);
-router.use("/schools", schoolRouter);
 router.use("/sample", sampleRouter);
+router.use("/schools", schoolRouter);
 router.use("/scrappers", scrapperRouter);
+router.use("/zones", zoneRouter);
 
 export default router;

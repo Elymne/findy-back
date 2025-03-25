@@ -1,12 +1,12 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
 import PageOffers from "@App/domain/models/PageOffers.model";
-import OfferRepository from "@App/domain/repositories/Offer.repository";
-import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
+import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository";
+import OfferRemoteDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
 
 export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFromSearchParams> {
-    private offerRepository: OfferRepository;
+    private offerRepository: OfferRemoteRepository;
 
-    public constructor(offerDatasource: OfferDatasource) {
+    public constructor(offerDatasource: OfferRemoteDatasource) {
         super();
         this.offerRepository = offerDatasource;
     }

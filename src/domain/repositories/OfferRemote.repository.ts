@@ -1,7 +1,7 @@
 import Offer from "../models/Offer.model";
 import OfferDetailed from "../models/OfferDetailed.model";
 
-export default interface OfferRepository {
+export default interface OfferRemoteRepository {
     findManyBySearch(params: FindManyBySearchParams): Promise<Offer[]>;
     findOne(id: string): Promise<OfferDetailed | null>;
 }

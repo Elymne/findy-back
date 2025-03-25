@@ -1,11 +1,11 @@
 import { Result, ResultType, UsecaseNoParams } from "@App/core/Usecase";
 import Offer from "@App/domain/models/Offer.model";
-import OfferRepository from "@App/domain/repositories/Offer.repository";
+import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository";
 
 export default class GetSample extends UsecaseNoParams<Offer[]> {
-    private offerRepository: OfferRepository;
+    private offerRepository: OfferRemoteRepository;
 
-    public constructor(offerRepository: OfferRepository) {
+    public constructor(offerRepository: OfferRemoteRepository) {
         super();
         this.offerRepository = offerRepository;
     }

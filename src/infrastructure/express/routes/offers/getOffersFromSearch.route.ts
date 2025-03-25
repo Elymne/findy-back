@@ -1,11 +1,10 @@
 import express, { Request, Response } from "express";
 import { query, validationResult } from "express-validator";
 import { cache10mins } from "@App/infrastructure/express/middlewares/cache";
-import OfferDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
-import { ResultType } from "@App/core/Usecase";
+import OfferRemoteDatasource from "@App/infrastructure/datasources/france_travail/OfferDatasource";
 import GetOffersFromSearch from "@App/domain/usecases/fetching/GetOffersFromSearch.usecase";
 
-const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferDatasource());
+const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferRemoteDatasource());
 
 const getOffersFromSearchRoute = express
     .Router()
@@ -37,11 +36,6 @@ const getOffersFromSearchRoute = express
                 distance: distance,
                 page: page,
             });
-
-            if (result.type == ResultType.FAILURE) {
-                res.status(result.code).send(result.data);
-                return;
-            }
 
             res.status(result.code).send(result.data);
         }

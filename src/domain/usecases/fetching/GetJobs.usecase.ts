@@ -1,11 +1,11 @@
 import { Result, ResultType, UsecaseNoParams } from "@App/core/Usecase";
 import Job from "@App/domain/models/Job.model";
-import JobCodeRepository from "@App/domain/repositories/Job.repository";
+import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository";
 
 export default class GetJobs extends UsecaseNoParams<Job[]> {
-    private jobRepository: JobCodeRepository;
+    private jobRepository: JobRemoteRepository;
 
-    constructor(jobRepository: JobCodeRepository) {
+    constructor(jobRepository: JobRemoteRepository) {
         super();
         this.jobRepository = jobRepository;
     }

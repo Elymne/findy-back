@@ -1,11 +1,11 @@
 import { Result, ResultType, Usecase } from "@App/core/Usecase";
 import OfferDetailed from "@App/domain/models/OfferDetailed.model";
-import OfferRepository from "@App/domain/repositories/Offer.repository";
+import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository";
 
 export default class GetOneOffer extends Usecase<OfferDetailed, GetOneOfferParams> {
-    private offerRepository: OfferRepository;
+    private offerRepository: OfferRemoteRepository;
 
-    constructor(offerRepository: OfferRepository) {
+    constructor(offerRepository: OfferRemoteRepository) {
         super();
         this.offerRepository = offerRepository;
     }
