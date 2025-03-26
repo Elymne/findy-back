@@ -13,8 +13,8 @@ export default async function generateToken(): Promise<string> {
         },
         data: qs.stringify({
             grant_type: "client_credentials",
-            client_id: process.env.VUE_APP_FRANCE_TRAVAIL_API_ID,
-            client_secret: process.env.VUE_APP_FRANCE_TRAVAIL_API_KEY,
+            client_id: process.env.FRANCE_TRAVAIL_API_ID,
+            client_secret: process.env.FRANCE_TRAVAIL_API_KEY,
             scope: scope,
         }),
     }

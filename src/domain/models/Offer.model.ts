@@ -2,6 +2,7 @@ export default interface Offer {
     id: string
     title: string
     company: string
+
     zone: string
     jobTitle: string | undefined
 
