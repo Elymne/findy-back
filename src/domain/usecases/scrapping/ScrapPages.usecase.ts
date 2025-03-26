@@ -1,7 +1,7 @@
 import { Usecase } from "@App/core/Usecase"
 import Offer from "@App/domain/models/Offer.model"
 import ScrapOnePage from "./ScrapOnePage.usecase"
-import { failed, Result, succeed, SuccessType } from "@App/core/Result"
+import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 
 /**
  * Scrap a precise number of pages from any web site given the repository implementation of {ScrapOnePage} usecase used here..
@@ -30,28 +30,28 @@ export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
                 const results = await Promise.all(streamedPageScrapping)
 
                 for (const r of results) {
-                    if (r.type == ResultType.SUCCESS) {
+                    if (r instanceof Success) {
                         result.push(...(r.data ?? []))
                     }
                 }
 
                 if (results.length == 0) {
-                    return succeed(204, `[${this.constructor.name}] Trying to scrap offers from webpage : none found (odd behavior)`, result, SuccessType.WARNING)
+                    return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : none found (odd behavior)`, result, SuccessType.WARNING)
                 }
 
-                return succeed(204, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
+                return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
             }
 
             // When params.maxDay is define.
             if (params.maxDay) {
-                return succeed(204, `[${this.constructor.name}] Trying to scrap offers from webpage : Not implemented yet tho.`, result)
+                return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : Not implemented yet tho.`, result)
             }
 
-            return failed(400, `[${this.constructor.name}] Trying to scrap offers from webpage : Wrong user input`, {
+            return new Failure(400, `[${this.constructor.name}] Trying to scrap offers from webpage : Wrong user input`, {
                 message: "Wrong user input : pageNumber and maxDay both undefined.",
             })
         } catch (trace) {
-            return failed(400, `[${this.constructor.name}] Trying to scrap offers from webpage : An exception has been thrown.`, "", trace)
+            return new Failure(400, `[${this.constructor.name}] Trying to scrap offers from webpage : An exception has been thrown.`, "", trace)
         }
     }
 }

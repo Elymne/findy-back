@@ -1,4 +1,4 @@
-import { failed, Result, succeed } from "@App/core/Result"
+import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
 import Offer from "@App/domain/models/Offer.model"
 import JobScrapperRepository from "@App/domain/repositories/OfferScrapper.repository"
@@ -18,11 +18,16 @@ export default class ScrapOnePage extends Usecase<Offer[], ScrapOnePageParams> {
         try {
             const result = await this.jobScrapperRepository.getOnePage(params.pageIndex)
             if (result.length == 0) {
-                return succeed(204, `[${this.constructor.name}] Trying to scrap offers from webpage : none found.`, result)
+                return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : none found.`, result)
             }
-            return succeed(200, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
+            return new Success(200, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
         } catch (trace) {
-            return failed(500, `[${this.constructor.name}] Trying to scrap offers from webpage : An exception has been thrown.`, { message: "An internal error occured while scrapping offers" }, trace)
+            return new Failure(
+                500,
+                `[${this.constructor.name}] Trying to scrap offers from webpage : An exception has been thrown.`,
+                { message: "An internal error occured while scrapping offers" },
+                trace
+            )
         }
     }
 }

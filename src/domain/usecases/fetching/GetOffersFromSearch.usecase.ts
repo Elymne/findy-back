@@ -1,4 +1,4 @@
-import { failed, Result, succeed } from "@App/core/Result"
+import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
 import PageOffers from "@App/domain/models/PageOffers.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
@@ -22,7 +22,7 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
                 distance: params.distance,
             })
             if (offers.length == 0) {
-                return succeed(204, `[${this.constructor.name}] Trying to fetch offers : none found.`, {
+                return new Success(204, `[${this.constructor.name}] Trying to fetch offers : none found.`, {
                     jobs: offers,
                     currentPage: params.page ?? 0,
                     maxPage: 0,
@@ -32,7 +32,7 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
             const indexStart = elementByPage * (params.page ? params.page - 1 : 0)
             const indexEnd = elementByPage * (params.page ? params.page : 1)
             if (offers.length < indexStart) {
-                return succeed(204, `[${this.constructor.name}] Trying to fetch offers : the page asked does not exists.`, {
+                return new Success(204, `[${this.constructor.name}] Trying to fetch offers : the page asked does not exists.`, {
                     jobs: offers,
                     currentPage: params.page ?? 0,
                     maxPage: 0,
@@ -41,13 +41,13 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
 
             const resultByPage = offers.slice(indexStart, indexEnd)
             const maxPage = Math.floor(offers.length / elementByPage)
-            return succeed(200, `[${this.constructor.name}] Trying to fetch offers : success.`, {
+            return new Success(200, `[${this.constructor.name}] Trying to fetch offers : success.`, {
                 jobs: resultByPage,
                 currentPage: params.page ?? 1,
                 maxPage: maxPage,
             })
         } catch (trace) {
-            return failed(500, `[${this.constructor.name}] An exception has been thrown.`, { message: "An internal error occured while fetching offers" }, trace)
+            return new Failure(500, `[${this.constructor.name}] An exception has been thrown.`, { message: "An internal error occured while fetching offers" }, trace)
         }
     }
 }
