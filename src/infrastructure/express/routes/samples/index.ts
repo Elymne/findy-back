@@ -1,8 +1,8 @@
-import { Router } from "express";
-import getSampleRoute from "../samples/getSample.route";
+import { Router } from "express"
+import getSampleRoute from "../samples/getSample.route"
 
-const sampleRouter = Router();
+const sampleRouter = Router()
 
-sampleRouter.use(getSampleRoute);
+sampleRouter.use(getSampleRoute)
 
-export default sampleRouter;
+export default sampleRouter

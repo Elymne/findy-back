@@ -1,8 +1,8 @@
-import { Router } from "express";
-import getJobsRoute from "./getJobs.route";
+import { Router } from "express"
+import getJobsRoute from "./getJobs.route"
 
-const jobRouter = Router();
+const jobRouter = Router()
 
-jobRouter.use(getJobsRoute);
+jobRouter.use(getJobsRoute)
 
-export default jobRouter;
+export default jobRouter

@@ -1,20 +1,20 @@
-import type { AxiosRequestConfig } from "axios";
-import axios from "axios";
-import generateToken from "./generateToken";
-import Offer from "@App/domain/models/Offer.model";
-import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository";
-import OfferDetailed from "@App/domain/models/OfferDetailed.model";
-import { OfferDetailedModelFT, parseOfferDetailed } from "./parsers/offerDetailed.parser";
-import { OfferResultModelFT, parseOffers } from "./parsers/offers.parser";
+import type { AxiosRequestConfig } from "axios"
+import axios from "axios"
+import generateToken from "./generateToken"
+import Offer from "@App/domain/models/Offer.model"
+import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
+import OfferDetailed from "@App/domain/models/OfferDetailed.model"
+import { OfferDetailedModelFT, parseOfferDetailed } from "./parsers/offerDetailed.parser"
+import { OfferResultModelFT, parseOffers } from "./parsers/offers.parser"
 
-const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi";
+const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi"
 
 export default class OfferRemoteDatasource implements OfferRemoteRepository {
     async findManyBySearch(params: { keyWords?: string; codeZone?: string; codeJob?: string; distance?: number }): Promise<Offer[]> {
         // ! Paris update. Cannot get data from FranceTravail APi with Paris insee code.
-        let departmentCode = null;
+        let departmentCode = null
         if (params.codeZone && params.codeZone == "75056") {
-            departmentCode = "75";
+            departmentCode = "75"
         }
 
         const options: AxiosRequestConfig = {
@@ -33,15 +33,15 @@ export default class OfferRemoteDatasource implements OfferRemoteRepository {
                 natureContrat: "E2",
                 modeSelectionPartenaires: "INCLUS",
             },
-        };
-
-        const response = await axios.request<OfferResultModelFT>(options);
-
-        if (response.status != 206 && response.status != 200) {
-            return [];
         }
 
-        return parseOffers(response.data);
+        const response = await axios.request<OfferResultModelFT>(options)
+
+        if (response.status != 206 && response.status != 200) {
+            return []
+        }
+
+        return parseOffers(response.data)
     }
 
     public async findOne(id: string): Promise<OfferDetailed | null> {
@@ -52,14 +52,14 @@ export default class OfferRemoteDatasource implements OfferRemoteRepository {
                 Authorization: `Bearer ${await generateToken()}`,
                 Accept: "application/json",
             },
-        };
-
-        const response = await axios.request<OfferDetailedModelFT>(options);
-
-        if (response.status != 200) {
-            return null;
         }
 
-        return parseOfferDetailed(response.data);
+        const response = await axios.request<OfferDetailedModelFT>(options)
+
+        if (response.status != 200) {
+            return null
+        }
+
+        return parseOfferDetailed(response.data)
     }
 }

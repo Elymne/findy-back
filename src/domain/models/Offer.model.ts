@@ -1,19 +1,19 @@
 export default interface Offer {
-    id: string;
-    title: string;
-    company: string;
-    zone: string;
-    jobTitle: string | undefined;
+    id: string
+    title: string
+    company: string
+    zone: string
+    jobTitle: string | undefined
 
-    tags: string[];
+    tags: string[]
 
-    companyLogoUrl: string | undefined;
-    imgUrl: string | undefined;
+    companyLogoUrl: string | undefined
+    imgUrl: string | undefined
 
-    createdAt: Date;
-    updateAt: Date | undefined;
+    createdAt: Date
+    updateAt: Date | undefined
 
-    origin: OfferOrigin | undefined;
+    origin: OfferOrigin | undefined
 }
 
 export enum OfferOrigin {

@@ -3,10 +3,17 @@
         "baseUrl": ".",
         "outDir": "./dist",
         "target": "esnext",
-        "lib": ["ESNext", "dom"],
+        "lib": [
+            "ESNext",
+            "dom"
+        ],
         "module": "nodenext",
         "moduleResolution": "NodeNext",
-        "types": ["node", "jest", "express"],
+        "types": [
+            "node",
+            "jest",
+            "express"
+        ],
         "esModuleInterop": true,
         "strict": true,
         "resolveJsonModule": true,
@@ -14,13 +21,19 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "strictPropertyInitialization": false,
-
         "paths": {
-            "@App/*": ["./src/*"]
+            "@App/*": [
+                "./src/*"
+            ]
         }
     },
-    "include": ["./src", "./__tests__"],
+    "include": [
+        "./src",
+        "./__tests__"
+    ],
     "ts-node": {
-        "require": ["tsconfig-paths/register"]
+        "require": [
+            "tsconfig-paths/register"
+        ]
     }
 }

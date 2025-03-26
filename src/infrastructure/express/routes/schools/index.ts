@@ -1,5 +1,5 @@
-import { Router } from "express";
+import { Router } from "express"
 
-const schoolRouter = Router();
+const schoolRouter = Router()
 
-export default schoolRouter;
+export default schoolRouter

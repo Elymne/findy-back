@@ -1,47 +1,47 @@
 export default interface OfferDetailed {
-    id: string;
-    title: string;
-    description: string;
-    jobTitle: string;
-    origin?: string;
+    id: string
+    title: string
+    description: string
+    jobTitle: string
+    origin?: string
 
     zone: {
-        libelle: string;
-        lat: number;
-        lng: number;
-    };
+        libelle: string
+        lat: number
+        lng: number
+    }
 
     company?: {
-        name: string;
-        description: string;
-        logo: string;
-        url: string;
-    };
+        name: string
+        description: string
+        logo: string
+        url: string
+    }
 
-    tags: string[];
+    tags: string[]
 
     salaryDetails?: {
-        value: string | number;
-        com?: string;
-        tags?: string[];
-    };
+        value: string | number
+        com?: string
+        tags?: string[]
+    }
 
     contact?: {
-        name?: string;
-        coords?: string;
-        phone?: string;
-        mail?: string;
-        com?: string;
-        url?: string;
-    };
+        name?: string
+        coords?: string
+        phone?: string
+        mail?: string
+        com?: string
+        url?: string
+    }
 
-    skills: string[];
+    skills: string[]
     softSkills: {
-        title: string;
-        description: string;
-    }[];
+        title: string
+        description: string
+    }[]
 
-    createdAt: Date;
-    updateAt?: Date;
-    imgUrl?: string;
+    createdAt: Date
+    updateAt?: Date
+    imgUrl?: string
 }

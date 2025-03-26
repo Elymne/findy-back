@@ -1,4 +1,4 @@
-import { rateLimit } from "express-rate-limit";
+import { rateLimit } from "express-rate-limit"
 
 const defaultLimiter = rateLimit({
     windowMs: 60 * 1000,
@@ -6,6 +6,6 @@ const defaultLimiter = rateLimit({
     message: "Nope",
     standardHeaders: "draft-7",
     legacyHeaders: false,
-});
+})
 
-export default defaultLimiter;
+export default defaultLimiter

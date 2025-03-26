@@ -1,6 +1,6 @@
-import Zone from "@App/domain/models/Zone.model";
-import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository";
-import axios, { type AxiosRequestConfig } from "axios";
+import Zone from "@App/domain/models/Zone.model"
+import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository"
+import axios, { type AxiosRequestConfig } from "axios"
 
 export default class ZoneDatasource implements ZoneRemoteRepository {
     public async findAll(text: string): Promise<Zone[]> {
@@ -18,9 +18,9 @@ export default class ZoneDatasource implements ZoneRemoteRepository {
                 limitQuery: "10",
                 nom: text,
             },
-        };
+        }
 
-        const response = await axios.request<GeoApiModel[]>(options);
+        const response = await axios.request<GeoApiModel[]>(options)
 
         return response.data.map((data) => {
             return {
@@ -28,8 +28,8 @@ export default class ZoneDatasource implements ZoneRemoteRepository {
                 code: data.code,
                 lng: data.centre.coordinates[0],
                 lat: data.centre.coordinates[1],
-            };
-        });
+            }
+        })
     }
 
     public async findOne(code: string): Promise<Zone | null> {
@@ -46,12 +46,12 @@ export default class ZoneDatasource implements ZoneRemoteRepository {
                 boost: "population",
                 limitQuery: "1",
             },
-        };
+        }
 
-        const response = await axios.request<GeoApiModel | undefined>(options);
+        const response = await axios.request<GeoApiModel | undefined>(options)
 
         if (response.data == undefined) {
-            return null;
+            return null
         }
 
         return {
@@ -59,17 +59,17 @@ export default class ZoneDatasource implements ZoneRemoteRepository {
             code: response.data.code,
             lng: response.data.centre.coordinates[0],
             lat: response.data.centre.coordinates[1],
-        };
+        }
     }
 }
 
-const baseUrl = "https://geo.api.gouv.fr";
+const baseUrl = "https://geo.api.gouv.fr"
 
 interface GeoApiModel {
-    nom: string;
-    code: string;
+    nom: string
+    code: string
     centre: {
-        type: string;
-        coordinates: number[];
-    };
+        type: string
+        coordinates: number[]
+    }
 }

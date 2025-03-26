@@ -1,22 +1,22 @@
-import express, { Request, Response } from "express";
-import { cache24hours } from "../../middlewares/cache";
-import { ResultType } from "@App/core/Usecase";
-import ZoneDatasource from "@App/infrastructure/datasources/geoapi/ZoneDatasource";
-import GetZoneByCode from "@App/domain/usecases/fetching/GetZoneByCode.usecase";
+import express, { Request, Response } from "express"
+import { cache24hours } from "../../middlewares/cache"
+import { ResultType } from "@App/core/Usecase"
+import ZoneDatasource from "@App/infrastructure/datasources/remote/geoapi/ZoneDatasource"
+import GetZoneByCode from "@App/domain/usecases/fetching/GetZoneByCode.usecase"
 
-const getZoneByCode: GetZoneByCode = new GetZoneByCode(new ZoneDatasource());
+const getZoneByCode: GetZoneByCode = new GetZoneByCode(new ZoneDatasource())
 
 const getZonebyCodeRoute = express.Router().get("/:code", cache24hours, async (req: Request<{ code: string }>, res: Response) => {
     const result = await getZoneByCode.perform({
         code: (req.params.code ?? "") as string,
-    });
+    })
 
     if (result.type == ResultType.FAILURE) {
-        res.status(result.code).send(result.data);
-        return;
+        res.status(result.code).send(result.data)
+        return
     }
 
-    res.status(result.code).send(result.data);
-});
+    res.status(result.code).send(result.data)
+})
 
-export default getZonebyCodeRoute;
+export default getZonebyCodeRoute

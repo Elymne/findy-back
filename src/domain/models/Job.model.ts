@@ -1,4 +1,4 @@
 export default interface Job {
-    code: string;
-    title: string;
+    code: string
+    title: string
 }

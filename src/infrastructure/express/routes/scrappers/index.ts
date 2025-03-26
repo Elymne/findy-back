@@ -1,9 +1,9 @@
-import { Router } from "express";
-import { scrapHelloworkPage, scrapHelloworkPages } from "./scrapHelloworkPage";
+import { Router } from "express"
+import { scrapHelloworkPage, scrapHelloworkPages } from "./scrapHelloworkPage"
 
-const scrapperRouter = Router();
+const scrapperRouter = Router()
 
-scrapperRouter.use(scrapHelloworkPages);
-scrapperRouter.use(scrapHelloworkPage);
+scrapperRouter.use(scrapHelloworkPages)
+scrapperRouter.use(scrapHelloworkPage)
 
-export default scrapperRouter;
+export default scrapperRouter
