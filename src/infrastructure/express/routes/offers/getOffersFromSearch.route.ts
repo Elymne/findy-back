@@ -3,6 +3,7 @@ import { query, validationResult } from "express-validator"
 import { cache10mins } from "@App/infrastructure/express/middlewares/cache"
 import OfferRemoteDatasource from "@App/infrastructure/datasources/remote/france_travail/OfferDatasource"
 import GetOffersFromSearch from "@App/domain/usecases/fetching/GetOffersFromSearch.usecase"
+import { Failure, Success } from "@App/core/Result"
 
 const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferRemoteDatasource())
 
@@ -37,7 +38,17 @@ const getOffersFromSearchRoute = express
                 page: page,
             })
 
-            res.status(result.code).send(result.data)
+            if (result instanceof Failure) {
+                res.status(result.code).send(result.error)
+                return
+            }
+
+            if (result instanceof Success) {
+                res.status(result.code).send(result.data)
+                return
+            }
+
+            res.status(result.code).send({ message: "Unknown type of result." })
         }
     )
 

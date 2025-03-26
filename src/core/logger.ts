@@ -40,19 +40,19 @@ export class Logger {
             switch (type) {
                 case LoggerType.INFO:
                     console.log(FgBlue, message)
-                    console.log(JSON.stringify(details))
+                    if (details) console.log(JSON.stringify(details))
                     break
                 case LoggerType.WARN:
                     console.log(FgYellow, message)
-                    console.warn(JSON.stringify(details))
+                    if (details) console.warn(JSON.stringify(details))
                     break
                 case LoggerType.ERROR:
                     console.log(FgMagenta, message)
-                    console.log(details)
+                    if (details) console.log(details)
                     break
                 case LoggerType.CRITICAL:
                     console.log(FgRed, message)
-                    console.error(details)
+                    if (details) console.error(details)
                     break
             }
         }

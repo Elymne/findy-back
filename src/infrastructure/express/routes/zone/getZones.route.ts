@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { cache24hours } from "../../middlewares/cache"
-import { ResultType } from "@App/core/Usecase"
 import ZoneDatasource from "@App/infrastructure/datasources/remote/geoapi/ZoneDatasource"
 import GetZones from "@App/domain/usecases/fetching/GetZones.usecase"
+import { Failure, Success } from "@App/core/Result"
 
 const getZones: GetZones = new GetZones(new ZoneDatasource())
 
@@ -18,12 +18,17 @@ const getZonesRoute = express.Router().get("/", query("text").isString().notEmpt
         text: (req.query.text ?? "") as string,
     })
 
-    if (result.type == ResultType.FAILURE) {
+    if (result instanceof Failure) {
+        res.status(result.code).send(result.error)
+        return
+    }
+
+    if (result instanceof Success) {
         res.status(result.code).send(result.data)
         return
     }
 
-    res.status(result.code).send(result.data)
+    res.status(result.code).send({ message: "Unknown type of result." })
 })
 
 export default getZonesRoute

@@ -2,6 +2,7 @@ import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
 import OfferRemoteDatasource from "@App/infrastructure/datasources/remote/france_travail/OfferDatasource"
 import GetOneOffer from "@App/domain/usecases/fetching/GetOneOffer.usecase"
+import { Failure, Success } from "@App/core/Result"
 
 const getOneOffer = new GetOneOffer(new OfferRemoteDatasource())
 
@@ -16,7 +17,18 @@ const getOneOfferRoute = express.Router().get("/:id", cache24hours, async (req: 
     }
 
     const result = await getOneOffer.perform({ id: id })
-    res.status(result.code).send(result.data)
+
+    if (result instanceof Failure) {
+        res.status(result.code).send(result.error)
+        return
+    }
+
+    if (result instanceof Success) {
+        res.status(result.code).send(result.data)
+        return
+    }
+
+    res.status(result.code).send({ message: "Unknown type of result." })
 })
 
 export default getOneOfferRoute

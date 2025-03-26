@@ -3,6 +3,7 @@ import { query, validationResult } from "express-validator"
 import HelloworkDatasource from "@App/infrastructure/datasources/remote/scrappers/hellowork/HelloworkDatasource"
 import ScrapOnePage from "@App/domain/usecases/scrapping/ScrapOnePage.usecase"
 import ScrapPages from "@App/domain/usecases/scrapping/ScrapPages.usecase"
+import { Failure, Success } from "@App/core/Result"
 
 const scrapOnePage: ScrapOnePage = new ScrapOnePage(new HelloworkDatasource())
 const scrapPages: ScrapPages = new ScrapPages(scrapOnePage)
@@ -19,12 +20,22 @@ export const scrapHelloworkPages = express
         const pageNumber = req.query.pagenumber ? parseInt(req.query.pagenumber as string) : undefined
         const maxDay = req.query.maxday ? parseInt(req.query.maxday as string) : undefined
 
-        const jobs = await scrapPages.perform({
+        const result = await scrapPages.perform({
             pageNumber: pageNumber,
             maxDay: maxDay,
         })
 
-        res.status(jobs.code).send(jobs.data)
+        if (result instanceof Failure) {
+            res.status(result.code).send(result.error)
+            return
+        }
+
+        if (result instanceof Success) {
+            res.status(result.code).send(result.data)
+            return
+        }
+
+        res.status(result.code).send({ message: "Unknown type of result." })
     })
 
 export const scrapHelloworkPage = express.Router().get("/hellowork/:index", async (req: Request, res: Response) => {
@@ -37,6 +48,16 @@ export const scrapHelloworkPage = express.Router().get("/hellowork/:index", asyn
         return
     }
 
-    const jobs = await scrapOnePage.perform({ pageIndex: index })
-    res.status(jobs.code).send(jobs.data)
+    const result = await scrapOnePage.perform({ pageIndex: index })
+    if (result instanceof Failure) {
+        res.status(result.code).send(result.error)
+        return
+    }
+
+    if (result instanceof Success) {
+        res.status(result.code).send(result.data)
+        return
+    }
+
+    res.status(result.code).send({ message: "Unknown type of result." })
 })
