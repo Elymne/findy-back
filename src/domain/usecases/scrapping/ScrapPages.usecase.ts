@@ -27,19 +27,18 @@ export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
                     streamedPageScrapping.push(this.scrapOnePage.perform({ pageIndex: i }))
                 }
 
-                const results = await Promise.all(streamedPageScrapping)
-
-                for (const r of results) {
+                const resultsFromScrapping = await Promise.all(streamedPageScrapping)
+                for (const r of resultsFromScrapping) {
                     if (r instanceof Success) {
-                        result.push(...(r.data ?? []))
+                        result.push(...r.data)
                     }
                 }
 
-                if (results.length == 0) {
+                if (result.length == 0) {
                     return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : none found (odd behavior)`, result, SuccessType.WARNING)
                 }
 
-                return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
+                return new Success(200, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
             }
 
             // When params.maxDay is define.
