@@ -1,7 +1,8 @@
-import { UsecaseNoParams, Result, ResultType } from "@App/core/Usecase"
+import { failed, Result, succeed } from "@App/core/Result"
+import { UsecaseNoParams } from "@App/core/Usecase"
 import Server from "@App/domain/gateways/Server.gateways"
 
-export default class RunServer extends UsecaseNoParams<null> {
+export default class RunServer extends UsecaseNoParams<void> {
     private server: Server
 
     public constructor(server: Server) {
@@ -9,12 +10,12 @@ export default class RunServer extends UsecaseNoParams<null> {
         this.server = server
     }
 
-    public async perform(): Promise<Result<null>> {
+    public async perform(): Promise<Result> {
         try {
             this.server.createAndServe()
-            return new Result(ResultType.SUCCESS, 0, "[RunServer] Server has started successfully !", null, 1)
-        } catch (err) {
-            return new Result(ResultType.FAILURE, 1, "[RunServer] An error occured while starting the server !", null, err)
+            return succeed(0, `[${this.constructor.name}] Running server : success`, undefined)
+        } catch (trace) {
+            return failed(1, `[${this.constructor.name}] Running server : An exception has been thrown.`, undefined, trace)
         }
     }
 }

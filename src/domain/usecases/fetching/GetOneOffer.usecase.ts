@@ -1,4 +1,5 @@
-import { Result, ResultType, Usecase } from "@App/core/Usecase"
+import { failed, Result, succeed } from "@App/core/Result"
+import { Usecase } from "@App/core/Usecase"
 import OfferDetailed from "@App/domain/models/OfferDetailed.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
 
@@ -14,12 +15,16 @@ export default class GetOneOffer extends Usecase<OfferDetailed, GetOneOfferParam
         try {
             const result = await this.offerRepository.findOne(params.id)
             if (!result) {
-                return new Result<OfferDetailed>(ResultType.FAILURE, 404, "[GetOneOffer] Offer not found.", null, null)
+                return failed(404, `[${this.constructor.name}] Trying to fetch offer ${params.id} : it doesn't exists`, { message: `Offer with id ${params.id} does not exists.` })
             }
-
-            return new Result(ResultType.SUCCESS, 200, "[GetOneOffer] Offer found.", result, null)
-        } catch (err) {
-            return new Result<OfferDetailed>(ResultType.FAILURE, 500, "[GetOneOffer] An exception has been throw. Check logs.", null, err)
+            return succeed(200, `[${this.constructor.name}] Trying to fetch offer ${params.id} : success`, result)
+        } catch (trace) {
+            return failed(
+                500,
+                `[${this.constructor.name}] Trying to fetch offer ${params.id} : An exception has been thrown.`,
+                { message: "An internal error occured while fetching the offer." },
+                trace
+            )
         }
     }
 }

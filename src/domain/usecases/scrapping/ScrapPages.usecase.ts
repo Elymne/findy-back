@@ -1,6 +1,7 @@
-import { Result, ResultType, Usecase } from "@App/core/Usecase"
+import { Usecase } from "@App/core/Usecase"
 import Offer from "@App/domain/models/Offer.model"
 import ScrapOnePage from "./ScrapOnePage.usecase"
+import { failed, Result, succeed, SuccessType } from "@App/core/Result"
 
 /**
  * Scrap a precise number of pages from any web site given the repository implementation of {ScrapOnePage} usecase used here..
@@ -35,20 +36,22 @@ export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
                 }
 
                 if (results.length == 0) {
-                    return new Result(ResultType.SUCCESS, 204, "[ScrapPages] No offers have been found. Check the website or the scrapper as it's not normal.", [], null)
+                    return succeed(204, `[${this.constructor.name}] Trying to scrap offers from webpage : none found (odd behavior)`, result, SuccessType.WARNING)
                 }
 
-                return new Result(ResultType.SUCCESS, 200, "[ScrapPages] The pages have been scraped without any problems.", result, null)
+                return succeed(204, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
             }
 
             // When params.maxDay is define.
             if (params.maxDay) {
-                throw "Not implemented yet."
+                return succeed(204, `[${this.constructor.name}] Trying to scrap offers from webpage : Not implemented yet tho.`, result)
             }
 
-            return new Result<Offer[]>(ResultType.FAILURE, 400, "[ScrapPages] Params should have at least one value defined.", null, params)
-        } catch (err) {
-            return new Result<Offer[]>(ResultType.FAILURE, 500, "[ScrapPages] An exception has been throw. Check logs.", null, err)
+            return failed(400, `[${this.constructor.name}] Trying to scrap offers from webpage : Wrong user input`, {
+                message: "Wrong user input : pageNumber and maxDay both undefined.",
+            })
+        } catch (trace) {
+            return failed(400, `[${this.constructor.name}] Trying to scrap offers from webpage : An exception has been thrown.`, "", trace)
         }
     }
 }

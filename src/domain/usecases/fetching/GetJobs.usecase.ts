@@ -1,4 +1,5 @@
-import { Result, ResultType, UsecaseNoParams } from "@App/core/Usecase"
+import { failed, Result, succeed, SuccessType } from "@App/core/Result"
+import { UsecaseNoParams } from "@App/core/Usecase"
 import Job from "@App/domain/models/Job.model"
 import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository"
 
@@ -13,14 +14,12 @@ export default class GetJobs extends UsecaseNoParams<Job[]> {
     public async perform(): Promise<Result<Job[]>> {
         try {
             const result = await this.jobRepository.findAll()
-
             if (result.length == 0) {
-                return new Result(ResultType.SUCCESS, 204, "[GetJobs] No Jobs found. It may be a problem.", [], null)
+                return succeed(204, `[${this.constructor.name}] Trying to fetch jobs : none found (odd behavior).`, result, SuccessType.WARNING)
             }
-
-            return new Result(ResultType.SUCCESS, 200, "[GetJobs] Jobs found.", result, null)
-        } catch (err) {
-            return new Result<Job[]>(ResultType.FAILURE, 500, "[GetJobs] An exception has been throw. Check logs.", null, err)
+            return succeed(200, `[${this.constructor.name}] Trying to fetch jobs : success.`, result)
+        } catch (trace) {
+            return failed(500, `[${this.constructor.name}] Trying to fetch jobs : An exception has been thrown.`, { message: "An internal error occured while fetching jobs data." }, trace)
         }
     }
 }

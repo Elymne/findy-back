@@ -1,8 +1,10 @@
-import { Result, ResultType, Usecase } from "@App/core/Usecase"
+import { failed, Result, succeed } from "@App/core/Result"
+import { Usecase } from "@App/core/Usecase"
 import PageOffers from "@App/domain/models/PageOffers.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
 import OfferRemoteDatasource from "@App/infrastructure/datasources/remote/france_travail/OfferDatasource"
 
+//TODO rework total ou pas je sais ap.
 export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFromSearchParams> {
     private offerRepository: OfferRemoteRepository
 
@@ -20,31 +22,32 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
                 distance: params.distance,
             })
             if (offers.length == 0) {
-                return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] No offers found.", null, null)
+                return succeed(204, `[${this.constructor.name}] Trying to fetch offers : none found.`, {
+                    jobs: offers,
+                    currentPage: params.page ?? 0,
+                    maxPage: 0,
+                })
             }
 
             const indexStart = elementByPage * (params.page ? params.page - 1 : 0)
             const indexEnd = elementByPage * (params.page ? params.page : 1)
-
             if (offers.length < indexStart) {
-                return new Result<PageOffers>(ResultType.SUCCESS, 204, "[GetOffersFromSearch] The page requested doesn't exists.", null, null)
+                return succeed(204, `[${this.constructor.name}] Trying to fetch offers : the page asked does not exists.`, {
+                    jobs: offers,
+                    currentPage: params.page ?? 0,
+                    maxPage: 0,
+                })
             }
 
             const resultByPage = offers.slice(indexStart, indexEnd)
             const maxPage = Math.floor(offers.length / elementByPage)
-            return new Result<PageOffers>(
-                ResultType.SUCCESS,
-                200,
-                "[GetOffersFromSearch] Offers founded successfully.",
-                {
-                    jobs: resultByPage,
-                    currentPage: params.page ?? 1,
-                    maxPage: maxPage,
-                },
-                null
-            )
-        } catch (err) {
-            return new Result<PageOffers>(ResultType.FAILURE, 500, "[GetOffersFromSearch] An exception has been throw. Check logs.", null, err)
+            return succeed(200, `[${this.constructor.name}] Trying to fetch offers : success.`, {
+                jobs: resultByPage,
+                currentPage: params.page ?? 1,
+                maxPage: maxPage,
+            })
+        } catch (trace) {
+            return failed(500, `[${this.constructor.name}] An exception has been thrown.`, { message: "An internal error occured while fetching offers" }, trace)
         }
     }
 }

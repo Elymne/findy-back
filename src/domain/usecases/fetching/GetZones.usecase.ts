@@ -1,4 +1,5 @@
-import { Result, ResultType, Usecase } from "@App/core/Usecase"
+import { failed, Result, succeed, SuccessType } from "@App/core/Result"
+import { Usecase } from "@App/core/Usecase"
 import Zone from "@App/domain/models/Zone.model"
 import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository"
 
@@ -17,14 +18,12 @@ export default class GetZones extends Usecase<Zone[], GetZonesParams> {
     public async perform(params: GetZonesParams): Promise<Result<Zone[]>> {
         try {
             const result = await this.zoneRepository.findAll(params.text)
-
             if (result.length == 0) {
-                return new Result(ResultType.SUCCESS, 204, "[GetZones] No zones found. It may be a problem.", [], null)
+                return succeed(204, `[${this.constructor.name}] Trying to fetch zones : none found (odd behavior).`, result, SuccessType.WARNING)
             }
-
-            return new Result(ResultType.SUCCESS, 200, "[GetZones] Zones found.", result, null)
-        } catch (err) {
-            return new Result<Zone[]>(ResultType.FAILURE, 500, "[GetZones] An exception has been throw. Check logs.", null, err)
+            return succeed(200, `[${this.constructor.name}] Trying to fetch zones : success`, result)
+        } catch (trace) {
+            return failed(500, `[${this.constructor.name}] Trying to fetch zones : An exception has been thrown.`, { message: "An internal error occured while fetching zones" }, trace)
         }
     }
 }
