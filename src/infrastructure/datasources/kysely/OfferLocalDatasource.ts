@@ -1,8 +1,7 @@
 import Offer from "@App/domain/models/Offer.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
 import { database } from "./database"
-import { OfferModel } from "./tables/offer.table"
-import { time } from "console"
+import { OfferModel } from "./tables/Offer.table"
 
 /**
  * Currently using Databse with kysely tools to connect top mysql database.
@@ -27,19 +26,18 @@ export default class OfferDatasource implements OfferLocalRepository {
      * @return {Offer[]} List of offer given the params.
      */
     async findMany(params: { keyWords?: string; codezone?: string; codejob?: string; distance?: number; range: string }): Promise<Offer[]> {
-        const offerModel = (await database.selectFrom("offer").where("id", "=", id).selectAll().executeTakeFirst()) as OfferModel
+        let queryBuilder = database.selectFrom("offer")
 
-        const queryBuilder = database.selectFrom("offer")
         if (params.keyWords) {
-            queryBuilder.where("title", "like", params.keyWords)
+            queryBuilder = queryBuilder.where("title", "like", params.keyWords)
         }
 
         if (params.codezone) {
-            queryBuilder.where("codezone", "=", params.codezone)
+            queryBuilder = queryBuilder.where("codezone", "=", params.codezone)
         }
 
         if (params.codejob) {
-            queryBuilder.where("codejob", "like", params.codejob)
+            queryBuilder = queryBuilder.where("codejob", "like", params.codejob)
         }
 
         const offerModels = (await queryBuilder.selectAll().execute()) as OfferModel[]

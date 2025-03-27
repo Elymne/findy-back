@@ -4,8 +4,8 @@ import generateToken from "./generateToken"
 import Offer from "@App/domain/models/Offer.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
 import OfferDetailed from "@App/domain/models/OfferDetailed.model"
-import { OfferDetailedModelFT, parseOfferDetailed } from "./parsers/offerDetailed.parser"
-import { OfferResultModelFT, parseOffers } from "./parsers/offers.parser"
+import { OfferDetailedModelFT, parseOfferDetailed } from "./models/offerDetailed.parser"
+import { OfferResultModelFT, parseOffers } from "./models/offers.parser"
 
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi"
 

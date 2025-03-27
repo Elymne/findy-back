@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
-import OfferRemoteDatasource from "@App/infrastructure/datasources/remote/france_travail/OfferRemoteDatasource"
+import OfferRemoteDatasource from "@App/infrastructure/datasources/francetravail/OfferRemoteDatasource"
 import GetSample from "@App/domain/usecases/fetching/GetSample"
 import { Failure, Success } from "@App/core/Result"
 

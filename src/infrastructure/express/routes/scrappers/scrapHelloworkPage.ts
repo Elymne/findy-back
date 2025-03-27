@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import HelloworkDatasource from "@App/infrastructure/datasources/remote/scrappers/hellowork/HelloworkDatasource"
+import HelloworkDatasource from "@App/infrastructure/datasources/scrappers/hellowork/HelloworkDatasource"
 import ScrapOnePage from "@App/domain/usecases/scrapping/ScrapOnePage.usecase"
 import ScrapPages from "@App/domain/usecases/scrapping/ScrapPages.usecase"
 import { Failure, Success } from "@App/core/Result"

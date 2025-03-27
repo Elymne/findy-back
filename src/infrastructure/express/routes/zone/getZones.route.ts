@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { cache24hours } from "../../middlewares/cache"
-import ZoneDatasource from "@App/infrastructure/datasources/remote/geoapi/ZoneDatasource"
+import ZoneDatasource from "@App/infrastructure/datasources/geoapi/ZoneDatasource"
 import GetZones from "@App/domain/usecases/fetching/GetZones.usecase"
 import { Failure, Success } from "@App/core/Result"
 

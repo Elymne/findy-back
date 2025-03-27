@@ -1,13 +1,11 @@
 import { Kysely, MysqlDialect } from "kysely"
-import { createPool } from "mysql2" // do not use 'mysql2/promises'!
-import LastScrapDateTable from "./tables/LastScrapDate.table"
-import OfferTable from "./tables/offer.table"
-import SchoolTable from "./tables/school.table"
+import { createPool } from "mysql2" // !do not use 'mysql2/promises'!
+import OfferTable from "./tables/Offer.table"
+import JobTable from "./tables/Job.table"
 
 interface Database {
     offer: OfferTable
-    school: SchoolTable
-    last_scrap_date: LastScrapDateTable
+    job: JobTable
 }
 
 const dialect = new MysqlDialect({
@@ -21,6 +19,8 @@ const dialect = new MysqlDialect({
     }),
 })
 
-export const database = new Kysely<Database>({
+const database = new Kysely<Database>({
     dialect,
 })
+
+export default database

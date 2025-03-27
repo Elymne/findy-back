@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "../../middlewares/cache"
-import ZoneDatasource from "@App/infrastructure/datasources/remote/geoapi/ZoneDatasource"
+import ZoneDatasource from "@App/infrastructure/datasources/geoapi/ZoneDatasource"
 import GetZoneByCode from "@App/domain/usecases/fetching/GetZoneByCode.usecase"
 import { Failure, Success } from "@App/core/Result"
 
