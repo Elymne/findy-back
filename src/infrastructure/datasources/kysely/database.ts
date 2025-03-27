@@ -8,19 +8,30 @@ interface Database {
     job: JobTable
 }
 
-const dialect = new MysqlDialect({
-    pool: createPool({
-        database: process.env.DB_DATABASE,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        port: 1,
-        connectionLimit: 1,
-    }),
-})
+export class DB {
+    readonly connec: Kysely<Database>
+    private static instance: DB
 
-const database = new Kysely<Database>({
-    dialect,
-})
+    private constructor() {
+        const dialect = new MysqlDialect({
+            pool: createPool({
+                host: process.env.DB_HOST,
+                port: parseInt(process.env.DB_PORT!),
+                database: process.env.DB_DATABASE,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                connectionLimit: 10,
+            }),
+        })
+        this.connec = new Kysely<Database>({
+            dialect,
+        })
+    }
 
-export default database
+    public static getInstance(): DB {
+        if (!DB.instance) {
+            DB.instance = new DB()
+        }
+        return DB.instance
+    }
+}

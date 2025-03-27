@@ -1,12 +1,12 @@
 import Job from "@App/domain/models/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
-import database from "./database"
 import { JobLocalCreate, JobLocalModel } from "./tables/Job.table"
+import { DB } from "./database"
 
 /**
  * Implementation of JobLocalRepository to France Travail Jobs datasource.
  * This implementation use kysely lib to manage data.
- * To see what type of database is used, check database import.
+ * To see what type of DB.instance.get is used, check DB.instance.get import.
  */
 export default class JobLocalDatasource implements JobLocalRepository {
     /**
@@ -15,7 +15,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise<Job | undefined>}
      */
     async findOne(id: string): Promise<Job | undefined> {
-        const jobLocalModel = (await database.selectFrom("job").where("id", "=", id).selectAll().executeTakeFirst()) as JobLocalModel
+        const jobLocalModel = (await DB.getInstance().connec.selectFrom("job").where("id", "=", id).selectAll().executeTakeFirst()) as JobLocalModel
         if (!jobLocalModel) {
             return undefined
         }
@@ -27,7 +27,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise<Job[]>}
      */
     async findAll(): Promise<Job[]> {
-        const jobsLocalModel = (await database.selectFrom("job").selectAll().execute()) as JobLocalModel[]
+        const jobsLocalModel = (await DB.getInstance().connec.selectFrom("job").selectAll().execute()) as JobLocalModel[]
         return jobsLocalModel.map((elem) => {
             return parse(elem)
         })
@@ -38,7 +38,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise}
      */
     async deleteAll(): Promise<void> {
-        database.deleteFrom("job").execute()
+        DB.getInstance().connec.deleteFrom("job").execute()
     }
 
     /**
@@ -46,7 +46,9 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @param {Job[]} jobs
      */
     async storeAll(jobs: Job[]): Promise<void> {
-        database.insertInto("job").values(jobs.map((elem) => parseCreate(elem)))
+        DB.getInstance()
+            .connec.insertInto("job")
+            .values(jobs.map((elem) => parseCreate(elem)))
     }
 
     /**
@@ -55,7 +57,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise}
      */
     async storeUnique(job: Job): Promise<void> {
-        database.insertInto("job").values(parseCreate(job))
+        DB.getInstance().connec.insertInto("job").values(parseCreate(job))
     }
 }
 
