@@ -8,7 +8,6 @@ export default interface OfferLocalRepository {
     deleteAll(ids: string[]): Promise<number>
 
     getLastTimeUpdate(): Promise<number | undefined>
-    updateLastTimeUpdate(timestamp: number): Promise<void>
 }
 
 /**

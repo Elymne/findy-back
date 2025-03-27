@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express"
 import { Failure, Success } from "@App/core/Result"
 import UpdateJobs from "@App/domain/usecases/storing/UpdateJobs.usecase"
-import JobLocalDatasource from "@App/infrastructure/datasources/kysely/JobLocalDatasource"
+import JobLocalDatasource from "@App/infrastructure/datasources/mysql/JobLocalDatasource"
 import JobRemoteDatasource from "@App/infrastructure/datasources/francetravail/JobRemoteDatasource"
 
 const updateJobs = new UpdateJobs(new JobLocalDatasource(), new JobRemoteDatasource())

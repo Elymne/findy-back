@@ -7,10 +7,10 @@ export default class UpdateJobs extends UsecaseNoParams<void> {
     private jobLocalRepository: JobLocalRepository
     private jobRemoteRepository: JobRemoteRepository
 
-    constructor(jobLocalDatasource: JobLocalRepository, jobRemoteDatasource: JobRemoteRepository) {
+    constructor(jobLocalRepository: JobLocalRepository, jobRemoteRepository: JobRemoteRepository) {
         super()
-        this.jobLocalRepository = jobLocalDatasource
-        this.jobRemoteRepository = jobRemoteDatasource
+        this.jobLocalRepository = jobLocalRepository
+        this.jobRemoteRepository = jobRemoteRepository
     }
 
     public async perform(): Promise<Result<void>> {
@@ -22,7 +22,7 @@ export default class UpdateJobs extends UsecaseNoParams<void> {
                 })
             }
 
-            // await this.jobLocalDatasource.deleteAll()
+            await this.jobLocalRepository.deleteAll()
             await this.jobLocalRepository.storeAll(newJobs)
 
             return new Success(204, `[${this.constructor.name}] Trying to make an update of jobs : success`, undefined)

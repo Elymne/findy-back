@@ -1,7 +1,7 @@
 import Job from "@App/domain/models/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
-import { JobLocalCreate, JobLocalModel } from "./tables/Job.table"
-import { DB } from "./database"
+import { MysqlDatabase } from "./MysqlDatabase"
+import { RowDataPacket } from "mysql2"
 
 /**
  * Implementation of JobLocalRepository to France Travail Jobs datasource.
@@ -15,11 +15,11 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise<Job | undefined>}
      */
     async findOne(id: string): Promise<Job | undefined> {
-        const jobLocalModel = (await DB.getInstance().connec.selectFrom("job").where("id", "=", id).selectAll().executeTakeFirst()) as JobLocalModel
-        if (!jobLocalModel) {
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<JobTable[]>("SELECT * FROM job WHERE id = ?", [id])
+        if (result.length == 0) {
             return undefined
         }
-        return parse(jobLocalModel)
+        return parse(result[0])
     }
 
     /**
@@ -27,10 +27,8 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise<Job[]>}
      */
     async findAll(): Promise<Job[]> {
-        const jobsLocalModel = (await DB.getInstance().connec.selectFrom("job").selectAll().execute()) as JobLocalModel[]
-        return jobsLocalModel.map((elem) => {
-            return parse(elem)
-        })
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<JobTable[]>("SELECT * FROM job")
+        return result.map((elem) => parse(elem))
     }
 
     /**
@@ -38,7 +36,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise}
      */
     async deleteAll(): Promise<void> {
-        DB.getInstance().connec.deleteFrom("job").execute()
+        MysqlDatabase.getInstance().getConnec().query("DELETE FROM job")
     }
 
     /**
@@ -46,9 +44,11 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @param {Job[]} jobs
      */
     async storeAll(jobs: Job[]): Promise<void> {
-        DB.getInstance()
-            .connec.insertInto("job")
-            .values(jobs.map((elem) => parseCreate(elem)))
+        const query = "INSERT INTO job(id, title) VALUES ?"
+        const values = jobs.map((elem) => {
+            return [elem.id, elem.title]
+        })
+        MysqlDatabase.getInstance().getConnec().query(query, values)
     }
 
     /**
@@ -57,28 +57,24 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise}
      */
     async storeUnique(job: Job): Promise<void> {
-        DB.getInstance().connec.insertInto("job").values(parseCreate(job))
+        const query = "INSERT INTO job(id, title) VALUES ?"
+        const values = [job.id, job.title]
+        MysqlDatabase.getInstance().getConnec().query(query, values)
     }
+}
+
+interface JobTable extends RowDataPacket {
+    id: string
+    title: string
 }
 
 /**
  * @param {JobLocalModel} jobLocalModel
  * @returns {Job}
  */
-function parse(jobLocalModel: JobLocalModel): Job {
+function parse(jobLocalModel: JobTable): Job {
     return {
         id: jobLocalModel.id,
         title: jobLocalModel.title,
-    }
-}
-
-/**
- * @param {Job} job
- * @returns {JobLocalCreate}
- */
-function parseCreate(job: Job): JobLocalCreate {
-    return {
-        id: job.id,
-        title: job.title,
     }
 }

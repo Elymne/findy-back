@@ -1,13 +1,11 @@
-import Server from "@App/domain/gateways/Server.gateways"
+import IServer from "@App/domain/gateways/IServer.gateways"
 import express, { Application } from "express"
 import helmet from "helmet"
-import dotenv from "dotenv"
 import apiRoute from "./routes"
 import cors from "cors"
 
-export default class ExpressServer implements Server {
-    createAndServe(): void {
-        dotenv.config()
+export default class ExpressServer implements IServer {
+    async createAndServe(): Promise<void> {
         const app: Application = express()
         app.use(helmet())
         app.use(express.json())
@@ -29,7 +27,5 @@ export default class ExpressServer implements Server {
         app.listen(port, async () => {
             console.log(`Server is running at http://localhost:${port}`)
         })
-
-        //ddddd
     }
 }
