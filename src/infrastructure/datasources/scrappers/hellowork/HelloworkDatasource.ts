@@ -1,18 +1,18 @@
 import Offer, { OfferOrigin } from "@App/domain/models/Offer.model"
-import JobScrapperRepository from "@App/domain/repositories/OfferScrapper.repository"
+import OfferScrapperRepository from "@App/domain/repositories/OfferScrapper.repository"
 import axios from "axios"
 import { load } from "cheerio"
 import { v4 as uuidv4 } from "uuid"
 
 /**
- * This scrapper will scrap job offers from Hellowork website.
+ * Class that contain function to scrap Hellowork offers pages.
+ * This class implements @interface OfferScrapperRepository that is used by usecases to scrap data for the local datasource.
  */
-export default class HelloworkDatasource implements JobScrapperRepository {
+export default class HelloworkDatasource implements OfferScrapperRepository {
     /**
      * Scrap one page of job offers from Hellowork website.
-     * If title, company and zone are not found, the offer is not added to the list.
      *
-     * @param pageIndex The current page to scrap from Hellowork student job offers.
+     * @param {number} pageIndex The current page to scrap from Hellowork student job offers.
      * @returns {Job[]} The list of job offers scrapped from Hellowork website.
      */
     async getOnePage(pageIndex: number): Promise<Offer[]> {
@@ -20,7 +20,7 @@ export default class HelloworkDatasource implements JobScrapperRepository {
 
         const options = {
             method: "GET",
-            url: `${baseUrl}`,
+            url: "https://www.hellowork.com/fr-fr/emploi/recherche.html?k=&k_autocomplete=&l=&l_autocomplete=&st=relevance&c=Alternance&cod=all&d=all",
             params: {
                 p: pageIndex,
             },
@@ -31,24 +31,29 @@ export default class HelloworkDatasource implements JobScrapperRepository {
 
         const cards = $("div > section > ul.tw-grid > li")
         for (let i = 0; i < cards.length; i++) {
+            let url: string | undefined = undefined
             let title: string | undefined = undefined
-            let company: string | undefined = undefined
-            let zone: string | undefined = undefined
-            let companyLogoUrl: string | undefined = undefined
+            let companyName: string | undefined = undefined
+            let zoneName: string | undefined = undefined
+            let logoUrl: string | undefined = undefined
             let imgUrl: string | undefined = undefined
             let createdAt: Date | undefined = undefined
+
+            // Find <a> href data to access detailed offer.
+            const hrefElement = $(cards[i]).find("div > header > div > a")
+            url = `https://www.hellowork.com${hrefElement.attr("href")}`
 
             // Find text for title and company.
             const textElement = $(cards[i]).find(`div > header > div > a > h3 > p`)
             title = $(textElement[0]).text()
-            company = $(textElement[1]).text()
+            companyName = $(textElement[1]).text()
 
             // Tags.
             const tagsElement = $(cards[i]).find(`div.tw-tag-secondary-s`)
             for (let i = 0; i < tagsElement.length; i++) {
                 const tag = $(tagsElement[i]).text().trim()
                 if (tag != "Alternance") {
-                    zone = tag
+                    zoneName = tag
                 }
             }
 
@@ -56,9 +61,9 @@ export default class HelloworkDatasource implements JobScrapperRepository {
             const headerImageElement = $(cards[i]).find(`div > div > header`)[0]
             const imageElements = $(headerImageElement).find("img")
             if (imageElements.length == 1) {
-                companyLogoUrl = imageElements.first().attr("src")
+                logoUrl = imageElements.first().attr("src")
             } else {
-                companyLogoUrl = $(imageElements[1]).attr("src")
+                logoUrl = $(imageElements[1]).attr("src")
                 imgUrl = $(imageElements[0]).attr("src")
             }
 
@@ -82,23 +87,42 @@ export default class HelloworkDatasource implements JobScrapperRepository {
                     break
             }
 
-            if (title && company && zone && createdAt) {
+            if (title && companyName && zoneName && createdAt) {
                 offers.push({
                     id: uuidv4(),
                     title: title,
-                    company: company,
-                    zone: zone,
-                    jobTitle: undefined, // Information not given by Hellowork.
-
-                    tags: [],
-
-                    companyLogoUrl: companyLogoUrl,
                     imgUrl: imgUrl,
 
+                    // Welack Description and Url site. Usecase will check this for us if the company name exists in database.
+                    company: {
+                        name: companyName,
+                        logoUrl: logoUrl,
+                        description: undefined,
+                        url: undefined,
+                    },
+
+                    // ID, Lat, Lng doesn't cannot be fetched.
+                    zone: {
+                        id: undefined,
+                        name: zoneName,
+                        lat: undefined,
+                        lng: undefined,
+                    },
+
+                    // Job type isn't accessible from Hellowork offers pages.
+                    job: {
+                        id: undefined,
+                        title: undefined,
+                    },
+                    // No tags.
+                    tags: [],
+
+                    // Only have access to creation date.
                     createdAt: createdAt,
                     updateAt: undefined,
 
                     origin: OfferOrigin.HELLOWORK,
+                    originUrl: url,
                 })
             }
         }
@@ -106,5 +130,3 @@ export default class HelloworkDatasource implements JobScrapperRepository {
         return offers
     }
 }
-
-const baseUrl = "https://www.hellowork.com/fr-fr/emploi/recherche.html?k=&k_autocomplete=&l=&l_autocomplete=&st=relevance&c=Alternance&cod=all&d=all"

@@ -5,6 +5,6 @@
  * I need this data structure because ppl may need to search offer by Job Type.
  */
 export default interface Job {
-    id: string
-    title: string
+    id: string | undefined
+    title: string | undefined
 }

@@ -1,5 +1,6 @@
 import IDatabase from "@App/domain/gateways/IDatabase.gateways"
 import mysql from "mysql2/promise"
+import queryCheck from "./queryCheck"
 
 export class MysqlDatabase implements IDatabase {
     private connec: mysql.Connection
@@ -37,20 +38,13 @@ export class MysqlDatabase implements IDatabase {
         if (!this.connec) {
             throw "No connection to Database"
         }
-
-        const query =
-            "CREATE TABLE IF NOT EXISTS job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));" +
-            "CREATE TABLE IF NOT EXISTS zone (id VARCHAR(250) UNIQUE NOT NULL, name VARCHAR(250) NOT NULL, lat FLOAT NOT NULL, lng FLOAT NOT NULL, CONSTRAINT pk_zone PRIMARY KEY (id));"
-        this.connec.query(query)
+        this.connec.query(queryCheck)
     }
 
     public async reset(): Promise<void> {
-        if (process.env.NODE_ENV == "development") {
-            const queries =
-                "CREATE OR REPLACE TABLE job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));" +
-                "CREATE OR REPLACE TABLE zone (id VARCHAR(250) UNIQUE NOT NULL, name VARCHAR(250) NOT NULL, lat FLOAT NOT NULL, lng FLOAT NOT NULL, CONSTRAINT pk_zone PRIMARY KEY (id));"
-            this.connec.query(queries)
-            return
+        if (!this.connec) {
+            throw "No connection to Database"
         }
+        this.connec.query(queryCheck)
     }
 }

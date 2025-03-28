@@ -1,6 +1,7 @@
 export default interface Company {
-    name: string
-    description: string
-    url: string | null
-    logo: string | null
+    id: string | undefined
+    name: string | undefined
+    description: string | undefined
+    url: string | undefined
+    logoUrl: string | undefined
 }

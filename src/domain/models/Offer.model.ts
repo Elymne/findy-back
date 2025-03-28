@@ -1,30 +1,27 @@
+import Company from "./Company.model"
+import Job from "./Job.model"
+import Zone from "./Zone.model"
+
 export default interface Offer {
     id: string
     title: string
-    company: string
+    imgUrl: string | undefined
 
-    zone: string
-    jobTitle: string | undefined
+    company: Company
+    zone: Zone
+    job: Job
 
     tags: string[]
-
-    companyLogoUrl: string | undefined
-    imgUrl: string | undefined
 
     createdAt: Date
     updateAt: Date | undefined
 
     origin: OfferOrigin | undefined
+    originUrl: string | undefined
 }
 
 export enum OfferOrigin {
     HELLOWORK,
     INDEED,
     FRANCE_TRAVAIL,
-    // GOOGLE,
-    // LINKEDIN,
-    // MONSTER,
-    // APEC,
-    // CADREMPLOI,
-    // JOBIJOBA
 }

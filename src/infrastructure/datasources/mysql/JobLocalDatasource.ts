@@ -1,6 +1,6 @@
 import Job from "@App/domain/models/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
-import { MysqlDatabase } from "./MysqlDatabase"
+import { MysqlDatabase } from "./db/MysqlDatabase"
 import { RowDataPacket } from "mysql2"
 
 export default class JobLocalDatasource implements JobLocalRepository {

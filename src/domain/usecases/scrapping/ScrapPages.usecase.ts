@@ -3,11 +3,6 @@ import Offer from "@App/domain/models/Offer.model"
 import ScrapOnePage from "./ScrapOnePage.usecase"
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 
-/**
- * Scrap a precise number of pages from any web site given the repository implementation of {ScrapOnePage} usecase used here..
- * @prop {ScrapOnePage} ScrapOnePage
- * @extends {Usecase}
- */
 export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
     private scrapOnePage: ScrapOnePage
 

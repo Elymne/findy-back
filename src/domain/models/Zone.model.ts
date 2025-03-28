@@ -1,6 +1,6 @@
 export default interface Zone {
-    id: string
-    name: string
-    lat: number
-    lng: number
+    id: string | undefined
+    name: string | undefined
+    lat: number | undefined
+    lng: number | undefined
 }
