@@ -48,7 +48,8 @@ export default class JobLocalDatasource implements JobLocalRepository {
         const values = jobs.map((elem) => {
             return [elem.id, elem.title]
         })
-        MysqlDatabase.getInstance().getConnec().query(query, values)
+
+        MysqlDatabase.getInstance().getConnec().query(query, [values])
     }
 
     /**
@@ -57,7 +58,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
      * @return {Promise}
      */
     async storeUnique(job: Job): Promise<void> {
-        const query = "INSERT INTO job(id, title) VALUES ?"
+        const query = "INSERT INTO job(id, title) VALUES (?)"
         const values = [job.id, job.title]
         MysqlDatabase.getInstance().getConnec().query(query, values)
     }

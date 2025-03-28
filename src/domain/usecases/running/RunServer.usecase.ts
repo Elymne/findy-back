@@ -24,6 +24,8 @@ export default class RunServer extends UsecaseNoParams<void> {
         try {
             dotenv.config()
             await this.database.startConnec()
+            await this.database.check()
+
             await this.server.createAndServe()
             return new Success(0, `[${this.constructor.name}] Running server : success`, undefined)
         } catch (trace) {

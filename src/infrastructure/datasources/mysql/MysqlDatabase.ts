@@ -18,7 +18,7 @@ export class MysqlDatabase implements IDatabase {
             waitForConnections: true,
         }
 
-        this.connec = await mysql.createConnection(options)
+        this.connec = await mysql.createPool(options)
     }
 
     public getConnec(): mysql.Connection {
@@ -30,5 +30,22 @@ export class MysqlDatabase implements IDatabase {
             MysqlDatabase.instance = new MysqlDatabase()
         }
         return MysqlDatabase.instance
+    }
+
+    public async check(): Promise<void> {
+        if (!this.connec) {
+            throw "No connection to Database"
+        }
+
+        const queries = "CREATE TABLE IF NOT EXISTS job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));"
+        this.connec.query(queries)
+    }
+
+    public async reset(): Promise<void> {
+        if (process.env.NODE_ENV == "development") {
+            const queries = "CREATE OR REPLACE TABLE job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));"
+            this.connec.query(queries)
+            return
+        }
     }
 }
