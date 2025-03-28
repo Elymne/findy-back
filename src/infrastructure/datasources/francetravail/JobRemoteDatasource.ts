@@ -3,9 +3,6 @@ import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository"
 import generateToken from "./generateToken"
 import axios, { AxiosRequestConfig } from "axios"
 
-/**
- * Implemntation of JobRemoteRepository to France Travail Jobs datasource.
- */
 export default class JobRemoteDatasource implements JobRemoteRepository {
     /**
      * Fetch all data from France Travail Jobs Datasource.

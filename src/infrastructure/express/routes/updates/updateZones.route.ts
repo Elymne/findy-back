@@ -1,14 +1,12 @@
 import express, { Request, Response } from "express"
-import { cache24hours } from "../../middlewares/cache"
-import GetZones from "@App/domain/usecases/fetching/GetZones.usecase"
 import { Failure, Success } from "@App/core/Result"
+import UpdateZones from "@App/domain/usecases/storing/UpdateZones.usecase"
 import ZoneLocalDatasource from "@App/infrastructure/datasources/mysql/ZoneLocalDatasource"
+import ZoneRemoteDatasource from "@App/infrastructure/datasources/geoapi/ZoneDatasource"
 
-const getZones: GetZones = new GetZones(new ZoneLocalDatasource())
-
-const getZonesRoute = express.Router().get("/", cache24hours, async (req: Request, res: Response) => {
-    const result = await getZones.perform()
-
+const updateZones = new UpdateZones(new ZoneLocalDatasource(), new ZoneRemoteDatasource())
+export const updateZoneRoute = express.Router().get("/zones", async (req: Request, res: Response) => {
+    const result = await updateZones.perform()
     if (result instanceof Failure) {
         res.status(result.code).send(result.error)
         return
@@ -21,5 +19,3 @@ const getZonesRoute = express.Router().get("/", cache24hours, async (req: Reques
 
     res.status(result.code).send({ message: "Unknown type of result." })
 })
-
-export default getZonesRoute

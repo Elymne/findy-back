@@ -1,13 +1,15 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "../../middlewares/cache"
-import GetZones from "@App/domain/usecases/fetching/GetZones.usecase"
+import GetZoneByID from "@App/domain/usecases/fetching/GetZoneByID.usecase"
 import { Failure, Success } from "@App/core/Result"
 import ZoneLocalDatasource from "@App/infrastructure/datasources/mysql/ZoneLocalDatasource"
 
-const getZones: GetZones = new GetZones(new ZoneLocalDatasource())
+const getZoneByID: GetZoneByID = new GetZoneByID(new ZoneLocalDatasource())
 
-const getZonesRoute = express.Router().get("/", cache24hours, async (req: Request, res: Response) => {
-    const result = await getZones.perform()
+const getZoneByIDRoute = express.Router().get("/:id", cache24hours, async (req: Request<{ id: string }>, res: Response) => {
+    const result = await getZoneByID.perform({
+        id: req.params.id,
+    })
 
     if (result instanceof Failure) {
         res.status(result.code).send(result.error)
@@ -22,4 +24,4 @@ const getZonesRoute = express.Router().get("/", cache24hours, async (req: Reques
     res.status(result.code).send({ message: "Unknown type of result." })
 })
 
-export default getZonesRoute
+export default getZoneByIDRoute

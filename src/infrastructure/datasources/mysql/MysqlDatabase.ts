@@ -16,6 +16,7 @@ export class MysqlDatabase implements IDatabase {
 
             connectionLimit: 10,
             waitForConnections: true,
+            multipleStatements: true,
         }
 
         this.connec = await mysql.createPool(options)
@@ -37,13 +38,17 @@ export class MysqlDatabase implements IDatabase {
             throw "No connection to Database"
         }
 
-        const queries = "CREATE TABLE IF NOT EXISTS job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));"
-        this.connec.query(queries)
+        const query =
+            "CREATE TABLE IF NOT EXISTS job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));" +
+            "CREATE TABLE IF NOT EXISTS zone (id VARCHAR(250) UNIQUE NOT NULL, name VARCHAR(250) NOT NULL, lat FLOAT NOT NULL, lng FLOAT NOT NULL, CONSTRAINT pk_zone PRIMARY KEY (id));"
+        this.connec.query(query)
     }
 
     public async reset(): Promise<void> {
         if (process.env.NODE_ENV == "development") {
-            const queries = "CREATE OR REPLACE TABLE job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));"
+            const queries =
+                "CREATE OR REPLACE TABLE job (id VARCHAR(250) UNIQUE NOT NULL, title VARCHAR(250) NOT NULL, CONSTRAINT pk_job PRIMARY KEY (id));" +
+                "CREATE OR REPLACE TABLE zone (id VARCHAR(250) UNIQUE NOT NULL, name VARCHAR(250) NOT NULL, lat FLOAT NOT NULL, lng FLOAT NOT NULL, CONSTRAINT pk_zone PRIMARY KEY (id));"
             this.connec.query(queries)
             return
         }

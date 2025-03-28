@@ -1,9 +1,9 @@
 import { Router } from "express"
 import getZonesRoute from "./getZones.route"
-import getZonebyCodeRoute from "./getZoneByCode.route"
+import getZoneByIDRoute from "./getZoneByID.route"
 
 const zoneRouter = Router()
 zoneRouter.use(getZonesRoute)
-zoneRouter.use(getZonebyCodeRoute)
+zoneRouter.use(getZoneByIDRoute)
 
 export default zoneRouter

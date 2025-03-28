@@ -1,23 +1,19 @@
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
-import { Usecase } from "@App/core/Usecase"
+import { UsecaseNoParams } from "@App/core/Usecase"
 import Zone from "@App/domain/models/Zone.model"
-import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository"
+import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 
-export interface GetZonesParams {
-    text: string
-}
+export default class GetZones extends UsecaseNoParams<Zone[]> {
+    private zoneLocalRepository: ZoneLocalRepository
 
-export default class GetZones extends Usecase<Zone[], GetZonesParams> {
-    private zoneRepository: ZoneRemoteRepository
-
-    public constructor(zoneRepository: ZoneRemoteRepository) {
+    public constructor(zoneLocalRepository: ZoneLocalRepository) {
         super()
-        this.zoneRepository = zoneRepository
+        this.zoneLocalRepository = zoneLocalRepository
     }
 
-    public async perform(params: GetZonesParams): Promise<Result<Zone[]>> {
+    public async perform(): Promise<Result<Zone[]>> {
         try {
-            const result = await this.zoneRepository.findAll(params.text)
+            const result = await this.zoneLocalRepository.findAll()
             if (result.length == 0) {
                 return new Success(204, `[${this.constructor.name}] Trying to fetch zones : none found (odd behavior).`, result, SuccessType.WARNING)
             }
