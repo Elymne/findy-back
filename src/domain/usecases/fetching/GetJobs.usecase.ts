@@ -1,19 +1,19 @@
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
 import Job from "@App/domain/models/Job.model"
-import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository"
+import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 
 export default class GetJobs extends UsecaseNoParams<Job[]> {
-    private jobRepository: JobRemoteRepository
+    private jobLocalRepository: JobLocalRepository
 
-    constructor(jobRepository: JobRemoteRepository) {
+    constructor(jobLocalRepository: JobLocalRepository) {
         super()
-        this.jobRepository = jobRepository
+        this.jobLocalRepository = jobLocalRepository
     }
 
     public async perform(): Promise<Result<Job[]>> {
         try {
-            const result = await this.jobRepository.findAll()
+            const result = await this.jobLocalRepository.findAll()
             if (result.length == 0) {
                 return new Success(204, `[${this.constructor.name}] Trying to fetch jobs : none found (odd behavior).`, result, SuccessType.WARNING)
             }

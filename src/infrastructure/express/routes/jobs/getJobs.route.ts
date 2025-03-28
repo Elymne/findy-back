@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
-import JobRemoteDatasource from "@App/infrastructure/datasources/francetravail/JobRemoteDatasource"
 import GetJobs from "@App/domain/usecases/fetching/GetJobs.usecase"
 import { Failure, Success } from "@App/core/Result"
+import JobLocalDatasource from "@App/infrastructure/datasources/mysql/JobLocalDatasource"
 
-const getJobs: GetJobs = new GetJobs(new JobRemoteDatasource())
+const getJobs: GetJobs = new GetJobs(new JobLocalDatasource())
 
 const getJobsRoute = express.Router().get("/", cache24hours, async (req: Request, res: Response) => {
     const result = await getJobs.perform()
