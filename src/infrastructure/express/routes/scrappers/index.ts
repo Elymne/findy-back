@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { scrapHelloworkPage, scrapHelloworkPages } from "./scrapHelloworkPage"
+import { scrapHelloworkPage, scrapHelloworkPages } from "./scrapHelloworkRoutes"
 
 const scrapperRouter = Router()
 

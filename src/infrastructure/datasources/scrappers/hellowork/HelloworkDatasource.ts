@@ -68,7 +68,6 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
             }
 
             // Parse date.
-            // TODO : Ugly as fuck. Maybe change this.
             const dateElement = $(cards[i]).find(`div.tw-text-grey`).first().text()
             const splicedDate = dateElement.split("il y a ")[1]
             const units = splicedDate.split(" ")
@@ -87,7 +86,12 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
                     break
             }
 
-            if (title && companyName && zoneName && createdAt) {
+            // Remove the department code from zone text.
+            const splicedZone = zoneName?.replace(/\d+/g, "")
+            const zone = splicedZone?.slice(0, splicedZone.length - 3)
+
+            // Check that our data contains at least the crutial data. If not, we don't add it to the result.
+            if (title && companyName && zone && createdAt && url) {
                 offers.push({
                     id: uuidv4(),
                     title: title,
@@ -95,6 +99,7 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
 
                     // Welack Description and Url site. Usecase will check this for us if the company name exists in database.
                     company: {
+                        id: undefined,
                         name: companyName,
                         logoUrl: logoUrl,
                         description: undefined,
@@ -104,12 +109,12 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
                     // ID, Lat, Lng doesn't cannot be fetched.
                     zone: {
                         id: undefined,
-                        name: zoneName,
+                        name: zone,
                         lat: undefined,
                         lng: undefined,
                     },
 
-                    // Job type isn't accessible from Hellowork offers pages.
+                    // Job type isn't accessible from Hellowork offers pages. It's a work for usecases.
                     job: {
                         id: undefined,
                         title: undefined,

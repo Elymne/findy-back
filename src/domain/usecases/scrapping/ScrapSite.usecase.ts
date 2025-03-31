@@ -3,7 +3,7 @@ import Offer from "@App/domain/models/Offer.model"
 import ScrapOnePage from "./ScrapOnePage.usecase"
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 
-export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
+export default class ScrapSite extends Usecase<Offer[], ScrapSiteParams> {
     private scrapOnePage: ScrapOnePage
 
     constructor(scrapOnePage: ScrapOnePage) {
@@ -11,7 +11,7 @@ export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
         this.scrapOnePage = scrapOnePage
     }
 
-    public async perform(params: ScrapPagesParams): Promise<Result<Offer[]>> {
+    public async perform(params: ScrapSiteParams): Promise<Result<Offer[]>> {
         try {
             const result: Offer[] = []
             const streamedPageScrapping: Promise<Result<Offer[]>>[] = []
@@ -55,7 +55,7 @@ export default class ScrapPages extends Usecase<Offer[], ScrapPagesParams> {
  * @prop {number | undefined} pageNumber - The maximum page you want to scrap from 1 to the number you want.
  * @prop {number | undefined} maxDay - The value of maximum oldest date of offers you want to scrap.
  */
-export interface ScrapPagesParams {
+export interface ScrapSiteParams {
     pageNumber: number | undefined
     maxDay: number | undefined
 }
