@@ -5,7 +5,7 @@ import { MysqlDatabase } from "./db/MysqlDatabase"
 
 export default class ZoneLocalDatasource implements ZoneLocalRepository {
     async findOne(id: string): Promise<Zone | undefined> {
-        const [result] = await MysqlDatabase.getInstance().getConnec().query<ZoneTable[]>("SELECT * FROM zone WHERE id = ?", [id])
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<ZoneResult[]>("SELECT * FROM zone WHERE id = ?", [id])
         if (result.length == 0) {
             return undefined
         }
@@ -13,7 +13,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
     }
 
     async findAll(): Promise<Zone[]> {
-        const [result] = await MysqlDatabase.getInstance().getConnec().query<ZoneTable[]>("SELECT * FROM zone")
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<ZoneResult[]>("SELECT * FROM zone")
         return result.map((elem) => parse(elem))
     }
 
@@ -37,14 +37,14 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
     }
 }
 
-interface ZoneTable extends RowDataPacket {
+interface ZoneResult extends RowDataPacket {
     id: string
     name: string
     lat: number
     lng: number
 }
 
-function parse(zoneLocalModel: ZoneTable): Zone {
+function parse(zoneLocalModel: ZoneResult): Zone {
     return {
         id: zoneLocalModel.id,
         name: zoneLocalModel.name,

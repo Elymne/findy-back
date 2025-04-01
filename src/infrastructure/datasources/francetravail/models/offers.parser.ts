@@ -32,7 +32,7 @@ export function parseOffers(data: OfferResultModelFT): Offer[] {
             tags: tags,
 
             createdAt: new Date(data.dateCreation),
-            updateAt: new Date(data.dateActualisation),
+            updatedAt: new Date(data.dateActualisation),
             origin: OfferOrigin.FRANCE_TRAVAIL,
             originUrl: undefined,
         }

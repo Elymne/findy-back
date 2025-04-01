@@ -14,7 +14,7 @@ export default interface Offer {
     tags: string[]
 
     createdAt: Date
-    updateAt: Date | undefined
+    updatedAt: Date | undefined
 
     origin: OfferOrigin | undefined
     originUrl: string | undefined

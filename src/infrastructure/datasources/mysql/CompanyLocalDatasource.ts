@@ -5,7 +5,7 @@ import { MysqlDatabase } from "./db/MysqlDatabase"
 
 export default class CompanyLocalDatasource implements CompanyLocalRepository {
     async findOne(id: string): Promise<Company | undefined> {
-        const [result] = await MysqlDatabase.getInstance().getConnec().query<CompanyTable[]>("SELECT * FROM company WHERE id = ?", [id])
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<CompanyResult[]>("SELECT * FROM company WHERE id = ?", [id])
         if (result.length == 0) {
             return undefined
         }
@@ -13,13 +13,13 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
     }
 
     async findAll(): Promise<Company[]> {
-        const [result] = await MysqlDatabase.getInstance().getConnec().query<CompanyTable[]>("SELECT * FROM company")
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<CompanyResult[]>("SELECT * FROM company")
         return result.map((elem) => parse(elem))
     }
 
     async findByName(text: string): Promise<Company[]> {
         console.log(text)
-        const [result] = await MysqlDatabase.getInstance().getConnec().query<CompanyTable[]>("SELECT * FROM company")
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<CompanyResult[]>("SELECT * FROM company")
         return result.map((elem) => parse(elem))
     }
 
@@ -27,7 +27,7 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
         MysqlDatabase.getInstance().getConnec().query("DELETE FROM company")
     }
 
-    async storeAll(jobs: Company[]): Promise<void> {
+    async createMany(jobs: Company[]): Promise<void> {
         const query = "INSERT INTO company(id, name, description, logo_url, url) VALUES ?"
         const values = jobs.map((elem) => {
             return [elem.id, elem.name, elem.description, elem.logoUrl, elem.url]
@@ -36,14 +36,14 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
         MysqlDatabase.getInstance().getConnec().query(query, [values])
     }
 
-    async storeUnique(job: Company): Promise<void> {
+    async createOne(job: Company): Promise<void> {
         const query = "INSERT INTO company(id, name, description, logo_url, url) VALUES (?)"
         const values = [job.id, job.name, job.description, job.logoUrl, job.url]
         MysqlDatabase.getInstance().getConnec().query(query, values)
     }
 }
 
-interface CompanyTable extends RowDataPacket {
+interface CompanyResult extends RowDataPacket {
     id: string
     name: string
     description: string | undefined
@@ -51,7 +51,7 @@ interface CompanyTable extends RowDataPacket {
     logo_url: string | undefined
 }
 
-function parse(companyTable: CompanyTable): Company {
+function parse(companyTable: CompanyResult): Company {
     return {
         id: companyTable.id,
         name: companyTable.name,

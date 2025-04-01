@@ -23,8 +23,8 @@ export default class UpdateJobs extends UsecaseNoParams<void> {
             }
 
             await this.jobLocalRepository.deleteAll()
-            await this.jobLocalRepository.storeAll(newJobs)
-            await this.jobLocalRepository.storeUnique({
+            await this.jobLocalRepository.createAll(newJobs)
+            await this.jobLocalRepository.createOne({
                 id: "00",
                 title: "None",
             })

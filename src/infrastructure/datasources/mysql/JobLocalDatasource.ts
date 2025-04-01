@@ -5,7 +5,7 @@ import { RowDataPacket } from "mysql2"
 
 export default class JobLocalDatasource implements JobLocalRepository {
     async findOne(id: string): Promise<Job | undefined> {
-        const [result] = await MysqlDatabase.getInstance().getConnec().query<JobTable[]>("SELECT * FROM job WHERE id = ?", [id])
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<JobResult[]>("SELECT * FROM job WHERE id = ?", [id])
         if (result.length == 0) {
             return undefined
         }
@@ -13,7 +13,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
     }
 
     async findAll(): Promise<Job[]> {
-        const [result] = await MysqlDatabase.getInstance().getConnec().query<JobTable[]>("SELECT * FROM job")
+        const [result] = await MysqlDatabase.getInstance().getConnec().query<JobResult[]>("SELECT * FROM job")
         return result.map((elem) => parse(elem))
     }
 
@@ -21,7 +21,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
         MysqlDatabase.getInstance().getConnec().query("DELETE FROM job")
     }
 
-    async storeAll(jobs: Job[]): Promise<void> {
+    async createAll(jobs: Job[]): Promise<void> {
         const query = "INSERT INTO job(id, title) VALUES ?"
         const values = jobs.map((elem) => {
             return [elem.id, elem.title]
@@ -30,19 +30,19 @@ export default class JobLocalDatasource implements JobLocalRepository {
         MysqlDatabase.getInstance().getConnec().query(query, [values])
     }
 
-    async storeUnique(job: Job): Promise<void> {
+    async createOne(job: Job): Promise<void> {
         const query = "INSERT INTO job(id, title) VALUES (?)"
         const values = [job.id, job.title]
         MysqlDatabase.getInstance().getConnec().query(query, values)
     }
 }
 
-interface JobTable extends RowDataPacket {
+interface JobResult extends RowDataPacket {
     id: string
     title: string
 }
 
-function parse(jobLocalModel: JobTable): Job {
+function parse(jobLocalModel: JobResult): Job {
     return {
         id: jobLocalModel.id,
         title: jobLocalModel.title,

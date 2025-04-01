@@ -56,6 +56,6 @@ export default class ScrapSite extends Usecase<Offer[], ScrapSiteParams> {
  * @prop {number | undefined} maxDay - The value of maximum oldest date of offers you want to scrap.
  */
 export interface ScrapSiteParams {
-    pageNumber: number | undefined
-    maxDay: number | undefined
+    pageNumber?: number
+    maxDay?: number
 }

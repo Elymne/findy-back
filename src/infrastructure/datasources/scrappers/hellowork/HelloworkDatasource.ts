@@ -124,7 +124,7 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
 
                     // Only have access to creation date.
                     createdAt: createdAt,
-                    updateAt: undefined,
+                    updatedAt: undefined,
 
                     origin: OfferOrigin.HELLOWORK,
                     originUrl: url,
