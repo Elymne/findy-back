@@ -1,7 +1,7 @@
-import Company from "@App/domain/models/Company.model"
 import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
 import { RowDataPacket } from "mysql2"
 import { MysqlDatabase } from "./db/MysqlDatabase"
+import Company from "@App/domain/models/clean/Company.model"
 
 export default class CompanyLocalDatasource implements CompanyLocalRepository {
     async findOne(id: string): Promise<Company | undefined> {
@@ -24,6 +24,11 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
     }
 
     async deleteAll(): Promise<void> {
+        MysqlDatabase.getInstance().getConnec().query("DELETE FROM company")
+    }
+
+    async deleteOne(id: string): Promise<void> {
+        console.log(id)
         MysqlDatabase.getInstance().getConnec().query("DELETE FROM company")
     }
 

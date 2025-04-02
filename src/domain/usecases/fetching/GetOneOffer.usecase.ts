@@ -1,6 +1,6 @@
 import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
-import OfferDetailed from "@App/domain/models/OfferDetailed.model"
+import OfferDetailed from "@App/domain/models/clean/OfferDetailed.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
 
 export default class GetOneOffer extends Usecase<OfferDetailed, GetOneOfferParams> {

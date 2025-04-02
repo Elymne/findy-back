@@ -1,6 +1,6 @@
 import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
-import PageOffers from "@App/domain/models/PageOffers.model"
+import PageOffers from "@App/domain/models/clean/PageOffers.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
 import OfferRemoteDatasource from "@App/infrastructure/datasources/francetravail/OfferRemoteDatasource"
 

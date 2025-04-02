@@ -1,11 +1,11 @@
-import Job from "@App/domain/models/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
-import db from "./db/db"
+import KyselyDatabase from "./db/KyselyDatabase"
 import { JobCreate } from "./tables/job_table"
+import Job from "@App/domain/models/clean/Job.model"
 
 export default class JobLocalDatasource implements JobLocalRepository {
     async findOne(id: string): Promise<Job | undefined> {
-        const result = await db.selectFrom("job").selectAll().where("id", "=", id).executeTakeFirst()
+        const result = await KyselyDatabase.get.connec.selectFrom("job").selectAll().where("id", "=", id).executeTakeFirst()
         if (!result) {
             return undefined
         }
@@ -17,7 +17,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
     }
 
     async findAll(): Promise<Job[]> {
-        const results = await db.selectFrom("job").selectAll().execute()
+        const results = await KyselyDatabase.get.connec.selectFrom("job").selectAll().execute()
         return results.map((result) => {
             return {
                 id: result.id,
@@ -27,7 +27,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
     }
 
     async deleteAll(): Promise<void> {
-        db.deleteFrom("company").execute()
+        await KyselyDatabase.get.connec.deleteFrom("company").execute()
     }
 
     async createAll(jobs: Job[]): Promise<void> {
@@ -38,7 +38,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
             }
         })
 
-        await db.insertInto("job").values(jobsTable).execute()
+        await KyselyDatabase.get.connec.insertInto("job").values(jobsTable).execute()
     }
 
     async createOne(job: Job): Promise<void> {
@@ -46,6 +46,6 @@ export default class JobLocalDatasource implements JobLocalRepository {
             id: job.id!,
             title: job.title!,
         }
-        await db.insertInto("job").values(jobTable).execute()
+        await KyselyDatabase.get.connec.insertInto("job").values(jobTable).execute()
     }
 }

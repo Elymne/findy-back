@@ -1,14 +1,12 @@
 import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
-import Company from "@App/domain/models/Company.model"
-import db from "./db/db"
 import { CompanyCreate } from "./tables/company_table"
+import Company from "@App/domain/models/clean/Company.model"
+import KyselyDatabase from "./db/KyselyDatabase"
 
 export default class CompanyLocalDatasource implements CompanyLocalRepository {
     async findOne(id: string): Promise<Company | undefined> {
-        const result = await db.selectFrom("company").selectAll().where("id", "=", id).executeTakeFirst()
-        if (!result) {
-            return undefined
-        }
+        const result = await KyselyDatabase.get.connec.selectFrom("company").selectAll().where("id", "=", id).executeTakeFirst()
+        if (!result) return undefined
 
         return {
             id: result.id,
@@ -20,7 +18,7 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
     }
 
     async findAll(): Promise<Company[]> {
-        const results = await db.selectFrom("company").selectAll().execute()
+        const results = await KyselyDatabase.get.connec.selectFrom("company").selectAll().execute()
         return results.map((result) => {
             return {
                 id: result.id,
@@ -33,7 +31,7 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
     }
 
     async findByName(name: string): Promise<Company[]> {
-        const results = await db.selectFrom("company").selectAll().where("name", "=", name).execute()
+        const results = await KyselyDatabase.get.connec.selectFrom("company").selectAll().where("name", "=", name).execute()
         return results.map((result) => {
             return {
                 id: result.id,
@@ -46,7 +44,7 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
     }
 
     async deleteOne(id: string): Promise<void> {
-        await db.deleteFrom("company").where("id", "=", id).execute()
+        await KyselyDatabase.get.connec.deleteFrom("company").where("id", "=", id).execute()
     }
 
     async createMany(companies: Company[]): Promise<void> {
@@ -60,11 +58,11 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
             } as CompanyCreate
         })
 
-        await db.insertInto("company").values(parsedData).execute()
+        await KyselyDatabase.get.connec.insertInto("company").values(parsedData).execute()
     }
 
     async createOne(company: Company): Promise<void> {
-        await db
+        await KyselyDatabase.get.connec
             .insertInto("company")
             .values({
                 id: company.id,

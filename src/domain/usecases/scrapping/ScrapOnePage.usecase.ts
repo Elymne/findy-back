@@ -1,9 +1,9 @@
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
-import Offer from "@App/domain/models/Offer.model"
+import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
 import OfferScrapperRepository from "@App/domain/repositories/OfferScrapper.repository"
 
-export default class ScrapOnePage extends Usecase<Offer[], ScrapOnePageParams> {
+export default class ScrapOnePage extends Usecase<OfferScrap[], ScrapOnePageParams> {
     private offerScrapperRepository: OfferScrapperRepository
 
     constructor(offerScrapperRepository: OfferScrapperRepository) {
@@ -11,7 +11,7 @@ export default class ScrapOnePage extends Usecase<Offer[], ScrapOnePageParams> {
         this.offerScrapperRepository = offerScrapperRepository
     }
 
-    public async perform(params: ScrapOnePageParams): Promise<Result<Offer[]>> {
+    public async perform(params: ScrapOnePageParams): Promise<Result<OfferScrap[]>> {
         try {
             const result = await this.offerScrapperRepository.getOnePage(params.pageIndex)
             if (result.length == 0) {

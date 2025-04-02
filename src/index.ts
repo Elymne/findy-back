@@ -1,6 +1,6 @@
 import RunServer from "./domain/usecases/running/RunServer.usecase"
-import { MysqlDatabase } from "./infrastructure/datasources/mysql/db/MysqlDatabase"
+import KyselyDatabase from "./infrastructure/datasources/kysely/db/KyselyDatabase"
 import ExpressServer from "./infrastructure/express/ExpressServer"
 
-const runServer: RunServer = new RunServer(new ExpressServer(), MysqlDatabase.getInstance())
+const runServer: RunServer = new RunServer(new ExpressServer(), KyselyDatabase.get)
 runServer.perform()

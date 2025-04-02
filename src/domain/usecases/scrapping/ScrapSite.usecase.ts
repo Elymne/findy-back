@@ -1,9 +1,9 @@
 import { Usecase } from "@App/core/Usecase"
-import Offer from "@App/domain/models/Offer.model"
 import ScrapOnePage from "./ScrapOnePage.usecase"
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
+import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
 
-export default class ScrapSite extends Usecase<Offer[], ScrapSiteParams> {
+export default class ScrapSite extends Usecase<OfferScrap[], ScrapSiteParams> {
     private scrapOnePage: ScrapOnePage
 
     constructor(scrapOnePage: ScrapOnePage) {
@@ -11,10 +11,10 @@ export default class ScrapSite extends Usecase<Offer[], ScrapSiteParams> {
         this.scrapOnePage = scrapOnePage
     }
 
-    public async perform(params: ScrapSiteParams): Promise<Result<Offer[]>> {
+    public async perform(params: ScrapSiteParams): Promise<Result<OfferScrap[]>> {
         try {
-            const result: Offer[] = []
-            const streamedPageScrapping: Promise<Result<Offer[]>>[] = []
+            const result: OfferScrap[] = []
+            const streamedPageScrapping: Promise<Result<OfferScrap[]>>[] = []
 
             // When params.pageNumber is define.
             if (params.pageNumber) {

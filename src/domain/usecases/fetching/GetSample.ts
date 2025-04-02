@@ -1,6 +1,6 @@
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
-import Offer from "@App/domain/models/Offer.model"
+import Offer from "@App/domain/models/clean/Offer.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
 
 export default class GetSample extends UsecaseNoParams<Offer[]> {

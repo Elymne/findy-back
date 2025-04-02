@@ -1,7 +1,7 @@
-import Job from "@App/domain/models/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 import { MysqlDatabase } from "./db/MysqlDatabase"
 import { RowDataPacket } from "mysql2"
+import Job from "@App/domain/models/clean/Job.model"
 
 export default class JobLocalDatasource implements JobLocalRepository {
     async findOne(id: string): Promise<Job | undefined> {

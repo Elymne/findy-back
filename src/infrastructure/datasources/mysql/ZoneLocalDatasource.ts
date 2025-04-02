@@ -1,7 +1,7 @@
-import Zone from "@App/domain/models/Zone.model"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 import { RowDataPacket } from "mysql2"
 import { MysqlDatabase } from "./db/MysqlDatabase"
+import Zone from "@App/domain/models/clean/Zone.model"
 
 export default class ZoneLocalDatasource implements ZoneLocalRepository {
     async findOne(id: string): Promise<Zone | undefined> {

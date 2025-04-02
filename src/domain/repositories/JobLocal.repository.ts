@@ -1,4 +1,4 @@
-import Job from "../models/Job.model"
+import Job from "../models/clean/Job.model"
 
 export default interface JobLocalRepository {
     findOne(id: string): Promise<Job | undefined>

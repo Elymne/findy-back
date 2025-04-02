@@ -1,4 +1,4 @@
-import Zone from "../models/Zone.model"
+import Zone from "../models/clean/Zone.model"
 
 export default interface ZoneLocalRepository {
     findOne(id: string): Promise<Zone | undefined>

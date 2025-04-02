@@ -1,4 +1,4 @@
-import School from "../models/School.model"
+import School from "../models/clean/School.model"
 
 /**
  * We need to filters all offers from school data.

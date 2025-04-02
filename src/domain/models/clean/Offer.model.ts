@@ -16,7 +16,7 @@ export default interface Offer {
     createdAt: Date
     updatedAt: Date | undefined
 
-    origin: OfferOrigin | undefined
+    origin: OfferOrigin
     originUrl: string | undefined
 }
 

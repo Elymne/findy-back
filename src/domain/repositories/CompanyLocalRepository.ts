@@ -1,4 +1,4 @@
-import Company from "../models/Company.model"
+import Company from "../models/clean/Company.model"
 
 export default interface CompanyLocalRepository {
     findOne(id: string): Promise<Company | undefined>

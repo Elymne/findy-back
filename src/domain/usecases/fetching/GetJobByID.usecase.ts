@@ -1,6 +1,6 @@
 import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
-import Job from "@App/domain/models/Job.model"
+import Job from "@App/domain/models/clean/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 
 export interface GetJobByIDParams {

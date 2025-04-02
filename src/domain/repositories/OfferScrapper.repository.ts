@@ -1,5 +1,5 @@
-import Offer from "../models/Offer.model"
+import OfferScrap from "../models/scrap/Offer.scrap"
 
 export default interface JobScrapperRepository {
-    getOnePage(pageIndex: number): Promise<Offer[]>
+    getOnePage(pageIndex: number): Promise<OfferScrap[]>
 }

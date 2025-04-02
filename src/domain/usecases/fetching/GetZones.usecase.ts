@@ -1,6 +1,6 @@
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
-import Zone from "@App/domain/models/Zone.model"
+import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 
 export default class GetZones extends UsecaseNoParams<Zone[]> {

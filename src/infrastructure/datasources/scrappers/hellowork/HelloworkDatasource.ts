@@ -1,8 +1,8 @@
-import Offer, { OfferOrigin } from "@App/domain/models/Offer.model"
+import { OfferOrigin } from "@App/domain/models/clean/Offer.model"
+import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
 import OfferScrapperRepository from "@App/domain/repositories/OfferScrapper.repository"
 import axios from "axios"
 import { load } from "cheerio"
-import { v4 as uuidv4 } from "uuid"
 
 /**
  * Class that contain function to scrap Hellowork offers pages.
@@ -15,8 +15,8 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
      * @param {number} pageIndex The current page to scrap from Hellowork student job offers.
      * @returns {Job[]} The list of job offers scrapped from Hellowork website.
      */
-    async getOnePage(pageIndex: number): Promise<Offer[]> {
-        const offers: Offer[] = []
+    async getOnePage(pageIndex: number): Promise<OfferScrap[]> {
+        const offers: OfferScrap[] = []
 
         const options = {
             method: "GET",
@@ -38,6 +38,7 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
             let logoUrl: string | undefined = undefined
             let imgUrl: string | undefined = undefined
             let createdAt: Date | undefined = undefined
+            const tags: string[] = []
 
             // Find <a> href data to access detailed offer.
             const hrefElement = $(cards[i]).find("div > header > div > a")
@@ -54,6 +55,8 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
                 const tag = $(tagsElement[i]).text().trim()
                 if (tag != "Alternance") {
                     zoneName = tag
+                } else {
+                    tags.push(tag)
                 }
             }
 
@@ -93,39 +96,24 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
             // Check that our data contains at least the crutial data. If not, we don't add it to the result.
             if (title && companyName && zone && createdAt && url) {
                 offers.push({
-                    id: uuidv4(),
                     title: title,
                     imgUrl: imgUrl,
-
                     // Welack Description and Url site. Usecase will check this for us if the company name exists in database.
                     company: {
-                        id: undefined,
                         name: companyName,
                         logoUrl: logoUrl,
                         description: undefined,
                         url: undefined,
                     },
-
                     // ID, Lat, Lng doesn't cannot be fetched.
                     zone: {
-                        id: undefined,
                         name: zone,
                         lat: undefined,
                         lng: undefined,
                     },
-
-                    // Job type isn't accessible from Hellowork offers pages. It's a work for usecases.
-                    job: {
-                        id: undefined,
-                        title: undefined,
-                    },
-                    // No tags.
-                    tags: [],
-
+                    tags: tags,
                     // Only have access to creation date.
                     createdAt: createdAt,
-                    updatedAt: undefined,
-
                     origin: OfferOrigin.HELLOWORK,
                     originUrl: url,
                 })

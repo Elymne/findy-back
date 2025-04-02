@@ -1,6 +1,6 @@
 import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
-import Zone from "@App/domain/models/Zone.model"
+import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 
 export interface GetZoneByCodeParams {

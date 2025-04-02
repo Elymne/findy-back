@@ -1,4 +1,4 @@
-import Offer from "../models/Offer.model"
+import Offer from "../models/clean/Offer.model"
 
 export default interface OfferLocalRepository {
     findOne(id: string): Promise<Offer | undefined>
