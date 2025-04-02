@@ -1,7 +1,7 @@
 import Job from "@App/domain/models/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 import db from "./db/db"
-import JobTable from "./tables/job_table"
+import { JobCreate } from "./tables/job_table"
 
 export default class JobLocalDatasource implements JobLocalRepository {
     async findOne(id: string): Promise<Job | undefined> {
@@ -31,23 +31,21 @@ export default class JobLocalDatasource implements JobLocalRepository {
     }
 
     async createAll(jobs: Job[]): Promise<void> {
-        const parsedData: JobTable[] = jobs.map((company) => {
+        const jobsTable: JobCreate[] = jobs.map((company) => {
             return {
                 id: company.id!,
                 title: company.title!,
             }
         })
 
-        await db.insertInto("job").values(parsedData).execute()
+        await db.insertInto("job").values(jobsTable).execute()
     }
 
     async createOne(job: Job): Promise<void> {
-        await db
-            .insertInto("job")
-            .values({
-                id: job.id,
-                title: job.title,
-            } as JobTable)
-            .execute()
+        const jobTable: JobCreate = {
+            id: job.id!,
+            title: job.title!,
+        }
+        await db.insertInto("job").values(jobTable).execute()
     }
 }

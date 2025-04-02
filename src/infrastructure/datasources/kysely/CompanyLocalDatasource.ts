@@ -1,7 +1,7 @@
 import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
 import Company from "@App/domain/models/Company.model"
 import db from "./db/db"
-import CompanyTable from "./tables/company_table"
+import { CompanyCreate } from "./tables/company_table"
 
 export default class CompanyLocalDatasource implements CompanyLocalRepository {
     async findOne(id: string): Promise<Company | undefined> {
@@ -50,14 +50,14 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
     }
 
     async createMany(companies: Company[]): Promise<void> {
-        const parsedData: CompanyTable[] = companies.map((company) => {
+        const parsedData: CompanyCreate[] = companies.map((company) => {
             return {
-                id: company.id!,
-                name: company.name!,
+                id: company.id,
+                name: company.name,
                 description: company.description,
                 logo_url: company.logoUrl,
                 url: company.url,
-            } as CompanyTable
+            } as CompanyCreate
         })
 
         await db.insertInto("company").values(parsedData).execute()
@@ -72,7 +72,7 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
                 description: company.description,
                 logo_url: company.logoUrl,
                 url: company.url,
-            } as CompanyTable)
+            } as CompanyCreate)
             .execute()
     }
 }
