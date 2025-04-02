@@ -4,6 +4,6 @@ export default interface ZoneLocalRepository {
     findOne(id: string): Promise<Zone | undefined>
     findAll(): Promise<Zone[]>
     deleteAll(): Promise<void>
-    storeAll(zones: Zone[]): Promise<void>
-    storeUnique(zone: Zone): Promise<void>
+    createAll(zones: Zone[]): Promise<void>
+    createOne(zone: Zone): Promise<void>
 }

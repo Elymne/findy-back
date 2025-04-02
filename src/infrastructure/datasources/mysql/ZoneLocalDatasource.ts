@@ -21,7 +21,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
         MysqlDatabase.getInstance().getConnec().query("DELETE FROM zone")
     }
 
-    async storeAll(zones: Zone[]): Promise<void> {
+    async createAll(zones: Zone[]): Promise<void> {
         const query = "INSERT INTO zone(id, name, lat, lng) VALUES ?"
         const values = zones.map((elem) => {
             return [elem.id, elem.name, elem.lat, elem.lng]
@@ -30,7 +30,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
         MysqlDatabase.getInstance().getConnec().query(query, [values])
     }
 
-    async storeUnique(zone: Zone): Promise<void> {
+    async createOne(zone: Zone): Promise<void> {
         const query = "INSERT INTO zone(id, name, lat, lng) VALUES (?)"
         const values = [zone.id, zone.name, zone.lat, zone.lng]
         MysqlDatabase.getInstance().getConnec().query(query, values)

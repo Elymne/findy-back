@@ -4,8 +4,9 @@ export default interface OfferLocalRepository {
     findOne(id: string): Promise<Offer | undefined>
     findMany(params: FindManyParams): Promise<Offer[]>
 
-    saveMany(offer: Offer[]): Promise<void>
-    deleteAll(ids: string[]): Promise<number>
+    createMany(offers: Offer[]): Promise<void>
+    createOne(offer: Offer): Promise<void>
+    deleteMany(ids: string[]): Promise<number>
 
     getLastTimeUpdate(): Promise<number | undefined>
 }

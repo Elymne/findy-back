@@ -6,9 +6,7 @@ import Job from "@App/domain/models/clean/Job.model"
 export default class JobLocalDatasource implements JobLocalRepository {
     async findOne(id: string): Promise<Job | undefined> {
         const result = await KyselyDatabase.get.connec.selectFrom("job").selectAll().where("id", "=", id).executeTakeFirst()
-        if (!result) {
-            return undefined
-        }
+        if (!result) return undefined
 
         return {
             id: result.id,
@@ -33,8 +31,8 @@ export default class JobLocalDatasource implements JobLocalRepository {
     async createAll(jobs: Job[]): Promise<void> {
         const jobsTable: JobCreate[] = jobs.map((company) => {
             return {
-                id: company.id!,
-                title: company.title!,
+                id: company.id,
+                title: company.title,
             }
         })
 
@@ -43,8 +41,8 @@ export default class JobLocalDatasource implements JobLocalRepository {
 
     async createOne(job: Job): Promise<void> {
         const jobTable: JobCreate = {
-            id: job.id!,
-            title: job.title!,
+            id: job.id,
+            title: job.title,
         }
         await KyselyDatabase.get.connec.insertInto("job").values(jobTable).execute()
     }

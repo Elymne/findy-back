@@ -27,7 +27,7 @@ export default class UpdateZone extends UsecaseNoParams<void> {
             }
 
             await this.zoneLocalRepository.deleteAll()
-            await this.zoneLocalRepository.storeAll(newZones)
+            await this.zoneLocalRepository.createAll(newZones)
 
             return new Success(204, `[${this.constructor.name}] Trying to make an update of zones : success`, undefined)
         } catch (trace) {
