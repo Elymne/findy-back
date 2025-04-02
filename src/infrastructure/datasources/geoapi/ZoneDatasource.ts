@@ -1,4 +1,4 @@
-import Zone from "@App/domain/models/Zone.model"
+import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository"
 import axios, { type AxiosRequestConfig } from "axios"
 

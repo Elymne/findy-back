@@ -1,4 +1,4 @@
-import OfferDetailed from "@App/domain/models/OfferDetailed.model"
+import OfferDetailed from "@App/domain/models/clean/OfferDetailed.model"
 
 export function parseOfferDetailed(data: OfferDetailedModelFT): OfferDetailed {
     const tags: string[] = []

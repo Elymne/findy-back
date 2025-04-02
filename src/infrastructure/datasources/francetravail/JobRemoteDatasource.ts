@@ -1,7 +1,7 @@
-import Job from "@App/domain/models/Job.model"
 import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository"
 import generateToken from "./generateToken"
 import axios, { AxiosRequestConfig } from "axios"
+import Job from "@App/domain/models/clean/Job.model"
 
 export default class JobRemoteDatasource implements JobRemoteRepository {
     /**

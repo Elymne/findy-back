@@ -1,4 +1,4 @@
-import Offer, { OfferOrigin } from "@App/domain/models/Offer.model"
+import Offer, { OfferOrigin } from "@App/domain/models/clean/Offer.model"
 
 export function parseOffers(data: OfferResultModelFT): Offer[] {
     return data.resultats.map((data) => {
@@ -13,20 +13,20 @@ export function parseOffers(data: OfferResultModelFT): Offer[] {
             title: data.intitule,
             imgUrl: undefined,
             company: {
-                id: undefined,
+                id: "undefined",
                 name: data.entreprise.nom,
                 logoUrl: data.entreprise.logo,
                 description: undefined,
                 url: undefined,
             },
             zone: {
-                id: undefined,
+                id: "undefined",
                 name: data.lieuTravail.libelle,
-                lat: undefined,
-                lng: undefined,
+                lat: 1,
+                lng: 1,
             },
             job: {
-                id: undefined,
+                id: "undefined",
                 title: data.appellationlibelle,
             },
             tags: tags,

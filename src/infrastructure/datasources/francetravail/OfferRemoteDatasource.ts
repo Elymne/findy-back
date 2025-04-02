@@ -1,11 +1,11 @@
 import type { AxiosRequestConfig } from "axios"
 import axios from "axios"
 import generateToken from "./generateToken"
-import Offer from "@App/domain/models/Offer.model"
 import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
-import OfferDetailed from "@App/domain/models/OfferDetailed.model"
 import { OfferDetailedModelFT, parseOfferDetailed } from "./models/offerDetailed.parser"
 import { OfferResultModelFT, parseOffers } from "./models/offers.parser"
+import OfferDetailed from "@App/domain/models/clean/OfferDetailed.model"
+import Offer from "@App/domain/models/clean/Offer.model"
 
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi"
 

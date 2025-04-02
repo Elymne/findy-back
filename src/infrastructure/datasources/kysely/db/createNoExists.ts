@@ -42,7 +42,7 @@ export const createNoExistsOffer = `
         zone_id VARCHAR(250) NOT NULL,
         job_id VARCHAR(250) NOT NULL,
 
-        created_at DATETIME NOT NULL
+        created_at DATETIME NOT NULL,
         update_at DATETIME,
 
         origin TINYINT NOT NULL,
