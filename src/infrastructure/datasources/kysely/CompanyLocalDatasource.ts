@@ -30,17 +30,17 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
         })
     }
 
-    async findByName(name: string): Promise<Company[]> {
-        const results = await KyselyDatabase.get.connec.selectFrom("company").selectAll().where("name", "=", name).execute()
-        return results.map((result) => {
-            return {
-                id: result.id,
-                name: result.name,
-                description: result.description,
-                logoUrl: result.logo_url,
-                url: result.url,
-            }
-        })
+    async findByName(name: string): Promise<Company | undefined> {
+        const result = await KyselyDatabase.get.connec.selectFrom("company").selectAll().where("name", "=", name).executeTakeFirst()
+        if (!result) return undefined
+
+        return {
+            id: result.id,
+            name: result.name,
+            description: result.description,
+            logoUrl: result.logo_url,
+            url: result.url,
+        }
     }
 
     async deleteOne(id: string): Promise<void> {
@@ -48,6 +48,10 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
     }
 
     async createMany(companies: Company[]): Promise<void> {
+        if (companies.length == 0) {
+            return
+        }
+
         const parsedData: CompanyCreate[] = companies.map((company) => {
             return {
                 id: company.id,
@@ -72,5 +76,11 @@ export default class CompanyLocalDatasource implements CompanyLocalRepository {
                 url: company.url,
             } as CompanyCreate)
             .execute()
+    }
+
+    // TODO.
+    async update(companies: Company[]): Promise<void> {
+        console.log(companies)
+        throw new Error("Method not implemented.")
     }
 }

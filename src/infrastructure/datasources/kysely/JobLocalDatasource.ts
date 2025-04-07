@@ -29,14 +29,18 @@ export default class JobLocalDatasource implements JobLocalRepository {
     }
 
     async createAll(jobs: Job[]): Promise<void> {
-        const jobsTable: JobCreate[] = jobs.map((company) => {
+        if (jobs.length == 0) {
+            return
+        }
+
+        const jobsParsed: JobCreate[] = jobs.map((company) => {
             return {
                 id: company.id,
                 title: company.title,
             }
         })
 
-        await KyselyDatabase.get.connec.insertInto("job").values(jobsTable).execute()
+        await KyselyDatabase.get.connec.insertInto("job").values(jobsParsed).execute()
     }
 
     async createOne(job: Job): Promise<void> {

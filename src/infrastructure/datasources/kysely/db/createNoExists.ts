@@ -33,7 +33,7 @@ export const createNoExistsCompany = `
 export const createNoExistsOffer = `
     CREATE TABLE IF NOT EXISTS offer (
         id VARCHAR(250) UNIQUE NOT NULL,
-        title VARCHAR(250) UNIQUE NOT NULL,
+        title VARCHAR(250) NOT NULL,
         img_url VARCHAR(250),
 
         tags JSON NOT NULL,

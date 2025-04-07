@@ -157,12 +157,16 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
     }
 
     async createMany(offers: Offer[]): Promise<void> {
+        if (offers.length == 0) {
+            return
+        }
+
         const offersCreate: OfferCreate[] = offers.map((offer) => {
             return {
                 id: offer.id,
                 title: offer.title,
                 img_url: offer.imgUrl,
-                tags: offer.tags,
+                tags: JSON.stringify(offer.tags),
                 zone_id: offer.zone.id,
                 company_id: offer.company.id,
                 job_id: offer.job.id,
@@ -180,7 +184,7 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
             id: offer.id,
             title: offer.title,
             img_url: offer.imgUrl,
-            tags: offer.tags,
+            tags: JSON.stringify(offer.tags),
             zone_id: offer.zone.id,
             company_id: offer.company.id,
             job_id: offer.job.id,
@@ -193,11 +197,12 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
     }
 
     async deleteMany(ids: string[]): Promise<number> {
-        console.log(ids)
-        throw new Error("Method not implemented.")
+        const result = await KyselyDatabase.get.connec.deleteFrom("offer").where("id", "in", ids).execute()
+        return result.length
     }
 
-    async getLastTimeUpdate(): Promise<number | undefined> {
-        throw new Error("Method not implemented.")
+    async getLastTimeUpdate(): Promise<Date | undefined> {
+        const result = await KyselyDatabase.get.connec.selectFrom("offer").select("created_at").orderBy("created_at", "desc").limit(1).executeTakeFirst()
+        return result?.created_at ? new Date(result.created_at) : undefined
     }
 }

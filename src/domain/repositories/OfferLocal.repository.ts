@@ -8,7 +8,7 @@ export default interface OfferLocalRepository {
     createOne(offer: Offer): Promise<void>
     deleteMany(ids: string[]): Promise<number>
 
-    getLastTimeUpdate(): Promise<number | undefined>
+    getLastTimeUpdate(): Promise<Date | undefined>
 }
 
 /**

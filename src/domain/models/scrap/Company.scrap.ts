@@ -1,5 +1,5 @@
 export default interface CompanyScrap {
-    name?: string
+    name: string
     description?: string | undefined
     url?: string | undefined
     logoUrl?: string | undefined

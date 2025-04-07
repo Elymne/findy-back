@@ -26,7 +26,7 @@ export default class UpdateJobs extends UsecaseNoParams<void> {
             await this.jobLocalRepository.createAll(newJobs)
             await this.jobLocalRepository.createOne({
                 id: "00",
-                title: "None",
+                title: "Unknown",
             })
 
             return new Success(204, `[${this.constructor.name}] Trying to make an update of jobs : success`, undefined)

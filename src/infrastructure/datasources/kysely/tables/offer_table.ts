@@ -1,4 +1,4 @@
-import { ColumnType, Insertable, Selectable, Updateable } from "kysely"
+import { ColumnType, Insertable, JSONColumnType, Selectable, Updateable } from "kysely"
 
 export default interface OfferTable {
     id: ColumnType<string, string, never>
@@ -9,7 +9,7 @@ export default interface OfferTable {
     zone_id: string
     job_id: string
 
-    tags: string[]
+    tags: JSONColumnType<string[]>
 
     created_at: ColumnType<Date, Date, never>
     updated_at: Date | undefined

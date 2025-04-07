@@ -1,9 +1,16 @@
 import Zone from "../models/clean/Zone.model"
 
 export default interface ZoneLocalRepository {
-    findOne(id: string): Promise<Zone | undefined>
+    findUnique(id: string): Promise<Zone | undefined>
+    findMany(params: FindManyParams): Promise<Zone[]>
     findAll(): Promise<Zone[]>
+
     deleteAll(): Promise<void>
-    createAll(zones: Zone[]): Promise<void>
+
+    createMany(zones: Zone[]): Promise<void>
     createOne(zone: Zone): Promise<void>
+}
+
+type FindManyParams = {
+    name?: string
 }

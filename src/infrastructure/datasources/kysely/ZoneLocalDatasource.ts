@@ -4,7 +4,7 @@ import KyselyDatabase from "./db/KyselyDatabase"
 import { ZoneCreate } from "./tables/zone_table"
 
 export default class ZoneLocalDatasource implements ZoneLocalRepository {
-    async findOne(id: string): Promise<Zone | undefined> {
+    async findUnique(id: string): Promise<Zone | undefined> {
         const result = await KyselyDatabase.get.connec.selectFrom("zone").selectAll().where("id", "=", id).executeTakeFirst()
         if (!result) return undefined
 
@@ -14,6 +14,15 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
             lat: result.lat,
             lng: result.lng,
         }
+    }
+
+    async findMany(params: { name?: string }): Promise<Zone[]> {
+        let query = KyselyDatabase.get.connec.selectFrom("zone").selectAll()
+        if (params.name) {
+            query = query.where("name", "like", params.name)
+        }
+        const result = await query.execute()
+        return result
     }
 
     async findAll(): Promise<Zone[]> {
@@ -32,7 +41,11 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
         await KyselyDatabase.get.connec.deleteFrom("zone").execute()
     }
 
-    async createAll(zones: Zone[]): Promise<void> {
+    async createMany(zones: Zone[]): Promise<void> {
+        if (zones.length == 0) {
+            return
+        }
+
         const zonesTable: ZoneCreate[] = zones.map((zone) => {
             return {
                 id: zone.id,

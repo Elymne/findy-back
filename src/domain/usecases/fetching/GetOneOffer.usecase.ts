@@ -29,6 +29,6 @@ export default class GetOneOffer extends Usecase<OfferDetailed, GetOneOfferParam
     }
 }
 
-export interface GetOneOfferParams {
+type GetOneOfferParams = {
     id: string
 }

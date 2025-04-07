@@ -33,7 +33,7 @@ export const createOrReplaceCompany = `
 export const createOrReplaceOffer = `
     CREATE OR REPLACE TABLE offer (
         id VARCHAR(250) UNIQUE NOT NULL,
-        title VARCHAR(250) UNIQUE NOT NULL,
+        title VARCHAR(250) NOT NULL,
         img_url VARCHAR(250),
 
         tags JSON NOT NULL,

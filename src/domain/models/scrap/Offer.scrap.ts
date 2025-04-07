@@ -4,18 +4,18 @@ import ZoneScrap from "./Zone.scrap"
 import JobScrap from "./Job.scrap"
 
 export default interface OfferScrap {
-    title?: string
+    title: string
     imgUrl?: string
 
-    company?: CompanyScrap
-    zone?: ZoneScrap
+    company: CompanyScrap
+    zone: ZoneScrap
     job?: JobScrap
 
     tags: string[]
 
-    createdAt?: Date
+    createdAt: Date
     updatedAt?: Date
 
-    origin?: OfferOrigin
+    origin: OfferOrigin
     originUrl?: string
 }

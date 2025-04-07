@@ -4,7 +4,7 @@ import { MysqlDatabase } from "./db/MysqlDatabase"
 import Zone from "@App/domain/models/clean/Zone.model"
 
 export default class ZoneLocalDatasource implements ZoneLocalRepository {
-    async findOne(id: string): Promise<Zone | undefined> {
+    async findUnique(id: string): Promise<Zone | undefined> {
         const [result] = await MysqlDatabase.getInstance().getConnec().query<ZoneResult[]>("SELECT * FROM zone WHERE id = ?", [id])
         if (result.length == 0) {
             return undefined
@@ -21,7 +21,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
         MysqlDatabase.getInstance().getConnec().query("DELETE FROM zone")
     }
 
-    async createAll(zones: Zone[]): Promise<void> {
+    async createMany(zones: Zone[]): Promise<void> {
         const query = "INSERT INTO zone(id, name, lat, lng) VALUES ?"
         const values = zones.map((elem) => {
             return [elem.id, elem.name, elem.lat, elem.lng]

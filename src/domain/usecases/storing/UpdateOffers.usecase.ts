@@ -1,71 +1,73 @@
 import { Failure, Result, Success } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
 import ScrapSite from "../scrapping/ScrapSite.usecase"
-import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
-import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
-import Offer from "@App/domain/models/Offer.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
+import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
+import ParseOffersScrap, { OffersScrapResult } from "../parsing/ParseOffersScrap.usecase"
+import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
 
 export default class UpdateOffers extends UsecaseNoParams<void> {
     private scrapSites: ScrapSite[]
-
-    private companyLocalRepository: CompanyLocalRepository
-    private zoneLocalRepository: ZoneLocalRepository
+    private parseOffersScrap: ParseOffersScrap
     private jobLocalRepository: JobLocalRepository
+    private companyLocalRepository: CompanyLocalRepository
     private offerLocalRepository: OfferLocalRepository
 
     constructor(
-        scrapPages: ScrapSite[],
-        companyLocalRepository: CompanyLocalRepository,
-        zoneLocalRepository: ZoneLocalRepository,
+        scrapSites: ScrapSite[],
+        parseOffersScrap: ParseOffersScrap,
         jobLocalRepository: JobLocalRepository,
+        companyLocalRepository: CompanyLocalRepository,
         offerLocalRepository: OfferLocalRepository
     ) {
         super()
-        this.scrapSites = scrapPages
-
-        this.companyLocalRepository = companyLocalRepository
-        this.zoneLocalRepository = zoneLocalRepository
+        this.scrapSites = scrapSites
+        this.parseOffersScrap = parseOffersScrap
         this.jobLocalRepository = jobLocalRepository
+        this.companyLocalRepository = companyLocalRepository
         this.offerLocalRepository = offerLocalRepository
     }
 
     public async perform(): Promise<Result<void>> {
         try {
+            // Prepare scrapping.
+            const streamedOfferScrapResults: Promise<Result<OfferScrap[]>>[] = []
             const lastUpdateDate = await this.offerLocalRepository.getLastTimeUpdate()
-            const streamedOfferResults: Promise<Result<Offer[]>>[] = []
             if (!lastUpdateDate) {
                 for (let i = 0; i < this.scrapSites.length; i++) {
-                    streamedOfferResults.push(this.scrapSites[i].perform({ pageNumber: 100 }))
+                    streamedOfferScrapResults.push(this.scrapSites[i].perform({ pageNumber: 50 }))
                 }
             } else {
                 for (let i = 0; i < this.scrapSites.length; i++) {
-                    console.log("Wait")
+                    //TODO : scrap by newest date.
+                    for (let i = 0; i < this.scrapSites.length; i++) {
+                        streamedOfferScrapResults.push(this.scrapSites[i].perform({ pageNumber: 50 }))
+                    }
                 }
             }
 
-            const rawOffers: Offer[] = []
-            const offerResults = await Promise.all(streamedOfferResults)
+            // Run scrappers.
+            const rawOffers: OfferScrap[] = []
+            const offerResults = await Promise.all(streamedOfferScrapResults)
             for (const r of offerResults) {
                 if (r instanceof Success) {
                     rawOffers.push(...r.data)
                 }
             }
 
-            // TODO Check de la data (Type job, zone et boite).
-            // TODO Si une nouvelle entrée (job ou boite) est trouvé, c'est-à-dire qu'elle n'existe pas dans la base de données, on la rajoute.
-            // for (let i = 0; i < result.length; i++) {
-            //     let company: Company | undefined
-            //     if (!result[i].company.id && result[i].company.name) {
-            //         const companies = await this.companyLocalRepository.findByName(result[i].company.name!)
-            //         if (companies.length > 0) {
-            //             company = companies[0]
-            //         }
-            //     }
-            //     console.log(company)
-            // }
+            // Parse scrappers result.
+            const parseResult = await this.parseOffersScrap.perform({ offerScraps: rawOffers, jobs: await this.jobLocalRepository.findAll() })
+            if (parseResult instanceof Failure) {
+                return parseResult
+            }
 
+            // Store news companies and offers.
+            const { offers, newCompanies } = (parseResult as Success<OffersScrapResult>).data
+            await this.companyLocalRepository.createMany(newCompanies)
+            await this.offerLocalRepository.createMany(offers)
+
+            // Return the result top use client.
             return new Success(204, `[${this.constructor.name}] Trying to make an update of offers : success`, undefined)
         } catch (trace) {
             return new Failure(

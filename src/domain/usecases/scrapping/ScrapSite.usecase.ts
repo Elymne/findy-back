@@ -16,28 +16,25 @@ export default class ScrapSite extends Usecase<OfferScrap[], ScrapSiteParams> {
             const result: OfferScrap[] = []
             const streamedPageScrapping: Promise<Result<OfferScrap[]>>[] = []
 
-            // When params.pageNumber is define.
+            // When params.pageNumber is define, it take priority.
             if (params.pageNumber) {
                 for (let i = 1; i <= params.pageNumber; i++) {
                     streamedPageScrapping.push(this.scrapOnePage.perform({ pageIndex: i }))
                 }
-
                 const resultsFromScrapping = await Promise.all(streamedPageScrapping)
                 for (const r of resultsFromScrapping) {
                     if (r instanceof Success) {
                         result.push(...r.data)
                     }
                 }
-
                 if (result.length == 0) {
                     return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : none found (odd behavior)`, result, SuccessType.WARNING)
                 }
-
                 return new Success(200, `[${this.constructor.name}] Trying to scrap offers from webpage : success`, result)
             }
 
             // When params.maxDay is define.
-            if (params.maxDay) {
+            if (params.newestDate) {
                 return new Success(204, `[${this.constructor.name}] Trying to scrap offers from webpage : Not implemented yet tho.`, result)
             }
 
@@ -45,7 +42,12 @@ export default class ScrapSite extends Usecase<OfferScrap[], ScrapSiteParams> {
                 message: "Wrong user input : pageNumber and maxDay both undefined.",
             })
         } catch (trace) {
-            return new Failure(400, `[${this.constructor.name}] Trying to scrap offers from webpage : An exception has been thrown.`, "", trace)
+            return new Failure(
+                400,
+                `[${this.constructor.name}] Trying to scrap offers from webpage : An exception has been thrown.`,
+                { message: "An internal error occured while scrapping pages of offers." },
+                trace
+            )
         }
     }
 }
@@ -55,7 +57,7 @@ export default class ScrapSite extends Usecase<OfferScrap[], ScrapSiteParams> {
  * @prop {number | undefined} pageNumber - The maximum page you want to scrap from 1 to the number you want.
  * @prop {number | undefined} maxDay - The value of maximum oldest date of offers you want to scrap.
  */
-export interface ScrapSiteParams {
+type ScrapSiteParams = {
     pageNumber?: number
-    maxDay?: number
+    newestDate?: Date
 }

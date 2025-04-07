@@ -53,7 +53,7 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
 }
 
 const elementByPage: number = 20
-interface GetOffersFromSearchParams {
+type GetOffersFromSearchParams = {
     keywords?: string
     codeZone?: string
     codeJob?: string

@@ -2,9 +2,10 @@ import express, { Request, Response } from "express"
 import { cache24hours } from "../../middlewares/cache"
 import GetZoneByID from "@App/domain/usecases/fetching/GetZoneByID.usecase"
 import { Failure, Success } from "@App/core/Result"
-import ZoneLocalDatasource from "@App/infrastructure/datasources/mysql/ZoneLocalDatasource"
+import ZoneLocalDatasource from "@App/infrastructure/datasources/kysely/ZoneLocalDatasource"
 
-const getZoneByID: GetZoneByID = new GetZoneByID(new ZoneLocalDatasource())
+const zoneLocalDatasource = new ZoneLocalDatasource()
+const getZoneByID: GetZoneByID = new GetZoneByID(zoneLocalDatasource)
 
 const getZoneByIDRoute = express.Router().get("/:id", cache24hours, async (req: Request<{ id: string }>, res: Response) => {
     const result = await getZoneByID.perform({

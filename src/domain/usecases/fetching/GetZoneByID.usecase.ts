@@ -17,7 +17,7 @@ export default class GetZoneByID extends Usecase<Zone, GetZoneByCodeParams> {
 
     public async perform(params: GetZoneByCodeParams): Promise<Result<Zone>> {
         try {
-            const result = await this.zoneLocalRepository.findOne(params.id)
+            const result = await this.zoneLocalRepository.findUnique(params.id)
             if (result == null) {
                 return new Failure(404, `[${this.constructor.name}] Trying to fetch the zone ${params.id} : it does not exists.`, {
                     message: `The code ${params.id} does not correspond to any zones`,

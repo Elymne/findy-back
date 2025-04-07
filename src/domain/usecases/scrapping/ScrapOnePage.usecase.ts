@@ -30,6 +30,6 @@ export default class ScrapOnePage extends Usecase<OfferScrap[], ScrapOnePagePara
     }
 }
 
-interface ScrapOnePageParams {
+type ScrapOnePageParams = {
     pageIndex: number
 }

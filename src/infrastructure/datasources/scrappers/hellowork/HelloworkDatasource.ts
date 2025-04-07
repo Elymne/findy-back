@@ -102,14 +102,10 @@ export default class HelloworkDatasource implements OfferScrapperRepository {
                     company: {
                         name: companyName,
                         logoUrl: logoUrl,
-                        description: undefined,
-                        url: undefined,
                     },
                     // ID, Lat, Lng doesn't cannot be fetched.
                     zone: {
                         name: zone,
-                        lat: undefined,
-                        lng: undefined,
                     },
                     tags: tags,
                     // Only have access to creation date.

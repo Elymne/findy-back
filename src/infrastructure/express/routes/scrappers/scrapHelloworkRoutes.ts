@@ -22,7 +22,7 @@ export const scrapHelloworkPages = express
 
         const result = await scrapRoute.perform({
             pageNumber: pageNumber,
-            maxDay: maxDay,
+            newestDate: maxDay ? new Date(maxDay) : undefined,
         })
 
         if (result instanceof Failure) {
