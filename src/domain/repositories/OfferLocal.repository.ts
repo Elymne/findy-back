@@ -3,6 +3,7 @@ import Offer from "../models/clean/Offer.model"
 export default interface OfferLocalRepository {
     findOne(id: string): Promise<Offer | undefined>
     findMany(params: FindManyParams): Promise<Offer[]>
+    count(params: CountParams): Promise<number>
 
     createMany(offers: Offer[]): Promise<void>
     createOne(offer: Offer): Promise<void>
@@ -22,6 +23,11 @@ type FindManyParams = {
     keyWords?: string
     codezone?: string
     codejob?: string
-    distance?: number
     range: string
+}
+
+type CountParams = {
+    keyWords?: string
+    codezone?: string
+    codejob?: string
 }

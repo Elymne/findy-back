@@ -2,6 +2,8 @@ import Offer from "@App/domain/models/clean/Offer.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { OfferCreate } from "./tables/offer_table"
+import { Expression } from "kysely"
+import { SqlBool } from "node_modules/kysely/dist/esm"
 
 export default class OfferLocalDatasource implements OfferLocalRepository {
     private kyselyDatabase: KyselyDatabase
@@ -83,13 +85,15 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
 
     async findMany(params: { keyWords?: string; codezone?: string; codejob?: string; distance?: number; range: string }): Promise<Offer[]> {
         const rangeSplit = params.range.split("-")
+
         if (rangeSplit.length != 2) {
             throw `Error : the range is not setup correctly. Current range : ${params.range}`
         }
 
         const start = parseInt(rangeSplit[0])
         const end = parseInt(rangeSplit[1])
-        if (start || end) {
+
+        if (Number.isNaN(start) || Number.isNaN(end)) {
             throw `Error : the range is not setup correctly. Current range : ${params.range}`
         }
 
@@ -122,6 +126,25 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
                 "job.id as job_id",
                 "job.title as job_title",
             ])
+
+        query = query.where((expBuilder) => {
+            const ors: Expression<SqlBool>[] = []
+
+            if (params.keyWords) {
+                ors.push(expBuilder("offer.title", "like", `%${params.keyWords!}%`))
+            }
+
+            if (params.codezone) {
+                ors.push(expBuilder("zone.id", "=", params.codezone))
+            }
+
+            if (params.codejob) {
+                ors.push(expBuilder("job.id", "=", params.codejob))
+            }
+
+            return expBuilder.and(ors)
+        })
+
         query = query.offset(start)
         query = query.limit(end - start)
 
@@ -160,6 +183,37 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
                 originUrl: result.offer_origin_url,
             }
         })
+    }
+
+    async count(params: { keyWords?: string; codezone?: string; codejob?: string }): Promise<number> {
+        let query = this.kyselyDatabase.connec
+            .selectFrom("offer")
+            .innerJoin("zone", "zone.id", "offer.zone_id")
+            .innerJoin("company", "company.id", "offer.company_id")
+            .innerJoin("job", "job.id", "offer.job_id")
+            .select(this.kyselyDatabase.connec.fn.countAll().as("count"))
+
+        query = query.where((expBuilder) => {
+            const ors: Expression<SqlBool>[] = []
+
+            if (params.keyWords) {
+                ors.push(expBuilder("offer.title", "like", `%${params.keyWords!}%`))
+            }
+
+            if (params.codezone) {
+                ors.push(expBuilder("zone.id", "=", params.codezone))
+            }
+
+            if (params.codejob) {
+                ors.push(expBuilder("job.id", "=", params.codejob))
+            }
+
+            return expBuilder.and(ors)
+        })
+
+        const { count } = await query.executeTakeFirstOrThrow()
+        if (typeof count != "number") return 0
+        return count
     }
 
     async createMany(offers: Offer[]): Promise<void> {

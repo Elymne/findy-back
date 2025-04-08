@@ -63,10 +63,10 @@ export default function runContainer(): void {
         useValue: new JobKyselyDatasource(container.resolve(IDatabase)),
     })
     container.register(ZoneLocalRepository, {
-        useValue: new OfferKyselyDatasource(container.resolve(IDatabase)),
+        useValue: new ZoneKyselyDatasource(container.resolve(IDatabase)),
     })
     container.register(OfferLocalRepository, {
-        useValue: new ZoneKyselyDatasource(container.resolve(IDatabase)),
+        useValue: new OfferKyselyDatasource(container.resolve(IDatabase)),
     })
 
     // Remote repositories

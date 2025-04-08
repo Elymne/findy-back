@@ -12,10 +12,12 @@ export default class GetZones extends UsecaseNoParams<Zone[]> {
     }
 
     public async perform(): Promise<Result<Zone[]>> {
+        console.log(this.zoneLocalRepository.findAll)
+
         try {
             const result = await this.zoneLocalRepository.findAll()
             if (result.length == 0) {
-                return new Success(204, `[${this.constructor.name}] Trying to fetch zones : none found (odd behavior).`, result, SuccessType.WARNING)
+                return new Success(200, `[${this.constructor.name}] Trying to fetch zones : none found (odd behavior).`, result, SuccessType.WARNING)
             }
             return new Success(200, `[${this.constructor.name}] Trying to fetch zones : success`, result)
         } catch (trace) {

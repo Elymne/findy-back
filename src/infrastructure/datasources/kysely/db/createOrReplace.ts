@@ -43,7 +43,7 @@ export const createOrReplaceOffer = `
         job_id VARCHAR(250) NOT NULL,
 
         created_at DATETIME NOT NULL,
-        update_at DATETIME,
+        updated_at DATETIME,
 
         origin TINYINT NOT NULL,
         origin_url VARCHAR(250),

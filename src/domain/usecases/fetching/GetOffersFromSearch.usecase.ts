@@ -15,35 +15,43 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
 
     public async perform(params: GetOffersFromSearchParams): Promise<Result<PageOffers>> {
         try {
+            const elementByPage = 20
+            const indexStart = elementByPage * (params.page ? params.page - 1 : 0)
+            const indexEnd = elementByPage * (params.page ? params.page : 1)
+
+            const count = await this.offerLocalRepository.count({
+                keyWords: params.keywords,
+                codezone: params.codeZone,
+                codejob: params.codeJob,
+            })
+
+            if (count < indexStart) {
+                return new Success(200, `[${this.constructor.name}] Trying to fetch offers : the page asked does not exists.`, {
+                    jobs: [],
+                    currentPage: params.page ?? 0,
+                    maxPage: 0,
+                })
+            }
+
             const offers = await this.offerLocalRepository.findMany({
                 keyWords: params.keywords,
                 codezone: params.codeZone,
                 codejob: params.codeJob,
-                range: "10-20",
+                range: `${indexStart}-${indexEnd}`,
             })
 
             if (offers.length == 0) {
-                return new Success(204, `[${this.constructor.name}] Trying to fetch offers : none found.`, {
+                return new Success(200, `[${this.constructor.name}] Trying to fetch offers : none found.`, {
                     jobs: offers,
                     currentPage: params.page ?? 0,
                     maxPage: 0,
                 })
             }
 
-            const indexStart = elementByPage * (params.page ? params.page - 1 : 0)
-            const indexEnd = elementByPage * (params.page ? params.page : 1)
-            if (offers.length < indexStart) {
-                return new Success(204, `[${this.constructor.name}] Trying to fetch offers : the page asked does not exists.`, {
-                    jobs: offers,
-                    currentPage: params.page ?? 0,
-                    maxPage: 0,
-                })
-            }
+            const maxPage = Math.floor(offers.length / count)
 
-            const resultByPage = offers.slice(indexStart, indexEnd)
-            const maxPage = Math.floor(offers.length / elementByPage)
             return new Success(200, `[${this.constructor.name}] Trying to fetch offers : success.`, {
-                jobs: resultByPage,
+                offers: offers,
                 currentPage: params.page ?? 1,
                 maxPage: maxPage,
             })
@@ -53,7 +61,6 @@ export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFr
     }
 }
 
-const elementByPage: number = 20
 type GetOffersFromSearchParams = {
     keywords?: string
     codeZone?: string
