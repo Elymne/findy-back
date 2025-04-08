@@ -2,9 +2,7 @@ import Offer from "@App/domain/models/clean/Offer.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { OfferCreate } from "./tables/offer_table"
-import { injectable } from "tsyringe"
 
-@injectable()
 export default class OfferLocalDatasource implements OfferLocalRepository {
     private kyselyDatabase: KyselyDatabase
 

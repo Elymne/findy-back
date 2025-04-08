@@ -2,9 +2,7 @@ import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { JobCreate } from "./tables/job_table"
 import Job from "@App/domain/models/clean/Job.model"
-import { injectable } from "tsyringe"
 
-@injectable()
 export default class JobLocalDatasource implements JobLocalRepository {
     private kyselyDatabase: KyselyDatabase
 

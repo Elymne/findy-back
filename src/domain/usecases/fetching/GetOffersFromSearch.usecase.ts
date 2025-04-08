@@ -2,11 +2,9 @@ import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
 import PageOffers from "@App/domain/models/clean/PageOffers.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
-import { injectable } from "tsyringe"
 
 //TODO rework local.
 
-@injectable()
 export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFromSearchParams> {
     private offerLocalRepository: OfferLocalRepository
 

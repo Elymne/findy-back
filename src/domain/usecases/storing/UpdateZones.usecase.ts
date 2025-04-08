@@ -2,9 +2,7 @@ import { Failure, Result, Success } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository"
-import { injectable } from "tsyringe"
 
-@injectable()
 export default class UpdateZone extends UsecaseNoParams<void> {
     private zoneLocalRepository: ZoneLocalRepository
     private zoneRemoteRepository: ZoneRemoteRepository

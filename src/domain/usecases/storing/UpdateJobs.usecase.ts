@@ -2,9 +2,7 @@ import { Failure, Result, Success } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository"
-import { injectable } from "tsyringe"
 
-@injectable()
 export default class UpdateJobs extends UsecaseNoParams<void> {
     private jobLocalRepository: JobLocalRepository
     private jobRemoteRepository: JobRemoteRepository

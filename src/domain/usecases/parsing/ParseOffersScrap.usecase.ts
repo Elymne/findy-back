@@ -7,10 +7,8 @@ import Zone from "@App/domain/models/clean/Zone.model"
 import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
 import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
-import { injectable } from "tsyringe"
 import { v4 as uuid } from "uuid"
 
-@injectable()
 export default class ParseOffersScrap extends Usecase<OffersScrapResult, ParseScrapOffersParams> {
     private companyLocalRepository: CompanyLocalRepository
     private zoneLocalRepository: ZoneLocalRepository

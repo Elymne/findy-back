@@ -2,11 +2,9 @@ import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
 import Offer from "@App/domain/models/clean/Offer.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
-import { injectable } from "tsyringe"
 
 // TODO Rework.
 
-@injectable()
 export default class GetSample extends UsecaseNoParams<Offer[]> {
     private offerLocalRepository: OfferLocalRepository
 

@@ -2,9 +2,7 @@ import { Usecase } from "@App/core/Usecase"
 import ScrapOnePage from "./ScrapOnePage.usecase"
 import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
-import { injectable } from "tsyringe"
 
-@injectable()
 export default class ScrapSite extends Usecase<OfferScrap[], ScrapSiteParams> {
     private scrapOnePage: ScrapOnePage
 
