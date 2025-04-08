@@ -5,10 +5,10 @@ import ScrapSite from "@App/domain/usecases/scrapping/ScrapSite.usecase"
 import ScrapOnePage from "@App/domain/usecases/scrapping/ScrapOnePage.usecase"
 import HelloworkDatasource from "@App/infrastructure/datasources/scrappers/hellowork/HelloworkDatasource"
 import ParseOffersScrap from "@App/domain/usecases/parsing/ParseOffersScrap.usecase"
-import JobLocalDatasource from "@App/infrastructure/datasources/kysely/JobLocalDatasource"
-import ZoneLocalDatasource from "@App/infrastructure/datasources/kysely/ZoneLocalDatasource"
-import CompanyLocalDatasource from "@App/infrastructure/datasources/kysely/CompanyLocalDatasource"
-import OfferLocalDatasource from "@App/infrastructure/datasources/kysely/OfferLocalDatasource"
+import JobLocalDatasource from "@App/infrastructure/datasources/kysely/JobKyselyDatasource"
+import ZoneLocalDatasource from "@App/infrastructure/datasources/kysely/ZoneKyselyDatasource"
+import CompanyLocalDatasource from "@App/infrastructure/datasources/kysely/CompanyKyselyDatasource"
+import OfferLocalDatasource from "@App/infrastructure/datasources/kysely/OfferKyselyDatasource"
 
 // TODO : I need a container to make good looking DI.
 

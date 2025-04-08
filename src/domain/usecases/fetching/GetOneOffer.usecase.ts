@@ -1,19 +1,19 @@
 import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
 import OfferDetailed from "@App/domain/models/clean/OfferDetailed.model"
-import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
+import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
 
 export default class GetOneOffer extends Usecase<OfferDetailed, GetOneOfferParams> {
-    private offerRepository: OfferRemoteRepository
+    private offerLocalRepository: OfferLocalRepository
 
-    constructor(offerRepository: OfferRemoteRepository) {
+    constructor(offerLocalRepository: OfferLocalRepository) {
         super()
-        this.offerRepository = offerRepository
+        this.offerLocalRepository = offerLocalRepository
     }
 
     public async perform(params: GetOneOfferParams): Promise<Result<OfferDetailed>> {
         try {
-            const result = await this.offerRepository.findOne(params.id)
+            const result = await this.offerLocalRepository.findOne(params.id)
             if (!result) {
                 return new Failure(404, `[${this.constructor.name}] Trying to fetch offer ${params.id} : it doesn't exists`, { message: `Offer with id ${params.id} does not exists.` })
             }

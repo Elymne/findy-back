@@ -3,10 +3,6 @@ import { Usecase } from "@App/core/Usecase"
 import Job from "@App/domain/models/clean/Job.model"
 import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 
-export interface GetJobByIDParams {
-    id: string
-}
-
 export default class GetJobByID extends Usecase<Job[], GetJobByIDParams> {
     private jobLocalRepository: JobLocalRepository
 
@@ -28,4 +24,8 @@ export default class GetJobByID extends Usecase<Job[], GetJobByIDParams> {
             return new Failure(500, `[${this.constructor.name}] Trying to fetch jobs : An exception has been thrown.`, { message: "An internal error occured while fetching jobs data." }, trace)
         }
     }
+}
+
+type GetJobByIDParams = {
+    id: string
 }

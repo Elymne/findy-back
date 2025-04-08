@@ -2,10 +2,18 @@ import Offer from "@App/domain/models/clean/Offer.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { OfferCreate } from "./tables/offer_table"
+import { inject, injectable } from "tsyringe"
 
+@injectable()
 export default class OfferLocalDatasource implements OfferLocalRepository {
+    private kyselyDatabase: KyselyDatabase
+
+    constructor(@inject("KyselyDatabase") kyselyDatabase: KyselyDatabase) {
+        this.kyselyDatabase = kyselyDatabase
+    }
+
     async findOne(id: string): Promise<Offer | undefined> {
-        const result = await KyselyDatabase.get.connec
+        const result = await this.kyselyDatabase.connec
             .selectFrom("offer")
             .innerJoin("zone", "zone.id", "offer.zone_id")
             .innerJoin("company", "company.id", "offer.company_id")
@@ -87,7 +95,7 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
             throw `Error : the range is not setup correctly. Current range : ${params.range}`
         }
 
-        let query = KyselyDatabase.get.connec
+        let query = this.kyselyDatabase.connec
             .selectFrom("offer")
             .innerJoin("zone", "zone.id", "offer.zone_id")
             .innerJoin("company", "company.id", "offer.company_id")
@@ -176,7 +184,7 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
                 origin_url: offer.originUrl,
             }
         })
-        await KyselyDatabase.get.connec.insertInto("offer").values(offersCreate).execute()
+        await this.kyselyDatabase.connec.insertInto("offer").values(offersCreate).execute()
     }
 
     async createOne(offer: Offer): Promise<void> {
@@ -193,16 +201,16 @@ export default class OfferLocalDatasource implements OfferLocalRepository {
             origin: offer.origin,
             origin_url: offer.originUrl,
         }
-        await KyselyDatabase.get.connec.insertInto("offer").values(offerCreate).execute()
+        await this.kyselyDatabase.connec.insertInto("offer").values(offerCreate).execute()
     }
 
     async deleteMany(ids: string[]): Promise<number> {
-        const result = await KyselyDatabase.get.connec.deleteFrom("offer").where("id", "in", ids).execute()
+        const result = await this.kyselyDatabase.connec.deleteFrom("offer").where("id", "in", ids).execute()
         return result.length
     }
 
     async getLastTimeUpdate(): Promise<Date | undefined> {
-        const result = await KyselyDatabase.get.connec.selectFrom("offer").select("created_at").orderBy("created_at", "desc").limit(1).executeTakeFirst()
+        const result = await this.kyselyDatabase.connec.selectFrom("offer").select("created_at").orderBy("created_at", "desc").limit(1).executeTakeFirst()
         return result?.created_at ? new Date(result.created_at) : undefined
     }
 }

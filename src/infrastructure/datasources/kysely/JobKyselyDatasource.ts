@@ -2,10 +2,18 @@ import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { JobCreate } from "./tables/job_table"
 import Job from "@App/domain/models/clean/Job.model"
+import { inject, injectable } from "tsyringe"
 
+@injectable()
 export default class JobLocalDatasource implements JobLocalRepository {
+    private kyselyDatabase: KyselyDatabase
+
+    constructor(@inject("KyselyDatabase") kyselyDatabase: KyselyDatabase) {
+        this.kyselyDatabase = kyselyDatabase
+    }
+
     async findOne(id: string): Promise<Job | undefined> {
-        const result = await KyselyDatabase.get.connec.selectFrom("job").selectAll().where("id", "=", id).executeTakeFirst()
+        const result = await this.kyselyDatabase.connec.selectFrom("job").selectAll().where("id", "=", id).executeTakeFirst()
         if (!result) return undefined
 
         return {
@@ -15,7 +23,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
     }
 
     async findAll(): Promise<Job[]> {
-        const results = await KyselyDatabase.get.connec.selectFrom("job").selectAll().execute()
+        const results = await this.kyselyDatabase.connec.selectFrom("job").selectAll().execute()
         return results.map((result) => {
             return {
                 id: result.id,
@@ -25,7 +33,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
     }
 
     async deleteAll(): Promise<void> {
-        await KyselyDatabase.get.connec.deleteFrom("company").execute()
+        await this.kyselyDatabase.connec.deleteFrom("company").execute()
     }
 
     async createAll(jobs: Job[]): Promise<void> {
@@ -40,7 +48,7 @@ export default class JobLocalDatasource implements JobLocalRepository {
             }
         })
 
-        await KyselyDatabase.get.connec.insertInto("job").values(jobsParsed).execute()
+        await this.kyselyDatabase.connec.insertInto("job").values(jobsParsed).execute()
     }
 
     async createOne(job: Job): Promise<void> {
@@ -48,6 +56,6 @@ export default class JobLocalDatasource implements JobLocalRepository {
             id: job.id,
             title: job.title,
         }
-        await KyselyDatabase.get.connec.insertInto("job").values(jobTable).execute()
+        await this.kyselyDatabase.connec.insertInto("job").values(jobTable).execute()
     }
 }

@@ -1,0 +1,87 @@
+import { container } from "tsyringe"
+import KyselyDatabase from "@App/infrastructure/datasources/kysely/db/KyselyDatabase"
+import CompanyKyselyDatasource from "@App/infrastructure/datasources/kysely/CompanyKyselyDatasource"
+import OfferKyselyDatasource from "@App/infrastructure/datasources/kysely/OfferKyselyDatasource"
+import JobKyselyDatasource from "@App/infrastructure/datasources/kysely/JobKyselyDatasource"
+import ZoneKyselyDatasource from "@App/infrastructure/datasources/kysely/ZoneKyselyDatasource"
+import GeoApiDatasource from "@App/infrastructure/datasources/geoapi/GeoApiDatasource"
+import HelloworkDatasource from "@App/infrastructure/datasources/scrappers/hellowork/HelloworkDatasource"
+import JobFTDatasource from "@App/infrastructure/datasources/francetravail/JobFTDatasource"
+import OfferFTDatasource from "@App/infrastructure/datasources/francetravail/OfferFTDatasource"
+import GetJobByID from "@App/domain/usecases/fetching/GetJobByID.usecase"
+import GetJobs from "@App/domain/usecases/fetching/GetJobs.usecase"
+import GetOffersFromSearch from "@App/domain/usecases/fetching/GetOffersFromSearch.usecase"
+import GetOneOffer from "@App/domain/usecases/fetching/GetOneOffer.usecase"
+import GetSample from "@App/domain/usecases/fetching/GetSample"
+import GetZoneByID from "@App/domain/usecases/fetching/GetZoneByID.usecase"
+import GetZones from "@App/domain/usecases/fetching/GetZones.usecase"
+import ParseOffersScrap from "@App/domain/usecases/parsing/ParseOffersScrap.usecase"
+import ExpressServer from "@App/infrastructure/express/ExpressServer"
+import RunServer from "@App/domain/usecases/running/RunServer.usecase"
+
+// Gateways
+container.register("IServer", { useValue: new ExpressServer() })
+container.register("IDatabase", { useValue: KyselyDatabase.get })
+
+// Local Repositories.
+container.register("CompanyLocalRepository", {
+    useValue: new CompanyKyselyDatasource(container.resolve("IDatabase")),
+})
+container.register("JobLocalRepository", {
+    useValue: new JobKyselyDatasource(container.resolve("IDatabase")),
+})
+container.register("OfferLocalRepository", {
+    useValue: new OfferKyselyDatasource(container.resolve("IDatabase")),
+})
+container.register("ZoneLocalRepository", {
+    useValue: new ZoneKyselyDatasource(container.resolve("IDatabase")),
+})
+
+// Remote repositories
+container.register("ZoneRemoteRepository", {
+    useValue: new GeoApiDatasource(),
+})
+container.register("JobRemoteRepository", {
+    useValue: new JobFTDatasource(),
+})
+container.register("OfferRemoteRepository", {
+    useValue: new OfferFTDatasource(),
+})
+
+// Srcapper repositories.
+container.register("HelloworkRepository", {
+    useValue: new HelloworkDatasource(),
+})
+
+// Usecases.
+container.register("GetJobByID", {
+    useValue: new GetJobByID(container.resolve("JobLocalRepository")),
+})
+container.register("GetJobs", {
+    useValue: new GetJobs(container.resolve("JobLocalRepository")),
+})
+
+container.register("GetOffersFromSearch", {
+    useValue: new GetOffersFromSearch(container.resolve("OfferLocalRepository")),
+})
+container.register("GetOneOffer", {
+    useValue: new GetOneOffer(container.resolve("OfferLocalRepository")),
+})
+container.register("GetSample", {
+    useValue: new GetSample(container.resolve("OfferLocalRepository")),
+})
+
+container.register("GetZoneByID", {
+    useValue: new GetZoneByID(container.resolve("ZoneLocalRepository")),
+})
+container.register("GetZones", {
+    useValue: new GetZones(container.resolve("ZoneLocalRepository")),
+})
+
+container.register("ParseOffersScrap", {
+    useValue: new ParseOffersScrap(container.resolve("CompanyLocalRepository"), container.resolve("ZoneLocalRepository")),
+})
+
+container.register("RunServer", {
+    useValue: new RunServer(container.resolve("IServer"), container.resolve("IDatabase")),
+})

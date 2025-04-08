@@ -2,10 +2,18 @@ import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { ZoneCreate } from "./tables/zone_table"
+import { inject, injectable } from "tsyringe"
 
+@injectable()
 export default class ZoneLocalDatasource implements ZoneLocalRepository {
+    private kyselyDatabase: KyselyDatabase
+
+    constructor(@inject("KyselyDatabase") kyselyDatabase: KyselyDatabase) {
+        this.kyselyDatabase = kyselyDatabase
+    }
+
     async findUnique(id: string): Promise<Zone | undefined> {
-        const result = await KyselyDatabase.get.connec.selectFrom("zone").selectAll().where("id", "=", id).executeTakeFirst()
+        const result = await this.kyselyDatabase.connec.selectFrom("zone").selectAll().where("id", "=", id).executeTakeFirst()
         if (!result) return undefined
 
         return {
@@ -17,7 +25,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
     }
 
     async findMany(params: { name?: string }): Promise<Zone[]> {
-        let query = KyselyDatabase.get.connec.selectFrom("zone").selectAll()
+        let query = this.kyselyDatabase.connec.selectFrom("zone").selectAll()
         if (params.name) {
             query = query.where("name", "like", params.name)
         }
@@ -26,7 +34,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
     }
 
     async findAll(): Promise<Zone[]> {
-        const results = await KyselyDatabase.get.connec.selectFrom("zone").selectAll().execute()
+        const results = await this.kyselyDatabase.connec.selectFrom("zone").selectAll().execute()
         return results.map((result) => {
             return {
                 id: result.id,
@@ -38,7 +46,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
     }
 
     async deleteAll(): Promise<void> {
-        await KyselyDatabase.get.connec.deleteFrom("zone").execute()
+        await this.kyselyDatabase.connec.deleteFrom("zone").execute()
     }
 
     async createMany(zones: Zone[]): Promise<void> {
@@ -55,7 +63,7 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
             }
         })
 
-        await KyselyDatabase.get.connec.insertInto("zone").values(zonesTable).execute()
+        await this.kyselyDatabase.connec.insertInto("zone").values(zonesTable).execute()
     }
 
     async createOne(zone: Zone): Promise<void> {
@@ -66,6 +74,6 @@ export default class ZoneLocalDatasource implements ZoneLocalRepository {
             lng: zone.lng,
         }
 
-        await KyselyDatabase.get.connec.insertInto("zone").values(jobTable).execute()
+        await this.kyselyDatabase.connec.insertInto("zone").values(jobTable).execute()
     }
 }

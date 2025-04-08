@@ -6,10 +6,16 @@ import { OfferDetailedModelFT, parseOfferDetailed } from "./models/offerDetailed
 import { OfferResultModelFT, parseOffers } from "./models/offers.parser"
 import OfferDetailed from "@App/domain/models/clean/OfferDetailed.model"
 import Offer from "@App/domain/models/clean/Offer.model"
+import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
 
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi"
 
-export default class OfferRemoteDatasource implements OfferRemoteRepository {
+export default class OfferFTDatasource implements OfferRemoteRepository {
+    async findAll(params: { count?: number; newestDate?: Date }): Promise<OfferScrap[]> {
+        console.log(params)
+        throw new Error("Method not implemented.")
+    }
+
     async findManyBySearch(params: { keyWords?: string; codeZone?: string; codeJob?: string; distance?: number }): Promise<Offer[]> {
         // ! Paris update. Cannot get data from FranceTravail APi with Paris insee code.
         let departmentCode = null

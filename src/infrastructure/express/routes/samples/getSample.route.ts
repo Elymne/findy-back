@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
-import OfferRemoteDatasource from "@App/infrastructure/datasources/francetravail/OfferRemoteDatasource"
+import OfferFTDatasource from "@App/infrastructure/datasources/francetravail/OfferFTDatasource"
 import GetSample from "@App/domain/usecases/fetching/GetSample"
 import { Failure, Success } from "@App/core/Result"
 
-const getOfferSample: GetSample = new GetSample(new OfferRemoteDatasource())
+const getOfferSample: GetSample = new GetSample(new OfferFTDatasource())
 
 const getSampleRoute = express.Router().get("/", cache24hours, async (req: Request, res: Response) => {
     const result = await getOfferSample.perform()

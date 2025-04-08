@@ -1,14 +1,10 @@
-import Offer from "../models/clean/Offer.model"
-import OfferDetailed from "../models/clean/OfferDetailed.model"
+import OfferCrap from "../models/scrap/Offer.scrap"
 
 export default interface OfferRemoteRepository {
-    findManyBySearch(params: FindManyBySearchParams): Promise<Offer[]>
-    findOne(id: string): Promise<OfferDetailed | null>
+    findAll(params: FindAllParams): Promise<OfferCrap[]>
 }
 
-type FindManyBySearchParams = {
-    keyWords?: string
-    codeZone?: string
-    codeJob?: string
-    distance?: number
+type FindAllParams = {
+    count?: number
+    newestDate?: Date
 }

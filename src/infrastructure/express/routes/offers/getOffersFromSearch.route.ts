@@ -1,11 +1,11 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { cache10mins } from "@App/infrastructure/express/middlewares/cache"
-import OfferRemoteDatasource from "@App/infrastructure/datasources/francetravail/OfferRemoteDatasource"
+import OfferFTDatasource from "@App/infrastructure/datasources/francetravail/OfferFTDatasource"
 import GetOffersFromSearch from "@App/domain/usecases/fetching/GetOffersFromSearch.usecase"
 import { Failure, Success } from "@App/core/Result"
 
-const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferRemoteDatasource())
+const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferFTDatasource())
 
 const getOffersFromSearchRoute = express
     .Router()

@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import { cache24hours } from "../../middlewares/cache"
 import GetZoneByID from "@App/domain/usecases/fetching/GetZoneByID.usecase"
 import { Failure, Success } from "@App/core/Result"
-import ZoneLocalDatasource from "@App/infrastructure/datasources/kysely/ZoneLocalDatasource"
+import ZoneLocalDatasource from "@App/infrastructure/datasources/kysely/ZoneKyselyDatasource"
 
 const zoneLocalDatasource = new ZoneLocalDatasource()
 const getZoneByID: GetZoneByID = new GetZoneByID(zoneLocalDatasource)

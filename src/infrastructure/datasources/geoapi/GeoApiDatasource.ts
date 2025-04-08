@@ -2,7 +2,7 @@ import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository"
 import axios, { type AxiosRequestConfig } from "axios"
 
-export default class ZoneRemoteDatasource implements ZoneRemoteRepository {
+export default class GeoApiDatasource implements ZoneRemoteRepository {
     public async findAll(): Promise<Zone[]> {
         const options: AxiosRequestConfig = {
             method: "GET",

@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
-import OfferRemoteDatasource from "@App/infrastructure/datasources/francetravail/OfferRemoteDatasource"
+import OfferFTDatasource from "@App/infrastructure/datasources/francetravail/OfferFTDatasource"
 import GetOneOffer from "@App/domain/usecases/fetching/GetOneOffer.usecase"
 import { Failure, Success } from "@App/core/Result"
 
-const getOneOffer = new GetOneOffer(new OfferRemoteDatasource())
+const getOneOffer = new GetOneOffer(new OfferFTDatasource())
 
 const getOneOfferRoute = express.Router().get("/:id", cache24hours, async (req: Request, res: Response) => {
     const id = req.params.id ? (req.params.id as string) : null

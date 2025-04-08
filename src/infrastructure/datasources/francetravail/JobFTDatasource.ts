@@ -3,7 +3,7 @@ import generateToken from "./generateToken"
 import axios, { AxiosRequestConfig } from "axios"
 import Job from "@App/domain/models/clean/Job.model"
 
-export default class JobRemoteDatasource implements JobRemoteRepository {
+export default class JobFTDatasource implements JobRemoteRepository {
     /**
      * Fetch all data from France Travail Jobs Datasource.
      * This function needs @function generateToken() to generate the tokken needed for France Travail API usage.

@@ -65,6 +65,7 @@ export default class UpdateOffers extends UsecaseNoParams<void> {
             // Store news companies and offers.
             const { offers, newCompanies } = (parseResult as Success<OffersScrapResult>).data
             await this.companyLocalRepository.createMany(newCompanies)
+            await new Promise((f) => setTimeout(f, 1_000))
             await this.offerLocalRepository.createMany(offers)
 
             // Return the result top use client.

@@ -1,26 +1,26 @@
 import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
 import PageOffers from "@App/domain/models/clean/PageOffers.model"
-import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
-import OfferRemoteDatasource from "@App/infrastructure/datasources/francetravail/OfferRemoteDatasource"
+import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
 
-//TODO rework total ou pas je sais ap.
+//TODO rework local.
 export default class GetOffersFromSearch extends Usecase<PageOffers, GetOffersFromSearchParams> {
-    private offerRepository: OfferRemoteRepository
+    private offerLocalRepository: OfferLocalRepository
 
-    public constructor(offerDatasource: OfferRemoteDatasource) {
+    public constructor(offerLocalRepository: OfferLocalRepository) {
         super()
-        this.offerRepository = offerDatasource
+        this.offerLocalRepository = offerLocalRepository
     }
 
     public async perform(params: GetOffersFromSearchParams): Promise<Result<PageOffers>> {
         try {
-            const offers = await this.offerRepository.findManyBySearch({
+            const offers = await this.offerLocalRepository.findMany({
                 keyWords: params.keywords,
-                codeZone: params.codeZone,
-                codeJob: params.codeJob,
-                distance: params.distance,
+                codezone: params.codeZone,
+                codejob: params.codeJob,
+                range: "10-20",
             })
+
             if (offers.length == 0) {
                 return new Success(204, `[${this.constructor.name}] Trying to fetch offers : none found.`, {
                     jobs: offers,

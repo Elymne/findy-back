@@ -3,10 +3,6 @@ import { Usecase } from "@App/core/Usecase"
 import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 
-export interface GetZoneByCodeParams {
-    id: string
-}
-
 export default class GetZoneByID extends Usecase<Zone, GetZoneByCodeParams> {
     private zoneLocalRepository: ZoneLocalRepository
 
@@ -28,4 +24,8 @@ export default class GetZoneByID extends Usecase<Zone, GetZoneByCodeParams> {
             return new Failure(500, `[${this.constructor.name}] An exception has been thrown`, { message: "An internal error occured while fecthing zone." }, trace)
         }
     }
+}
+
+type GetZoneByCodeParams = {
+    id: string
 }
