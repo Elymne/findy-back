@@ -6,7 +6,9 @@ import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository
 import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
 import ParseOffersScrap, { OffersScrapResult } from "../parsing/ParseOffersScrap.usecase"
 import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
+import { injectable } from "tsyringe"
 
+@injectable()
 export default class UpdateOffers extends UsecaseNoParams<void> {
     private scrapSites: ScrapSite[]
     private parseOffersScrap: ParseOffersScrap

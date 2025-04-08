@@ -1,13 +1,11 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
 import { Failure, Success } from "@App/core/Result"
-import JobLocalDatasource from "@App/infrastructure/datasources/mysql/JobLocalDatasource"
 import GetJobByID from "@App/domain/usecases/fetching/GetJobByID.usecase"
-
-const getJobByID: GetJobByID = new GetJobByID(new JobLocalDatasource())
+import { container } from "tsyringe"
 
 const getJobByIDRoute = express.Router().get("/:id", cache24hours, async (req: Request<{ id: string }>, res: Response) => {
-    const result = await getJobByID.perform({
+    const result = await container.resolve(GetJobByID).perform({
         id: req.params.id,
     })
 

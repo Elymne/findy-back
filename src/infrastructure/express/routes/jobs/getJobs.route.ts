@@ -2,12 +2,10 @@ import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
 import GetJobs from "@App/domain/usecases/fetching/GetJobs.usecase"
 import { Failure, Success } from "@App/core/Result"
-import JobLocalDatasource from "@App/infrastructure/datasources/mysql/JobLocalDatasource"
-
-const getJobs: GetJobs = new GetJobs(new JobLocalDatasource())
+import { container } from "tsyringe"
 
 const getJobsRoute = express.Router().get("/", cache24hours, async (req: Request, res: Response) => {
-    const result = await getJobs.perform()
+    const result = await container.resolve(GetJobs).perform()
 
     if (result instanceof Failure) {
         res.status(result.code).send(result.error)

@@ -1,12 +1,10 @@
 import express, { Request, Response } from "express"
 import { Failure, Success } from "@App/core/Result"
 import UpdateZones from "@App/domain/usecases/storing/UpdateZones.usecase"
-import ZoneLocalDatasource from "@App/infrastructure/datasources/kysely/ZoneKyselyDatasource"
-import GeoApiDatasource from "@App/infrastructure/datasources/geoapi/GeoApiDatasource"
+import { container } from "tsyringe"
 
-const updateZones = new UpdateZones(new ZoneLocalDatasource(), new GeoApiDatasource())
 export const updateZoneRoute = express.Router().get("/zones", async (req: Request, res: Response) => {
-    const result = await updateZones.perform()
+    const result = await container.resolve(UpdateZones).perform()
     if (result instanceof Failure) {
         res.status(result.code).send(result.error)
         return

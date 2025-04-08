@@ -1,10 +1,8 @@
 import express, { Request, Response } from "express"
 import { cache24hours } from "@App/infrastructure/express/middlewares/cache"
-import OfferFTDatasource from "@App/infrastructure/datasources/francetravail/OfferFTDatasource"
 import GetOneOffer from "@App/domain/usecases/fetching/GetOneOffer.usecase"
 import { Failure, Success } from "@App/core/Result"
-
-const getOneOffer = new GetOneOffer(new OfferFTDatasource())
+import { container } from "tsyringe"
 
 const getOneOfferRoute = express.Router().get("/:id", cache24hours, async (req: Request, res: Response) => {
     const id = req.params.id ? (req.params.id as string) : null
@@ -16,7 +14,7 @@ const getOneOfferRoute = express.Router().get("/:id", cache24hours, async (req: 
         return
     }
 
-    const result = await getOneOffer.perform({ id: id })
+    const result = await container.resolve(GetOneOffer).perform({ id: id })
 
     if (result instanceof Failure) {
         res.status(result.code).send(result.error)

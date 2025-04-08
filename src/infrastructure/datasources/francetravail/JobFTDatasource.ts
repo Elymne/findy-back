@@ -2,7 +2,9 @@ import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository"
 import generateToken from "./generateToken"
 import axios, { AxiosRequestConfig } from "axios"
 import Job from "@App/domain/models/clean/Job.model"
+import { injectable } from "tsyringe"
 
+@injectable()
 export default class JobFTDatasource implements JobRemoteRepository {
     /**
      * Fetch all data from France Travail Jobs Datasource.

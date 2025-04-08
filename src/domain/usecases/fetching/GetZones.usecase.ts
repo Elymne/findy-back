@@ -2,7 +2,9 @@ import { Failure, Result, Success, SuccessType } from "@App/core/Result"
 import { UsecaseNoParams } from "@App/core/Usecase"
 import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
+import { injectable } from "tsyringe"
 
+@injectable()
 export default class GetZones extends UsecaseNoParams<Zone[]> {
     private zoneLocalRepository: ZoneLocalRepository
 

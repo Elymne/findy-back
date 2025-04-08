@@ -1,11 +1,9 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
 import { cache10mins } from "@App/infrastructure/express/middlewares/cache"
-import OfferFTDatasource from "@App/infrastructure/datasources/francetravail/OfferFTDatasource"
 import GetOffersFromSearch from "@App/domain/usecases/fetching/GetOffersFromSearch.usecase"
 import { Failure, Success } from "@App/core/Result"
-
-const getOffer: GetOffersFromSearch = new GetOffersFromSearch(new OfferFTDatasource())
+import { container } from "tsyringe"
 
 const getOffersFromSearchRoute = express
     .Router()
@@ -30,7 +28,7 @@ const getOffersFromSearchRoute = express
             const distance = req.query.distance ? parseInt(req.query.distance as string) : undefined
             const page = req.query.page ? parseInt(req.query.page as string) : undefined
 
-            const result = await getOffer.perform({
+            const result = await container.resolve(GetOffersFromSearch).perform({
                 keywords: keywords,
                 codeZone: codeZone,
                 codeJob: codeJob,

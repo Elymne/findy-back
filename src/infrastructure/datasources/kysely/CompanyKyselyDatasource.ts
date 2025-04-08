@@ -2,13 +2,13 @@ import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalReposit
 import { CompanyCreate } from "./tables/company_table"
 import Company from "@App/domain/models/clean/Company.model"
 import KyselyDatabase from "./db/KyselyDatabase"
-import { inject, injectable } from "tsyringe"
+import { injectable } from "tsyringe"
 
 @injectable()
 export default class CompanyLocalDatasource implements CompanyLocalRepository {
     private kyselyDatabase: KyselyDatabase
 
-    constructor(@inject("KyselyDatabase") kyselyDatabase: KyselyDatabase) {
+    constructor(kyselyDatabase: KyselyDatabase) {
         this.kyselyDatabase = kyselyDatabase
     }
 

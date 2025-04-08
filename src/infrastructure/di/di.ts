@@ -18,70 +18,139 @@ import GetZones from "@App/domain/usecases/fetching/GetZones.usecase"
 import ParseOffersScrap from "@App/domain/usecases/parsing/ParseOffersScrap.usecase"
 import ExpressServer from "@App/infrastructure/express/ExpressServer"
 import RunServer from "@App/domain/usecases/running/RunServer.usecase"
+import ScrapOnePage from "@App/domain/usecases/scrapping/ScrapOnePage.usecase"
+import ScrapSite from "@App/domain/usecases/scrapping/ScrapSite.usecase"
+import UpdateJobs from "@App/domain/usecases/storing/UpdateJobs.usecase"
+import UpdateZone from "@App/domain/usecases/storing/UpdateZones.usecase"
+import UpdateOffers from "@App/domain/usecases/storing/UpdateOffers.usecase"
+import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
+import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
+import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
+import CompanyLocalRepository from "@App/domain/repositories/CompanyLocalRepository"
+import ZoneRemoteRepository from "@App/domain/repositories/ZoneRemote.repository"
+import JobRemoteRepository from "@App/domain/repositories/JobRemote.repository"
+import OfferRemoteRepository from "@App/domain/repositories/OfferRemote.repository"
+import IServer from "@App/domain/gateways/IServer.gateways"
+import IDatabase from "@App/domain/gateways/IDatabase.gateways"
 
-// Gateways
-container.register("IServer", { useValue: new ExpressServer() })
-container.register("IDatabase", { useValue: KyselyDatabase.get })
+export const IServer = "IServer"
+export const IDatabase = "IDatabase"
 
-// Local Repositories.
-container.register("CompanyLocalRepository", {
-    useValue: new CompanyKyselyDatasource(container.resolve("IDatabase")),
-})
-container.register("JobLocalRepository", {
-    useValue: new JobKyselyDatasource(container.resolve("IDatabase")),
-})
-container.register("OfferLocalRepository", {
-    useValue: new OfferKyselyDatasource(container.resolve("IDatabase")),
-})
-container.register("ZoneLocalRepository", {
-    useValue: new ZoneKyselyDatasource(container.resolve("IDatabase")),
-})
+export const CompanyLocalRepository = "CompanyLocalRepository"
+export const JobLocalRepository = "JobLocalRepository"
+export const ZoneLocalRepository = "ZoneLocalRepository"
+export const OfferLocalRepository = "OfferLocalRepository"
 
-// Remote repositories
-container.register("ZoneRemoteRepository", {
-    useValue: new GeoApiDatasource(),
-})
-container.register("JobRemoteRepository", {
-    useValue: new JobFTDatasource(),
-})
-container.register("OfferRemoteRepository", {
-    useValue: new OfferFTDatasource(),
-})
+export const ZoneRemoteRepository = "ZoneRemoteRepository"
+export const JobRemoteRepository = "JobRemoteRepository"
+export const OfferRemoteRepository = "OfferRemoteRepository"
 
-// Srcapper repositories.
-container.register("HelloworkRepository", {
-    useValue: new HelloworkDatasource(),
-})
+export const HelloworkRepository = "HelloworkRepository"
 
-// Usecases.
-container.register("GetJobByID", {
-    useValue: new GetJobByID(container.resolve("JobLocalRepository")),
-})
-container.register("GetJobs", {
-    useValue: new GetJobs(container.resolve("JobLocalRepository")),
-})
+export const ScrapHelloworkPage = "ScrapHelloworkPage"
+export const ScrapHelloworkSite = "ScrapHelloworkSite"
 
-container.register("GetOffersFromSearch", {
-    useValue: new GetOffersFromSearch(container.resolve("OfferLocalRepository")),
-})
-container.register("GetOneOffer", {
-    useValue: new GetOneOffer(container.resolve("OfferLocalRepository")),
-})
-container.register("GetSample", {
-    useValue: new GetSample(container.resolve("OfferLocalRepository")),
-})
+export default function runContainer(): void {
+    // Gateways
+    container.register(IServer, { useValue: new ExpressServer() })
+    container.register(IDatabase, { useValue: KyselyDatabase.get })
 
-container.register("GetZoneByID", {
-    useValue: new GetZoneByID(container.resolve("ZoneLocalRepository")),
-})
-container.register("GetZones", {
-    useValue: new GetZones(container.resolve("ZoneLocalRepository")),
-})
+    // Local Repositories.
+    container.register(CompanyLocalRepository, {
+        useValue: new CompanyKyselyDatasource(container.resolve(IDatabase)),
+    })
+    container.register(JobLocalRepository, {
+        useValue: new JobKyselyDatasource(container.resolve(IDatabase)),
+    })
+    container.register(ZoneLocalRepository, {
+        useValue: new OfferKyselyDatasource(container.resolve(IDatabase)),
+    })
+    container.register(OfferLocalRepository, {
+        useValue: new ZoneKyselyDatasource(container.resolve(IDatabase)),
+    })
 
-container.register("ParseOffersScrap", {
-    useValue: new ParseOffersScrap(container.resolve("CompanyLocalRepository"), container.resolve("ZoneLocalRepository")),
-})
+    // Remote repositories
+    container.register(ZoneRemoteRepository, {
+        useValue: new GeoApiDatasource(),
+    })
+    container.register(JobRemoteRepository, {
+        useValue: new JobFTDatasource(),
+    })
+    container.register(OfferRemoteRepository, {
+        useValue: new OfferFTDatasource(),
+    })
 
-container.register("RunServer", {
-    useValue: new RunServer(container.resolve("IServer"), container.resolve("IDatabase")),
-})
+    // Srcapper repositories.
+    container.register(HelloworkRepository, {
+        useValue: new HelloworkDatasource(),
+    })
+
+    // Usecases Local.
+    container.register(GetJobByID, {
+        useValue: new GetJobByID(container.resolve(JobLocalRepository)),
+    })
+    container.register(GetJobs, {
+        useValue: new GetJobs(container.resolve(JobLocalRepository)),
+    })
+
+    container.register(GetOffersFromSearch, {
+        useValue: new GetOffersFromSearch(container.resolve(OfferLocalRepository)),
+    })
+
+    container.register(GetOneOffer, {
+        useValue: new GetOneOffer(container.resolve(OfferLocalRepository)),
+    })
+
+    container.register(GetSample, {
+        useValue: new GetSample(container.resolve(OfferLocalRepository)),
+    })
+
+    container.register(GetZoneByID, {
+        useValue: new GetZoneByID(container.resolve(ZoneLocalRepository)),
+    })
+    container.register(GetZones, {
+        useValue: new GetZones(container.resolve(ZoneLocalRepository)),
+    })
+
+    // Usecases Server.
+
+    container.register(RunServer, {
+        useValue: new RunServer(container.resolve(IServer), container.resolve(IDatabase)),
+    })
+
+    // Usecases Parsers.
+
+    container.register<ParseOffersScrap>(ParseOffersScrap, {
+        useValue: new ParseOffersScrap(container.resolve(CompanyLocalRepository), container.resolve(ZoneLocalRepository)),
+    })
+
+    // Usecases Scrapers.
+
+    container.register(ScrapHelloworkPage, {
+        useValue: new ScrapOnePage(container.resolve(HelloworkRepository)),
+    })
+
+    container.register(ScrapHelloworkSite, {
+        useValue: new ScrapSite(container.resolve(ScrapHelloworkPage)),
+    })
+
+    // Usecases Updaters.
+
+    container.register(UpdateJobs, {
+        useValue: new UpdateJobs(container.resolve(JobLocalRepository), container.resolve(JobRemoteRepository)),
+    })
+
+    container.register(UpdateZone, {
+        useValue: new UpdateZone(container.resolve(ZoneLocalRepository), container.resolve(ZoneRemoteRepository)),
+    })
+
+    container.register(UpdateOffers, {
+        useValue: new UpdateOffers(
+            [container.resolve(ScrapHelloworkSite)],
+            container.resolve(ParseOffersScrap),
+            container.resolve(JobLocalRepository),
+            container.resolve(CompanyLocalRepository),
+            container.resolve(OfferLocalRepository)
+        ),
+    })
+}

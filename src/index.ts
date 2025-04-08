@@ -1,8 +1,7 @@
-import RunServer from "@App/domain/usecases/running/RunServer.usecase"
-import KyselyDatabase from "@App/infrastructure/datasources/kysely/db/KyselyDatabase"
-import ExpressServer from "@App/infrastructure/express/ExpressServer"
 import "reflect-metadata"
-import "@App/infrastructure/di/di"
+import { container } from "tsyringe"
+import runContainer from "@App/infrastructure/di/di"
+import RunServer from "@App/domain/usecases/running/RunServer.usecase"
 
-const runServer: RunServer = new RunServer(new ExpressServer(), KyselyDatabase.get)
-runServer.perform()
+runContainer() // DI Container runner.
+container.resolve(RunServer).perform() // Run the server.

@@ -3,11 +3,13 @@ import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
 import OfferScrapperRepository from "@App/domain/repositories/OfferScrapper.repository"
 import axios from "axios"
 import { load } from "cheerio"
+import { injectable } from "tsyringe"
 
 /**
  * Class that contain function to scrap Hellowork offers pages.
  * This class implements @interface OfferScrapperRepository that is used by usecases to scrap data for the local datasource.
  */
+@injectable()
 export default class HelloworkDatasource implements OfferScrapperRepository {
     /**
      * Scrap one page of job offers from Hellowork website.

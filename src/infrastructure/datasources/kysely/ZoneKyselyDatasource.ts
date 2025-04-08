@@ -2,13 +2,13 @@ import Zone from "@App/domain/models/clean/Zone.model"
 import ZoneLocalRepository from "@App/domain/repositories/ZoneLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { ZoneCreate } from "./tables/zone_table"
-import { inject, injectable } from "tsyringe"
+import { injectable } from "tsyringe"
 
 @injectable()
 export default class ZoneLocalDatasource implements ZoneLocalRepository {
     private kyselyDatabase: KyselyDatabase
 
-    constructor(@inject("KyselyDatabase") kyselyDatabase: KyselyDatabase) {
+    constructor(kyselyDatabase: KyselyDatabase) {
         this.kyselyDatabase = kyselyDatabase
     }
 

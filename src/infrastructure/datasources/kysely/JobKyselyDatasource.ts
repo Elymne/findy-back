@@ -2,13 +2,13 @@ import JobLocalRepository from "@App/domain/repositories/JobLocal.repository"
 import KyselyDatabase from "./db/KyselyDatabase"
 import { JobCreate } from "./tables/job_table"
 import Job from "@App/domain/models/clean/Job.model"
-import { inject, injectable } from "tsyringe"
+import { injectable } from "tsyringe"
 
 @injectable()
 export default class JobLocalDatasource implements JobLocalRepository {
     private kyselyDatabase: KyselyDatabase
 
-    constructor(@inject("KyselyDatabase") kyselyDatabase: KyselyDatabase) {
+    constructor(kyselyDatabase: KyselyDatabase) {
         this.kyselyDatabase = kyselyDatabase
     }
 

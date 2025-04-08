@@ -3,7 +3,9 @@ import { UsecaseNoParams } from "@App/core/Usecase"
 import IDatabase from "@App/domain/gateways/IDatabase.gateways"
 import IServer from "@App/domain/gateways/IServer.gateways"
 import dotenv from "dotenv"
+import { injectable } from "tsyringe"
 
+@injectable()
 export default class RunServer extends UsecaseNoParams<void> {
     private server: IServer
     private database: IDatabase

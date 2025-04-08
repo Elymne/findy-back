@@ -1,12 +1,10 @@
 import express, { Request, Response } from "express"
 import { query, validationResult } from "express-validator"
-import HelloworkDatasource from "@App/infrastructure/datasources/scrappers/hellowork/HelloworkDatasource"
-import ScrapOnePage from "@App/domain/usecases/scrapping/ScrapOnePage.usecase"
 import ScrapSite from "@App/domain/usecases/scrapping/ScrapSite.usecase"
 import { Failure, Success } from "@App/core/Result"
-
-const scrapOneRoute: ScrapOnePage = new ScrapOnePage(new HelloworkDatasource())
-const scrapRoute: ScrapSite = new ScrapSite(scrapOneRoute)
+import { container } from "tsyringe"
+import { ScrapHelloworkPage, ScrapHelloworkSite } from "@App/infrastructure/di/di"
+import ScrapOnePage from "@App/domain/usecases/scrapping/ScrapOnePage.usecase"
 
 export const scrapHelloworkPages = express
     .Router()
@@ -20,7 +18,7 @@ export const scrapHelloworkPages = express
         const pageNumber = req.query.pagenumber ? parseInt(req.query.pagenumber as string) : undefined
         const maxDay = req.query.maxday ? parseInt(req.query.maxday as string) : undefined
 
-        const result = await scrapRoute.perform({
+        const result = await container.resolve<ScrapSite>(ScrapHelloworkSite).perform({
             pageNumber: pageNumber,
             newestDate: maxDay ? new Date(maxDay) : undefined,
         })
@@ -48,7 +46,7 @@ export const scrapHelloworkPage = express.Router().get("/hellowork/:index", asyn
         return
     }
 
-    const result = await scrapOneRoute.perform({ pageIndex: index })
+    const result = await container.resolve<ScrapOnePage>(ScrapHelloworkPage).perform({ pageIndex: index })
     if (result instanceof Failure) {
         res.status(result.code).send(result.error)
         return

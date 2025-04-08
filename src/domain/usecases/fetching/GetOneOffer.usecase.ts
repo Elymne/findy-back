@@ -2,7 +2,9 @@ import { Failure, Result, Success } from "@App/core/Result"
 import { Usecase } from "@App/core/Usecase"
 import OfferDetailed from "@App/domain/models/clean/OfferDetailed.model"
 import OfferLocalRepository from "@App/domain/repositories/OfferLocal.repository"
+import { injectable } from "tsyringe"
 
+@injectable()
 export default class GetOneOffer extends Usecase<OfferDetailed, GetOneOfferParams> {
     private offerLocalRepository: OfferLocalRepository
 

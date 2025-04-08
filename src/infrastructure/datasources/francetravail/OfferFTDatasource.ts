@@ -7,9 +7,11 @@ import { OfferResultModelFT, parseOffers } from "./models/offers.parser"
 import OfferDetailed from "@App/domain/models/clean/OfferDetailed.model"
 import Offer from "@App/domain/models/clean/Offer.model"
 import OfferScrap from "@App/domain/models/scrap/Offer.scrap"
+import { injectable } from "tsyringe"
 
 const baseUrl = "https://api.francetravail.io/partenaire/offresdemploi"
 
+@injectable()
 export default class OfferFTDatasource implements OfferRemoteRepository {
     async findAll(params: { count?: number; newestDate?: Date }): Promise<OfferScrap[]> {
         console.log(params)
